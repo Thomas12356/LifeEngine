@@ -1,5 +1,13 @@
 # LifeEngine
 
+## Supervisor Weekly Updates
+Click [Here](https://livekentac-my.sharepoint.com/:f:/g/personal/te215_kent_ac_uk/IgCK6fdCNx1BSYUQCXkJK7S9AYrHyPEUXVlg6XbdPyGVcug?e=ycjpPG) to access the folder containing all weekly supervisor updates.
+Each supervisor weekly update is a word document containing:
+1. Weekly meeting minutes from the last weeks meeting.
+2. A completed todo list from the week that has just passed.
+3. Weekly project diary entry.
+4. Questions / notes for the next supervisor meeting.
+5. Evidence of progress.
 
 
 ## Getting started
