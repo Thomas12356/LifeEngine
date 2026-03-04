@@ -8,6 +8,7 @@ const customConfig = defineConfig( {
                 brand:{
                     blueLight: {value: "#39A3FF"},
                     blueDark: {value: "#004A89"},
+                    gray: {value: "#9A9A9A"}
                 },
             },
         },
