@@ -3,17 +3,18 @@
 **WIP - NO LOGIC OR STYLING**
 
 *TODO*
-    1. Implement state logic into DateSelectMenu
-    1. Integrate DateSelectMenu state logic with calendar body
+1. Fix broken clear-date-select button
+2. Tidy up import paths
+3. Test state features
 
 ## Sub-components Roadmap
 - Calendar Menu **WIP**
-    1. DateSelectMenu (Date picker) **WIP - Implement state logic**
+    1. DateSelectMenu (Date picker) **FIX - Clear selection button**
     2. ViewSelectMenu (Day/week/month) **WIP - Implement state logic**
-- Calendar Header **WIP - Integrate with menu state logic**
-- Calendar Body **WIP**
+- Calendar Header **WIP - Implement current day indicator**
+- Calendar Body
     1. Time labels [x]
     2. Grid layers container
         - Background grid [x]
-        - Event box layer [0] **WIP - Integrate with menu state logic**
+        - Event box layer [x]
         - Time indicator [x]
