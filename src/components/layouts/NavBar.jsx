@@ -5,10 +5,16 @@ import LifeEngineLogo from "@ui-components/LifeEngineLogo";
 //test icons
 import { FaBeer } from "react-icons/fa";
 
+
 const NavLinkStyles = {
     display: "flex",
     alignItems:"center"
 }
+
+const NavButtons = [
+  { to: "/", Icon: FaBeer, text: "Home" },
+  { to: "/calendar", Icon: FaBeer, text: "Calendar" },
+];
 
 const NavButton = ({ to, Icon, text}) => {
     return(
@@ -16,7 +22,7 @@ const NavButton = ({ to, Icon, text}) => {
             {({ isActive }) => (
                 <Box
                     {...NavLinkStyles}
-                    color={isActive ? "brand.blueLight" : "brand.gray"} 
+                    color={isActive ? "brand.blueLight" : "brand.gray"}
                 >
                     <ChakraIcon as={Icon} boxSize="20px" />
                     <Text>{text}</Text>
@@ -34,8 +40,9 @@ export default function NavBar() {
                 <LifeEngineLogo />
 
                 <nav>
-                    <NavButton to="/" text="Home" Icon={FaBeer} />
-                    <NavButton to="/calendar" text="Calendar" Icon={FaBeer} />
+                    {NavButtons.map((button) => (
+                        <NavButton key={button.to} {...button} />
+                    ))}
                 </nav>
 
             </Flex>
