@@ -1,21 +1,38 @@
-import { createSystem, defaultConfig } from "@chakra-ui/react"
+import { Color, createSystem, defaultConfig } from "@chakra-ui/react"
 import { defineConfig } from "@chakra-ui/react";
+import { textStyles } from "@theme/textStyles";
 
 const customConfig = defineConfig( {
     globalCss: {
         body: {
             margin: 0,
             padding: 0,
-            fontFamily: "mukta, sans-sans-serif",
+            textStyle: "body",
         },
     },
     theme:{
+        textStyles: {
+            defaultSolid: {
+                fontSize: "md",
+                fontWeight: "normal",
+                color: "text.solid"
+            },
+            defaultGrey: {
+                fontSize: "md",
+                fontWeight: "normal",
+                color: "brand.gray"
+            }
+            
+        },
         tokens: {
             colors: {
                 brand:{
                     blueLight: {value: "#39A3FF"},
                     blueDark: {value: "#004A89"},
-                    gray: {value: "#9A9A9A"}
+                    gray: {value: "#9A9A9A"},
+                },
+                text: {
+                    solid: { value: "#393939"},
                 },
             },
             fontSizes: {
@@ -24,6 +41,11 @@ const customConfig = defineConfig( {
                 "md": { value: "1.5rem" },
                 "lg": { value: "1.75rem" },
                 "xl": { value: "2.25rem" },
+            },
+            fontWeights: {
+                normal: { value: "400" },
+                medium: { value: "500" },
+                bold: { value: "700" },
             },
             radii: {
                 "widgetRadii": { value: "1.5rem" },
