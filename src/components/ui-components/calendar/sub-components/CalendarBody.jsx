@@ -26,26 +26,7 @@ const GridBackground = () => {
     )
 }
 
-const EventLayer = () => {
-
-    // Dummy event data for testing
-    const events = [
-        {
-            title: "Meeting",
-            start: "2026-03-02T14:00:00", // Monday 2:00 PM
-            end: "2026-03-02T15:00:00"
-        },
-        {
-            title: "Lunch",
-            start: "2026-03-03T12:00:00", // Tuesday 12:00 PM
-            end: "2026-03-03T13:00:00"
-        },
-        {
-            title: "Workout",
-            start: "2026-03-04T18:00:00", // Wednesday 6:00 PM
-            end: "2026-03-04T19:30:00"
-        }
-    ]
+const EventLayer = ({ events}) => {
 
     return (
         <Box position="absolute" top="0" left="0" w="100%" h="1440px">
@@ -89,7 +70,7 @@ const TimeIndicator = () => {
     )
 }
 
-export default function CalendarBody() {
+export default function CalendarBody({ events}) {
 
     const hours = Array.from({ length: 24 }, (_, i) => i)
 
@@ -104,7 +85,7 @@ export default function CalendarBody() {
             </VStack>
             <Box flex="1" h="1440px" position="relative">
                 <GridBackground />
-                <EventLayer />
+                <EventLayer events={events} />
                 <TimeIndicator />
             </Box>
         </HStack>

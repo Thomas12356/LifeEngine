@@ -1,5 +1,6 @@
 
 import { HStack, VStack, Text, Box } from "@chakra-ui/react"
+import { getWeekDays } from "src/components/ui-components/calendar/utils/dateHelpers.js"
 
 const CalendarHeaderDate = ({ weekday, date }) => {
     return (
@@ -10,17 +11,9 @@ const CalendarHeaderDate = ({ weekday, date }) => {
     )
 }
 
-export default function CalendarHeader() {
+export default function CalendarHeader({ selectedDate }) {
 
-    const days = [
-        { weekday: "Mon", date: "2" },
-        { weekday: "Tue", date: "3" },
-        { weekday: "Wed", date: "4" },
-        { weekday: "Thu", date: "5" },
-        { weekday: "Fri", date: "6" },
-        { weekday: "Sat", date: "7" },
-        { weekday: "Sun", date: "8" },
-    ]
+    const days = getWeekDays(selectedDate);
 
     return (
         <HStack w="100%" spacing={0}>

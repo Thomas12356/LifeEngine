@@ -1,4 +1,18 @@
+import { startOfWeek } from "date-fns"
 
+export const getWeekDays = (selectedDate) => {
+    const days = []
+    const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 }) // Monday as first day of the week
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(weekStart)
+        date.setDate(weekStart.getDate() + i)
+        days.push({
+            weekday: date.toLocaleString('en-US', { weekday: 'short' }),
+            date: date.getDate()
+        })
+    }
+    return days
+}
 
 export const getEventDurationInMinutes = (start, end) => {
     const startTime = new Date(start)
