@@ -1,11 +1,13 @@
 
 import { HStack } from "@chakra-ui/react"
+import DateSelectMenu from "@ui-components/calendar/sub-components/DateSelectMenu"
+import ViewSelectMenu from "@ui-components/calendar/sub-components/ViewSelectMenu"
 
 export default function CalendarMenu() {
     return (
         <HStack>
-            <h1>Date Picker Menu</h1>
-            <h1>View Menu</h1>
+            <DateSelectMenu />
+            <ViewSelectMenu />
         </HStack>
     )
 }
