@@ -35,12 +35,9 @@ export default function DateSelectMenu({ selectedDate, setSelectedDate }) {
     >
       <DatePicker.Control>
         <DatePicker.Trigger>
-            <Button>
-                <Text>March 2026</Text> {/* TODO: Update this to display the currently selected date */}
-                <LuChevronDown />
-            </Button>
+          <Text>March 2026</Text> {/* TODO: Update this to display the currently selected date */}
+          <LuChevronDown />
         </DatePicker.Trigger>
-        <DatePicker.ClearTrigger>Today</DatePicker.ClearTrigger> {/* TODO: Fix clear trigger to jump to today's date */}
       </DatePicker.Control>
       <Portal>
         <DatePicker.Positioner>
