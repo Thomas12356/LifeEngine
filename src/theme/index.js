@@ -7,6 +7,7 @@ const customConfig = defineConfig( {
             margin: 0,
             padding: 0,
             textStyle: "body",
+            fontFamily: "Mukta, sans-serif",
         },
     },
     theme:{
