@@ -5,6 +5,7 @@ import { Link as ChakraLink, Icon as ChakraIcon, Text, Box, Flex, HStack } from 
 import { NavLink } from "react-router-dom";
 {/* UI Components */}
 import LifeEngineLogo from "@ui-components/LifeEngineLogo";
+import VerticalDivider from "@ui-components/VerticalDivider";
 {/* Assets */}
 
 {/* Temporary Dev Imports */}
@@ -16,7 +17,7 @@ import { FaBeer } from "react-icons/fa";
 const navLinkStyles = {
     display: "flex",
     alignItems:"center",
-    marginRight: "general.smSpacing",
+    marginRight: "general.mdSpacing",
 }
 const navLinkTextStyles = {
     fontSize: "sm",
@@ -34,8 +35,8 @@ const navBarBoxStyles = {
     marginTop: "widget.mTop",
     paddingLeft: "widget.pLeftRight",
     paddingRight: "widget.pLeftRight",
-    paddingTop: "widget.pTopBottom",
-    paddingBottom: "widget.pTopBottom"
+    height: "70px",
+    alignContent: "center",
 }
 
 
@@ -73,11 +74,11 @@ const NavButton = ({ to, Icon, text}) => {
 export default function NavBar() {
     return(
         <Box {...navBarBoxStyles}>
-            <Flex justifyContent="space-between" alignItems="center">
+            <Flex justifyContent="space-between" alignItems="center" height="100%">
 
-                <HStack>
+                <HStack height="100%">
                     <LifeEngineLogo />
-
+                    <VerticalDivider />
                     <nav>
                         <HStack>
                             {navButtons.map((button) => (
