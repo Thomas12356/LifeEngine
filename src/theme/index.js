@@ -1,6 +1,5 @@
-import { Color, createSystem, defaultConfig } from "@chakra-ui/react"
+import { createSystem, defaultConfig } from "@chakra-ui/react"
 import { defineConfig } from "@chakra-ui/react";
-import { textStyles } from "@theme/textStyles";
 
 const customConfig = defineConfig( {
     globalCss: {
