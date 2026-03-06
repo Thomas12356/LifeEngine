@@ -3,12 +3,12 @@
  * @module CalendarHeader
  * @description Renders the header for the LifeEngine calendar, displaying the days of the week.
  * 
- * @WIP Header currently does not contain indicator for the current day & selected day
+ * @WIP Header currently does not contain indicator for the current day
  */
 
 /* --- IMPORTS --- */
 import { HStack, VStack, Text, Box } from "@chakra-ui/react"
-import { getWeekDays } from "../utils/dateHelpers.js"
+import { getWeekDays, isSameDay } from "../utils/dateHelpers.js"
 
 
 /* --- MAIN COMPONENT --- */
@@ -29,7 +29,9 @@ export default function CalendarHeader({ selectedDate }) {
             {days.map((day, index) => ( // Loop through the days of the week and render a header cell for each day
                 <VStack flex="1">
                     <Text>{day.toLocaleString('en-US', { weekday: 'short' })}</Text>
-                    <Text>{day.getDate()}</Text>
+                    <Box bgColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}> {/* Highlight the current day */}
+                        <Text>{day.getDate()}</Text>
+                    </Box>
                 </VStack>
             ))}
          </HStack>

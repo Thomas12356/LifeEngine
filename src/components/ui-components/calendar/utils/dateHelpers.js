@@ -15,7 +15,7 @@ import { startOfWeek } from "date-fns"
 /**
  * getWeekDays returns an array of objects representing the days of the week (Monday to Sunday) for a given date.
  * @param {Date} selectedDate - The date for which to calculate the week days.
- * @returns {Array} An array of date objects representing the days of the week for the given date.
+ * @returns {Array} An array of date objects representing the days of the week for the given date.  
  */
 export const getWeekDays = (selectedDate) => {
     const days = []
@@ -70,5 +70,19 @@ export const calculateEventPosition = (event) => {
         left: (dayIndex / 7) * 100, // percentage of the week
         width: (1 / 7) * 100 // percentage of the week for one day
     }
+}
+
+/**
+ * isSameDay checks if two dates fall on the same calendar day.
+ * @param {string|Date} date1 - Date 1
+ * @param {string|Date} date2 - Date 2
+ * @returns {boolean} True if the two dates are on the same calendar day, false otherwise.
+ */
+export const isSameDay = (date1, date2) => {
+    const d1 = new Date(date1)
+    const d2 = new Date(date2)
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate()
 }
 
