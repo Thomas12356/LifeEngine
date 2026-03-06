@@ -1,9 +1,22 @@
+/**
+ * @file useWeekEvents.js
+ * @module useWeekEvents
+ * @description Custom React hook for filtering events to display only those that fall within the currently selected week in the calendar. 
+ */
 
+/* --- IMPORTS --- */
 import { useState, useEffect } from "react"
 import { startOfWeek, endOfWeek } from "date-fns"
 
+/**
+ * useWeekEvents filters a list of events to include only those that occur within the week of the selected date.
+ * @param {Array} allEvents - An array of event objects.
+ * @param {Date} selectedDate - The currently selected date in the calendar.
+ * @returns {Array} An array of event objects that occur within the week of the selected date.
+ */
 export function useWeekEvents(allEvents, selectedDate) {
 
+    // State to hold the events for the current week
     const [weekEvents, setWeekEvents] = useState([])
 
     // Update state with filtered events

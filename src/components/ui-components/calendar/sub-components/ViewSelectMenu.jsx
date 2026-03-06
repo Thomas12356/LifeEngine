@@ -1,14 +1,18 @@
 /**
+ * @file ViewSelectMenu.jsx
+ * @module ViewSelectMenu
+ * @description Renders the view selection menu for the LifeEngine calendar, 
+ * allowing users to switch between day, week, and month views.
  * 
- * NOTE : This is a standard drop down selection menu which could be
- * re used for other purposes. If re-used, abstract to a global drop down component and pass in the options as props.
- * 
+ * @WIP View selection menu is currently a placeholder and does not affect the calendar view.
  */
 
+/* --- IMPORTS --- */
 import { Menu, Portal, Button, Stack, Text, Icon } from "@chakra-ui/react"
 import { FaAngleDown } from "react-icons/fa6"
 import { useState } from "react"
 
+/* --- MAIN COMPONENT --- */
 export default function ViewSelectMenu() {
 
     const [view, setView] = useState("week")

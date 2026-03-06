@@ -1,31 +1,46 @@
+/**
+ * @file DateSelectMenu.jsx
+ * @module DateSelectMenu
+ * @description Renders the date selection menu for the LifeEngine calendar.
+ * @NOTE : ArkUI DatePicker component uses a custom value format and change handler, 
+ * so we use a custom hook to convert between the standard JSDate format and the Ark UI format.
+ * 
+ * @WIP Currently the DatePicker trigger label does not update to display selected date 
+ * and the clear trigger does not jump to today's date. 
+ */
+
+/* --- IMPORTS ---*/
 import { DatePicker } from '@ark-ui/react/date-picker'
 import { Portal } from '@ark-ui/react/portal'
 import { Text, Button } from '@chakra-ui/react'
 import { LuChevronDown, LuChevronLeft, LuChevronRight } from 'react-icons/lu'
-
 import { useArkCalendar } from "../hooks/useArkCalendar.js"
 
+/* --- MAIN COMPONENT ---*/
+/**
+ * DateSelectMenu renders the date selection menu for the LifeEngine calendar.
+ * @param {Date} selectedDate - The date for which to display the calendar.
+ * @param {Function} setSelectedDate - A function to update the selected date.
+ * @returns {JSX.Element} A Custom DatePicker component containing the date selection menu.
+ */
 export default function DateSelectMenu({ selectedDate, setSelectedDate }) {
-
-  console.log("DateSelectMenu rendered with selectedDate:", selectedDate)
-
+  // Use the custom hook to get the Ark UI calendar value and change handler
   const { arkValue, handleDateChange } = useArkCalendar(selectedDate, setSelectedDate);
-
 
   return (
     <DatePicker.Root
       value={arkValue}
-      onValueChange={handleDateChange}
-      selectionMode='single'
+      onValueChange={handleDateChange} // Update the selected date when the user selects a new date
+      selectionMode='single' // Set the selection mode to single, allowing only one date to be selected at a time
     >
       <DatePicker.Control>
         <DatePicker.Trigger>
             <Button>
-                <Text>March 2026</Text>
+                <Text>March 2026</Text> {/* TODO: Update this to display the currently selected date */}
                 <LuChevronDown />
             </Button>
         </DatePicker.Trigger>
-        <DatePicker.ClearTrigger>Today</DatePicker.ClearTrigger>
+        <DatePicker.ClearTrigger>Today</DatePicker.ClearTrigger> {/* TODO: Fix clear trigger to jump to today's date */}
       </DatePicker.Control>
       <Portal>
         <DatePicker.Positioner>
