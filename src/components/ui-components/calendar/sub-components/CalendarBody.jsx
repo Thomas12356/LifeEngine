@@ -108,19 +108,21 @@ export default function CalendarBody({ events}) {
     const hours = Array.from({ length: 24 }, (_, i) => i) // Create an array of hours from 0 to 23 for the time axis
 
     return (
-        <HStack align="start" spacing={0} w="100%">
-            <VStack w="60px" h="1440px" position="relative"> {/* Container for the time axis */}
-                {hours.map(hour => ( // Loop through hours and render time labels inside the container
-                    <Text key={hour} top={`${hour * 60}px`} position="absolute">
-                        {hour}:00
-                    </Text>
-                ))}
-            </VStack>
-            <Box flex="1" h="1440px" position="relative"> {/* Main calendar body container */}
-                <GridBackground />
-                <EventLayer events={events} />
-                <TimeIndicator />
-            </Box>
-        </HStack>
+        <Box w="100%" h="calc(100vh - 200px)" overflowY="auto" position="relative"> {/* Main container for the calendar body */}
+            <HStack align="start" spacing={0} w="100%">
+                <VStack w="60px" h="1440px" position="relative"> {/* Container for the time axis */}
+                    {hours.map(hour => ( // Loop through hours and render time labels inside the container
+                        <Text key={hour} top={`${hour * 60}px`} position="absolute">
+                            {hour}:00
+                        </Text>
+                    ))}
+                </VStack>
+                <Box flex="1" h="1440px" position="relative"> {/* Main calendar body container */}
+                    <GridBackground />
+                    <EventLayer events={events} />
+                    <TimeIndicator />
+                </Box>
+            </HStack>
+        </Box>
     )
 }

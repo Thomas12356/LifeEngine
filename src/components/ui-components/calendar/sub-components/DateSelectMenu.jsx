@@ -12,7 +12,7 @@
 /* --- IMPORTS ---*/
 import { DatePicker } from '@ark-ui/react/date-picker'
 import { Portal } from '@ark-ui/react/portal'
-import { Text, Button } from '@chakra-ui/react'
+import { Text, HStack } from '@chakra-ui/react'
 import { LuChevronDown, LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 import { useArkCalendar } from "../hooks/useArkCalendar.js"
 
@@ -35,8 +35,10 @@ export default function DateSelectMenu({ selectedDate, setSelectedDate }) {
     >
       <DatePicker.Control>
         <DatePicker.Trigger>
-          <Text>March 2026</Text> {/* TODO: Update this to display the currently selected date */}
-          <LuChevronDown />
+          <HStack>
+            <Text>{selectedDate.toDateString()}</Text> {/* Display the currently selected date in a human-readable format */}
+            <LuChevronDown /> {/* Icon indicating that this is a dropdown menu */}
+          </HStack>
         </DatePicker.Trigger>
       </DatePicker.Control>
       <Portal>
