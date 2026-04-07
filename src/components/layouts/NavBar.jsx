@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import LifeEngineLogo from "@ui-components/LifeEngineLogo";
 import VerticalDivider from "@ui-components/VerticalDivider";
 {/* Assets */}
-
+{/* TODO - replace with actual icons */}
 {/* Temporary Dev Imports */}
 import { FaBeer } from "react-icons/fa";
 
