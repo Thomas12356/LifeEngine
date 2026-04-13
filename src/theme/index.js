@@ -1,26 +1,29 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react"
 import { defineConfig } from "@chakra-ui/react";
+import { GiApc } from "react-icons/gi";
 
 const customConfig = defineConfig( {
     globalCss: {
         body: {
-            margin: 0,
-            padding: 0,
-            textStyle: "body",
             fontFamily: "Mukta, sans-serif",
+
         },
     },
     theme:{
         textStyles: {
-            defaultSolid: {
-                fontSize: "md",
-                fontWeight: "normal",
-                color: "text.solid"
+            "headingSolid": {
+                value: {
+                    fontSize: "lg",
+                    fontWeight: "500",
+                    color: "text.solid"
+                }
             },
-            defaultGrey: {
-                fontSize: "md",
-                fontWeight: "normal",
-                color: "brand.gray"
+            "defaultGrey": {
+                value: {
+                    fontSize: "md",
+                    fontWeight: "normal",
+                    color: "brand.gray"
+                }
             }
             
         },
