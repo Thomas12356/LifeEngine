@@ -13,10 +13,7 @@ export default function AgentChat() {
     return (
         <VStack>
             <AgentChatHeader />
-            <HStack>
-                <AgentChatWindow chatHistory={chatHistory} />
-                <AgentSuggestionWindow />
-            </HStack>
+            <AgentChatWindow chatHistory={chatHistory} />
             <AgentTextInput onSendMessage={sendMessage} />
         </VStack>
     )
