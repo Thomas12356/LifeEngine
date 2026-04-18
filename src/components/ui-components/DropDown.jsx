@@ -22,7 +22,7 @@ export default function DropDown({ type, option }) {
     return(
         <HStack>
             <Text>{type}</Text>
-            <Menu.Root positioning={{placement : "right-start"}}>
+            <Menu.Root>
                 <Menu.Trigger asChild>
                     {/* Custom button variant needed */}
                     <Button variant="plain" color={"brand.blueDark"} size={"sm"}>
