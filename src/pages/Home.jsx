@@ -6,7 +6,7 @@
  * @component
  * @returns {JSX.Element} The Home page component
  *
- * Last updated: 21/02/2026
+ * Last updated: 18/04/2026
  */
 
 /* ---------- Imports Chakra UI ----------*/
