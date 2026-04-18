@@ -6,7 +6,7 @@
  * @component
  * @returns {JSX.Element} ResourceSelect component
  *
- * Last updated: 13/04/2026 by te215@kent.ac.uk
+ * Last updated: 18/04/2026 by te215@kent.ac.uk
  */
 
 import { HStack, Text, Menu, Button } from "@chakra-ui/react";
