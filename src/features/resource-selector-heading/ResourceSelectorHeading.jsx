@@ -14,7 +14,8 @@
  * - Add Styling and Theming
  */
 
-import ResourceSelect from "./components/ResourceSelect"
+import ResourceSelect from "./components/ResourceSelect";
+import DropDown from "@ui-components/DropDown";
 import { HStack, VStack, Text, Stack } from "@chakra-ui/react";
 
 export default function ResourceSelectorHeading() {
@@ -28,8 +29,8 @@ export default function ResourceSelectorHeading() {
             </Stack>
 
             <HStack>
-                <ResourceSelect resource="Focus" />
-                <ResourceSelect resource="Energy" />
+                <DropDown type={"Focus"} option={0}></DropDown>
+                <DropDown type={"Energy"} option={0}></DropDown>
             </HStack>
         
         </HStack>
