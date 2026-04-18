@@ -14,7 +14,7 @@ import { useState } from "react";
 
 export default function DropDown({ type, option }) {
     {/* { type } will make an api call and run the handler named { type } */}
-    var temptypeOptions = ["Normal", "Exercise"];
+    var temptypeOptions = ["Normal", "Exercise", "8:00 AM"];
     var temptypeStartOption = option;
 
     const [selected, setSelected] = useState(temptypeOptions[temptypeStartOption]);
@@ -22,16 +22,16 @@ export default function DropDown({ type, option }) {
     return(
         <HStack>
             <Text>{type}</Text>
-            <Menu.Root>
+            <Menu.Root positioning={{placement : "right-start"}}>
                 <Menu.Trigger asChild>
-                    <Button variant="outline" size="sm">
+                    {/* Custom button variant needed */}
+                    <Button variant="plain" color={"brand.blueDark"} size={"sm"}>
                         {selected}
-                        {/*replace with drop down icon */}
-                        <Text>^</Text>
+                        {/*drop down icon */}
                     </Button>
                 </Menu.Trigger>
                 <Menu.Positioner>
-                    <Menu.Content>
+                    <Menu.Content maxH="200px" minW={"10rem"}>
                         {temptypeOptions.map((opt) => (
                             <Menu.Item 
                                 key={opt} 
