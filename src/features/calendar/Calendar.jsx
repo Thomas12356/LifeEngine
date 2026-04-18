@@ -1,7 +1,7 @@
 import { VStack, Text } from "@chakra-ui/react"
-import CalendarMenu from "@/features/calendar/sub-components/CalendarMenu"
-import CalendarHeader from "@/features/calendar/sub-components/CalendarHeader"
-import CalendarBody from "@/features/calendar/sub-components/CalendarBody"
+import CalendarMenu from "@/features/calendar/components/CalendarMenu"
+import CalendarHeader from "@/features/calendar/components/CalendarHeader"
+import CalendarBody from "@/features/calendar/components/CalendarBody"
 import { useState } from "react"
 import { useWeekEvents } from "@/features/calendar/hooks/useWeekEvents"
 
