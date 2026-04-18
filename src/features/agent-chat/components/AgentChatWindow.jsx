@@ -1,5 +1,5 @@
 import { VStack, Text } from "@chakra-ui/react"
-import useChatHistory from "./useChatHistory"
+import useChatHistory from "../hooks/useChatHistory"
 
 export default function AgentChatWindow() {
 
