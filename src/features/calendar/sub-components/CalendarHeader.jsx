@@ -27,7 +27,7 @@ export default function CalendarHeader({ selectedDate }) {
         <HStack w="100%" spacing={0}>
             <Box w="60px"/>
             {days.map((day, index) => ( // Loop through the days of the week and render a header cell for each day
-                <VStack flex="1">
+                <VStack key={index} flex="1">
                     <Text>{day.toLocaleString('en-US', { weekday: 'short' })}</Text>
                     <Box bgColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}> {/* Highlight the current day */}
                         <Text>{day.getDate()}</Text>

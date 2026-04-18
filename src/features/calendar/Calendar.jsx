@@ -1,7 +1,9 @@
 import { VStack, Text } from "@chakra-ui/react"
-import { CalendarMenu, CalendarHeader, CalendarBody } from "@ui-components/calendar"
+import CalendarMenu from "@/features/calendar/sub-components/CalendarMenu"
+import CalendarHeader from "@/features/calendar/sub-components/CalendarHeader"
+import CalendarBody from "@/features/calendar/sub-components/CalendarBody"
 import { useState } from "react"
-import { useWeekEvents } from "@ui-components/calendar/hooks/useWeekEvents"
+import { useWeekEvents } from "@/features/calendar/hooks/useWeekEvents"
 
 // Dummy event data for testing
 const allEvents = [
@@ -37,7 +39,7 @@ const allEvents = [
     },
 ]
 
-export default function CalendarLayout() {
+export default function Calendar() {
 
     const [selectedDate, setSelectedDate] = useState(new Date())
     const weekEvents = useWeekEvents(allEvents, selectedDate);

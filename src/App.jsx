@@ -15,6 +15,7 @@ export default function App() {
             <BrowserRouter>
 
             <Box
+                position="fixed"
                 top="0"
                 left="0"
                 w="100vw"

@@ -9,10 +9,13 @@
  * Last updated: 21/02/2026
 */
 
-import CalendarLayout from "@layouts/CalendarLayout";
+import { Box } from "@chakra-ui/react";
+import Calendar from "@/features/calendar/Calendar";
 
 export default function CalendarPage() {
     return (
-        <CalendarLayout />
+        <Box>
+            <Calendar />
+        </Box>
     )
 }

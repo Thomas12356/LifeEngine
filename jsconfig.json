@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@pages/*": ["src/pages/*"],
+      "@pages/*": ["./src/pages/*"],
       "@ui-components/*": ["./src/components/ui-components/*"],
       "@theme/*": ["./src/theme/*"],
     }
