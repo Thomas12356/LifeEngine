@@ -31,7 +31,7 @@ const navBarIconStyles = {
 }
 {/* NavBar Styles */}
 const navBarBoxStyles = {
-    bg: "white",
+    bg: "brand.white",
     borderRadius: "widgetRadii",
     marginLeft: "widget.mLeftRight",
     marginRight: "widget.mLeftRight",
