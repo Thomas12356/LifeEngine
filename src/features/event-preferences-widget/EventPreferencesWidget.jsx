@@ -5,7 +5,10 @@ import DropDown from "@ui-components/DropDown"
 export default function EventPreferenceWidget({...props}){
     return(
         <WidgetBox {...props}>
+            <Stack direction={"row"}>
             <Text textStyle={"headingSolid"}>Event Preferences</Text>
+            <DropDown option={1}/>
+            </Stack>
             <Stack mt={"general.xsSpacing"}>
             <DropDown type={"Energy Level:"} option={0}/>
             <DropDown type={"Focus Level:"} option={0}/>

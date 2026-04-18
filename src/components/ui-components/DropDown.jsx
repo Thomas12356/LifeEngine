@@ -25,7 +25,7 @@ export default function DropDown({ type, option }) {
             <Menu.Root>
                 <Menu.Trigger asChild>
                     {/* Custom button variant needed */}
-                    <Button variant="plain" color={"brand.blueDark"} size={"sm"}>
+                    <Button variant="outline" color={"brand.blueDark"} size={"sm"}>
                         {selected}
                         {/*drop down icon */}
                     </Button>
