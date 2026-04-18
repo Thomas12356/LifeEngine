@@ -3,11 +3,11 @@
 The full sized agent chat component used on the dedicated agent page, some sub components may be reused
 for smaller widgets 
 
-** WIP - Unfinished UI, No Logic, No Styling **
+** WIP - Basic state logic, No Styling, No API connection **
 
 * TODO *
-1. Create send button for text box
-2. Wire message send logic with state chat history
+1. Format user & agent chats differently
+2. Contain chat window to scrollable box
 
 * Sub-components road map *
 - AgentChatHeader ** WIP **
@@ -20,5 +20,5 @@ for smaller widgets
 - AgentSuggestionWindow ** WIP **
     1. AgentSuggestion components []
 - AgentTextInput ** WIP **
-    1. Text input bar []
-    2. Send icon button []
+    1. Text input bar [x]
+    2. Send icon button [x]
