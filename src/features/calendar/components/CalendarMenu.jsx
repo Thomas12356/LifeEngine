@@ -3,6 +3,7 @@
 import { HStack } from "@chakra-ui/react"
 import DateSelectMenu from "./DateSelectMenu"
 import ViewSelectMenu from "./ViewSelectMenu"
+import AddEventButton from "./AddEventButton"
 
 /**
  * CalendarMenu renders the menu for the LifeEngine calendar, providing options to select the date and view.
@@ -17,6 +18,7 @@ export default function CalendarMenu( { selectedDate, setSelectedDate }) {
         <HStack>
             <DateSelectMenu selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             <ViewSelectMenu />
+            <AddEventButton />
         </HStack>
     )
 }
