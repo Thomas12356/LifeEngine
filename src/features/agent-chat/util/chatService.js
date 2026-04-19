@@ -1,4 +1,4 @@
-
+// NOTE : Replace this file with API calls for chat services.
 
 // Dummy chat history data, replace with API fetch call
 export const chatHistory = {
