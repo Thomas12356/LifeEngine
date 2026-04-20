@@ -8,6 +8,7 @@ import NavBar from "@/features/navbar/NavBar"
 import Home from "@pages/Home"
 import Agent from "@pages/Agent"
 import Profile from "@pages/Profile"
+import CalendarPage from "@pages/CalendarPage"
 
 export default function App() {
     return (
@@ -31,7 +32,7 @@ export default function App() {
 
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/calendar" element={<h1>Calendar</h1>} />
+                    <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/agent" element={<Agent />} />
                 </Routes>
