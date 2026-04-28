@@ -13,3 +13,7 @@
 - Waste penalties have now been added, the consider the value of the time slot and have a weighted multiplier to lower their overall impact on the net score.
 - Calculate Net Score Function has now been added.
 
+## V.1.1 Fix Waste Cost
+### Changes
+- Waste cost only considered energy previously, now it considers both energy and focus.
+

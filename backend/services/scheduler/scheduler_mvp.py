@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 #Config
 #Weights
+#How Aggressively to penalize low demand events in high value time slots.
 WASTE_COST_WEIGHT = 0.5
 
 @dataclass
@@ -26,12 +27,14 @@ def time_slot_value(timeslot):
     return (timeslot.predicted_energy + timeslot.predicted_focus) / 2
 
 def waste_cost(event, timeslot):
-    return time_slot_value(timeslot) * (1 - event.ideal_energy) * WASTE_COST_WEIGHT
+    event_demand_value = (event.ideal_energy + event.ideal_focus) / 2
+    return time_slot_value(timeslot) * (1 - event_demand_value) * WASTE_COST_WEIGHT
 
 def compute_net_score(event, timeslot):
-    fit_score = score_fit(event, timeslot) - waste_cost(event, timeslot)
+    fit_score = score_fit(event, timeslot)
     cost = waste_cost(event, timeslot)
-    return fit_score - cost
+    #Prevent negative scores - avoid very low demand events that are being scheduled in high value slots producing negative net scores
+    return max(0.0 ,fit_score - cost)
 
 #Test
 def test():
