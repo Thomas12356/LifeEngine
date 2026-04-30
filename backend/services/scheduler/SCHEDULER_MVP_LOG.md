@@ -24,19 +24,20 @@
 
 ## V.1.3 In Progress
 ### Issues found in V.1.2
-- **TODO** Transition from symmetric -> asymmetric scoring
-- **TODO** Priority Events
-- **TODO** harmonic mean, if a task requires 1 focus and the slot has 0 the task is impossible even if the energy matches perfectly. Using the Harmonic Mean ensures that if either fit is near zero, the total score crashes.
-- **TODO** Both score-fit and waste consider excess resources, score fit should be changed to avoid this.
-- **Done** currently the weighted score fit average doesnt consider the weight and needs to be chnaged to a waited average.
-- **TODO** change weights to ratio's rather than percentages.
+- **Todo** Test different coeficients on the fitnes equation with graph view to find starting point.
+- **Done** Transition from symmetric -> asymmetric scoring
+- **Check?** change weights to ratio's rather than percentages.
 - **Done** Quadratic scoring
-- **Done** Quadratic waste 
+- **Done** currently the weighted score fit average doesnt consider the weight and needs to be chnaged to a waited average.
+- **Done** Quadratic waste and exponent.
 
 ## Future Goals / Fixes
+### Scoring Goals / Fixes
 - **Maybe?** TESTING -> max(0.0, ...) silently hides problematic pairings: logging when it clamps so we can tune WASTE_COST_WEIGHT later?
 - default event types + optional custom properties.
 - Hungarian Algorithm for arranging schedule
 - Time ranges
+- Priority Events
+- **Maybe?** harmonic mean, if a task requires 1 focus and the slot has 0 the task is impossible even if the energy matches perfectly. Using the Harmonic Mean ensures that if either fit is near zero, the total score crashes.
 
 

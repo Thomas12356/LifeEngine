@@ -1,5 +1,6 @@
 #V.1
 from dataclasses import dataclass
+import math
 
 #Config
 #Weights
@@ -33,7 +34,7 @@ def score_fit(event, timeslot):
         if predicted > ideal:
             gap *= WASTE_COST_WEIGHT
 
-        resource_fit = 1 - gap ** 2
+        resource_fit = math.exp(- 6*(gap ** 2))
 
         return resource_fit
 
@@ -45,17 +46,6 @@ def score_fit(event, timeslot):
 
     return (energy_fit * event.EventType.energy_weight + focus_fit * event.EventType.focus_weight) / total_weight
 
-# def time_slot_value(timeslot):
-#     return (timeslot.predicted_energy + timeslot.predicted_focus) / 2
-
-# def waste_cost(event, timeslot):
-#     event_demand_value = (event.EventType.ideal_energy + event.EventType.ideal_focus) / 2
-#     if event_demand_value < time_slot_value(timeslot):
-#         gap = time_slot_value(timeslot) - event_demand_value
-#         #quadratic penalty
-#         return (gap ** 2) * WASTE_COST_WEIGHT
-#     else:
-#         return 0.0
 
 def compute_net_score(event, timeslot):
     fit_score = score_fit(event, timeslot)
@@ -64,9 +54,9 @@ def compute_net_score(event, timeslot):
 
 #Test
 def test():
-    event_type = EventType("Work", ideal_energy=0, ideal_focus=0, energy_weight=1, focus_weight=1)
+    event_type = EventType("Work", ideal_energy=0.8, ideal_focus=0.8, energy_weight=1, focus_weight=1)
     event = Event("meeting", EventType=event_type)
-    timeslot = TimeSlot(hour=10, predicted_energy=0.5, predicted_focus=0.5)
+    timeslot = TimeSlot(hour=10, predicted_energy=1, predicted_focus=1)
     
     fit_score = score_fit(event, timeslot)
     net_score = compute_net_score(event, timeslot)
