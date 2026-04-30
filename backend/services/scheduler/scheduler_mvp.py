@@ -59,9 +59,8 @@ def score_fit(event, timeslot):
 
 def compute_net_score(event, timeslot):
     fit_score = score_fit(event, timeslot)
-    cost = waste_cost(event, timeslot)
     #Prevent negative scores - avoid very low demand events that are being scheduled in high value slots producing negative net scores
-    return max(0.0 ,fit_score - cost)
+    return max(0.0 ,fit_score)
 
 #Test
 def test():
