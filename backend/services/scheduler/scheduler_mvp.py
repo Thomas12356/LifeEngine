@@ -7,6 +7,14 @@ from dataclasses import dataclass
 WASTE_COST_WEIGHT = 0.5
 
 @dataclass
+class EventType:
+    name: str
+    ideal_energy: float
+    ideal_focus: float
+    energy_weight: float
+    focus_weight: float
+
+@dataclass
 class Event:
     name: str
     EventType: EventType
@@ -17,18 +25,18 @@ class TimeSlot:
     predicted_energy: float # (low = 0, medium = 0.5, high = 1)
     predicted_focus: float # (low = 0, medium = 0.5, high = 1)
 
-@dataclass
-class EventType:
-    name: str
-    ideal_energy: float
-    ideal_focus: float
-    energy_weight: float
-    focus_weight: float
-
 def score_fit(event, timeslot):
-    energy_fit = 1 - (event.EventType.ideal_energy - timeslot.predicted_energy) ** 2
-    focus_fit = 1 - (event.EventType.ideal_focus - timeslot.predicted_focus) ** 2
-    return (energy_fit * event.EventType.energy_weight + focus_fit * event.EventType.focus_weight) / 2
+    if event.EventType.ideal_energy < timeslot.predicted_energy:
+        energy_fit = 1.0
+    else:
+        energy_fit = 1 - (event.EventType.ideal_energy - timeslot.predicted_energy) ** 2
+    if event.EventType.ideal_focus < timeslot.predicted_focus:
+        focus_fit = 1.0
+    else:
+        focus_fit = 1 - (event.EventType.ideal_focus - timeslot.predicted_focus) ** 2
+
+    total_weight = event.EventType.energy_weight + event.EventType.focus_weight
+    return (energy_fit * event.EventType.energy_weight + focus_fit * event.EventType.focus_weight) / total_weight
 
 def time_slot_value(timeslot):
     return (timeslot.predicted_energy + timeslot.predicted_focus) / 2
@@ -50,9 +58,9 @@ def compute_net_score(event, timeslot):
 
 #Test
 def test():
-    event_type = EventType("Work", ideal_energy=0, ideal_focus=1, energy_weight=0.5, focus_weight=0.5)
+    event_type = EventType("Work", ideal_energy=0, ideal_focus=0, energy_weight=1, focus_weight=1)
     event = Event("meeting", EventType=event_type)
-    timeslot = TimeSlot(hour=10, predicted_energy=1, predicted_focus=0.3)
+    timeslot = TimeSlot(hour=10, predicted_energy=0.5, predicted_focus=0.5)
     
     fit_score = score_fit(event, timeslot)
     net_score = compute_net_score(event, timeslot)
