@@ -26,6 +26,7 @@
 ### Issues found in V.1.2
 - **Todo** Test different coeficients on the fitnes equation with graph view to find starting point.
 - **Done** Transition from symmetric -> asymmetric scoring
+- **Done** Replace additive scoring with multiplicative to better model resource interdependence and fitness collapse
 - **Check?** change weights to ratio's rather than percentages.
 - **Done** Quadratic scoring
 - **Done** currently the weighted score fit average doesnt consider the weight and needs to be chnaged to a waited average.

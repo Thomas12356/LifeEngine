@@ -34,7 +34,7 @@ def score_fit(event, timeslot):
         if predicted > ideal:
             gap *= WASTE_COST_WEIGHT
 
-        resource_fit = math.exp(- 6*(gap ** 2))
+        resource_fit = - 6*(gap ** 2)
 
         return resource_fit
 
@@ -43,9 +43,9 @@ def score_fit(event, timeslot):
     focus_fit = calculate_resource_fit( event.EventType.ideal_focus, timeslot.predicted_focus)
 
     total_weight = (event.EventType.energy_weight + event.EventType.focus_weight)
+    avg_fit = (energy_fit * event.EventType.energy_weight + focus_fit * event.EventType.focus_weight) / total_weight
 
-    return (energy_fit * event.EventType.energy_weight + focus_fit * event.EventType.focus_weight) / total_weight
-
+    return math.exp(avg_fit)
 
 def compute_net_score(event, timeslot):
     fit_score = score_fit(event, timeslot)
@@ -54,14 +54,15 @@ def compute_net_score(event, timeslot):
 
 #Test
 def test():
-    event_type = EventType("Work", ideal_energy=0.8, ideal_focus=0.8, energy_weight=1, focus_weight=1)
+    event_type = EventType("Work", ideal_energy=0.6, ideal_focus=0.8, energy_weight=1, focus_weight=5)
     event = Event("meeting", EventType=event_type)
     timeslot = TimeSlot(hour=10, predicted_energy=1, predicted_focus=1)
     
     fit_score = score_fit(event, timeslot)
     net_score = compute_net_score(event, timeslot)
-    
-    print(f"Fit Score: {fit_score}")
-    print(f"Net Score: {net_score}")
 
-test()
+    print(f"Fit Score : {fit_score}")
+    print(f"Net Score : {net_score}")
+
+if __name__ == "__main__":
+    test()
