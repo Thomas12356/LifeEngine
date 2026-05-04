@@ -2,32 +2,35 @@
 Util functions for authentication
 """
 
-from hashlib import sha256
+import hashlib
 from os import urandom
 import hmac
 
 # ! for production move to env variable.
 PEPPER = ""
+pbkdf2_complexity = 600000
+
+
 
 def generate_hash(password):
     """
-    Generates a salted and peppered hash for a password.
+    Generates a salted and peppered pbkdf2 hash for a password.
     """
-
     salt = urandom(32).hex()
 
-    salted_peppered_password = password + salt + PEPPER
-    password_hash = sha256(salted_peppered_password.encode()).hexdigest()
+    peppered_password = password + salt + PEPPER
+    
+    password_hash = hashlib.pbkdf2_hmac('sha256', peppered_password.encode('utf-8'), salt.encode('utf-8'), pbkdf2_complexity)
 
-    return password_hash, salt
+    return password_hash.hex(), salt
 
 
 def verify_password(password, stored_salt, stored_hash):
     """
-    Verifies a password against its stored hash.
+    Verifies a password against its stored pbkdf2 hash.
     """
     
     salted_peppered_password = password + stored_salt + PEPPER
-    password_hash = sha256(salted_peppered_password.encode()).hexdigest()
+    new_password_hash = hashlib.pbkdf2_hmac('sha256', salted_peppered_password.encode('utf-8'), stored_salt.encode('utf-8'), pbkdf2_complexity)
 
-    return hmac.compare_digest(password_hash, stored_hash)
+    return hmac.compare_digest(new_password_hash.hex(), stored_hash)
