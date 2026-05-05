@@ -57,6 +57,9 @@ class CandidateSchedule:
 population_size = 50
 num_generations = 100
 WAKE_UP_TIME = 7 # 7am
+SLEEP_DURATION = 8
+BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24
+
 
 population = list[CandidateSchedule]
 
@@ -150,6 +153,7 @@ class SchedulerGA:
         input("Press Enter to view best simulation individual...")
         self.visualise_individual(best_simulation_individual)
 
+    # DEPRECIATED
     def evaluate_fitness(self, candidate):
         # --------------------- LAYER 1 (ENERGY MATCHING)----------------------------
         total_score = 0.0
@@ -205,10 +209,13 @@ class SchedulerGA:
             predicted_energy, predicted_focus = self.energy_focus_landscape[clock_hour]
             effective_energy = predicted_energy - (s * 0.5) - residual_fatigue
             if event is not None:
-                if effective_energy < 0:
-                    task_yield = (importance * 0.01) + (effective_energy * 0.5)
+                if clock_hour < BED_TIME and clock_hour >= WAKE_UP_TIME: # Only apply yield if event is scheduled during waking hours
+                    if effective_energy < 0:
+                        task_yield = (importance * 0.01) + (effective_energy * 0.5)
+                    else:
+                        task_yield = importance * math.pow(effective_energy, k)
                 else:
-                    task_yield = importance * math.pow(effective_energy, k)
+                    task_yield = -10 # Heavy penalty for scheduling events during sleep hours
                 consecutive_hours += 1
                 drain = intensity * math.pow((1 + alpha), consecutive_hours - 1)
                 residual_fatigue += drain
@@ -217,7 +224,7 @@ class SchedulerGA:
                 consecutive_hours = 0
                 residual_fatigue *= 0.7
             
-            if True:
+            if False: # Set to True to enable detailed logging of the simulation process
                 if event is not None:
                     print(f"Hour {clock_hour}: Event: {event.name if event else 'Free'}, Predicted Energy: {predicted_energy}, Effective Energy: {effective_energy}, Task Yield: {task_yield if event else 'N/A'}, Residual Fatigue: {residual_fatigue}, S value: {s}")
                 else:
