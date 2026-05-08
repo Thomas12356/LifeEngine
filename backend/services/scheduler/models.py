@@ -7,6 +7,8 @@ class EventType:
     ideal_focus: float
     energy_weight: float
     focus_weight: float
+    impact : float
+    burnout_rate : float
 
 @dataclass
 class Event:
@@ -20,3 +22,4 @@ class TimeSlot:
     hour: int # 0-23
     predicted_energy: float # (low = 0, medium = 0.5, high = 1)
     predicted_focus: float # (low = 0, medium = 0.5, high = 1)
+    effective_energy: float = 0.0
