@@ -1,3 +1,13 @@
+"""
+
+
+    NOTE : THIS CODE IS DEPRECIATED, FUNCTIONS HAVE BEEN REFACTORED INTO EVALUATOR CLASS
+
+
+"""
+
+
+
 #V.1
 from models import EventType, Event, TimeSlot
 import math

@@ -7,6 +7,8 @@
 
     Currently focus is only modelled as a function of energy.
 
+    NOTE : THIS FILE SHOULD BE REVIEWED FOR A REFACTOR
+
 """
 import math
 import numpy as np
