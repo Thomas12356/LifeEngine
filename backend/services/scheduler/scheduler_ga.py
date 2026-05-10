@@ -63,6 +63,7 @@ from scheduler_mvp import compute_net_score
 from models import EventType, Event, TimeSlot
 from dataclasses import dataclass
 import random
+import copy
 
 # NOTE : These constants should be moved to a GA config file
 population_size = 50
@@ -81,12 +82,12 @@ event_types = {
 
 # Placeholder for storing events fed into the GA
 events_to_schedule = [
-    Event("Task 1", event_types["Work"], start_time=9, duration=2),
-    Event("Task 2", event_types["Work"], start_time=None, duration=2),
-    Event("Work meeting", event_types["Work"], start_time=12, duration=1),
-    Event("Evening Workout", event_types["Exercise"], start_time=17, duration=1),
-    Event("Study Session", event_types["Study"], start_time=None, duration=2),
-    Event("Read budget report", event_types["Work"], start_time=None, duration=1),
+    Event(1, "Task 1", event_types["Work"], start_time=9, duration=2),
+    Event(2, "Task 2", event_types["Work"], start_time=None, duration=2),
+    Event(3, "Work meeting", event_types["Work"], start_time=12, duration=1),
+    Event(4, "Evening Workout", event_types["Exercise"], start_time=17, duration=1),
+    Event(5, "Study Session", event_types["Study"], start_time=None, duration=2),
+    Event(6, "Read budget report", event_types["Work"], start_time=None, duration=1),
 ]
 
 class SchedulerGA:
@@ -94,6 +95,7 @@ class SchedulerGA:
         self.events = events
         self.energy_focus_landscape = energy_focus_landscape
         self.population = self.initialise_population()
+        self.next_gen = []
         self.fixed_events = []
         self.flexible_events = []
         self.base_schedule = []
@@ -136,7 +138,34 @@ class SchedulerGA:
             population.append(candidate) # Update population with new candidate
 
         return population
+    
+    def tournament_selection(self, k):
 
+        selection = random.sample(self.population, k) # Randomly select k individuals
+        return max(selection, key=lambda ind:ind.simulation_score) # Return the best from the selection
+
+    def crossover(self, parent1, parent2):
+
+        crossover_point = random.randint(0, 23) # Randomly select a point to split each parent
+
+        # Breed parents to create offspring using deep copy to break references
+        child1_slots = copy.deepcopy(parent1.timeslots[:crossover_point] + parent2.timeslots[crossover_point:])
+        child2_slots = copy.deepcopy(parent2.timeslots[:crossover_point] + parent1.timeslots[crossover_point:])
+
+        # Filter through time slots to build list of events
+        #child1_events = [timeslot.event for timeslot in child1_slots if timeslot is not None]
+        #child2_events = [timeslot.event for timeslot in child2_slots if timeslot is not None]
+
+        # Create schedule objects using childrens event lists
+        child1 = Schedule(id=len(self.next_gen), events=self.events)
+        child2 = Schedule(id=len(self.next_gen.len) + 1, events=self.events)
+
+        # Set children timeslots
+        child1.timeslots = child1_slots
+        child2.timeslots = child2_slots
+
+        # NOTE: Children need to be repaired to ensure schedules stay valid (no repeat events)
+        return child1, child2
 
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
 

@@ -12,6 +12,7 @@ class EventType:
 
 @dataclass
 class Event:
+    event_id : int
     name: str
     EventType: EventType
     start_time: None
