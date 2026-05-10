@@ -75,3 +75,88 @@ class Schedule:
         self.match_fitness = 0.0
         self.simulation_score = 0.0
         self.total_fitness = 0.0
+
+    def repair(self):
+        
+        # 3 CASES WHERE REPAIR IS NEEDED
+        #   - Duplicate events
+        #       - Collect all scheduled events and check for duplicates
+        #       - Remove instance with lower effective energy
+        #   - Missing events
+        #       - Build a list of events present in the schedule
+        #       - Compare against self.events (master list, must be clean)
+        #       - Attempt to greedy insert each missing event
+        #   - Fragmented events
+        #       - Scan list of scheduled events
+        #       - Check each event to see if it occupies duration number of slots
+
+        # STEP 1. Check for fragmented events
+        unscheduled_events = []
+        i = 0 # Intialise pointer
+        while i < len(self.timeslots):
+            slot = self.timeslots[i] # Current timeslot being viewed
+
+            if slot is None: # Check if an event has been scheduled in current timeslot
+                i += 1
+                continue # If not increment pointer and move jump back to top of loop
+
+            event = slot.event # Event scheduled in current timeslot
+            duration = event.duration
+            is_fragmented = False # Initialise flag to exit loop
+
+            # Check temporal integrity (event start at the correct time)
+            if event.start_time is not None: # Check if event has a fixed start time
+                if event.start_time != i: # If there is a discrepancy between start times, event has been fragemented
+                    is_fragmented = True
+
+            # NOTE : We can instantly tell if a fixed event has been fragemented by comparing correct and actual start times
+            # Since the loop jumps when an event has been checked we will always be looking at the start of an event, even if it spans multiple timeslots
+
+            # Check structural integrity (full duration is met)
+            if not is_fragmented:
+                for d in range(duration): # Iterate over event duration
+                    if i + d >= len(self.timeslots): # Check if event has been cutoff by end-of-day
+                        is_fragmented == True
+                        break
+                    target = self.timeslots[i + d] # Set target slot to where the next block of the event should be scheduled
+                    if target == None or target.event.event_id != event.event_id: # Check if timeslot if empty or contains a different event
+                        is_fragmented = True
+                        break
+            
+            # Resolve by removing fragements and pushing event into unscheduled_events
+            if is_fragmented: # Event has been fragmented
+                current_id = event.event_id
+                while i < len(self.timeslots): # Iterate over each subsequent time slot 
+                    if self.timeslots[i] != None and (self.timeslots[i].event.event_id == current_id): # Check if timeslot contains a fragment
+                        self.timeslots[i] = None # Clear the timeslot
+                        i += 1 # Increment pointer
+                if event not in unscheduled_events:
+                    unscheduled_events.append(event) # Push event to unscheduled events to be re inserted later
+            else: # Event integrity has been preserved
+                i += duration # Jump to end of event
+
+
+            
+
+
+
+
+
+
+        
+        
+        
+                        
+
+        
+            
+
+
+        
+
+
+        
+
+        
+            
+                
