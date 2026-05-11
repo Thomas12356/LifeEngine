@@ -25,7 +25,7 @@ def fetch_database_url():
 
 def create_app():
     """
-    App factory: Creates and configures the Flask appinstance.
+    App factory: Creates and configures the Flask app instance.
     """
     # Create Flask app instance.
     app = Flask(__name__) 
