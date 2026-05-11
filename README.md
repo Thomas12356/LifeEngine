@@ -48,6 +48,9 @@ Thomas Eardley:
 Daniel Dixon:
 * University Email - [djd41@kent.ac.uk](djd41@kent.ac.uk).
 
+Note on AI usage :
+On GitLab, the following commit messages are labelled as having been co-authored by co-pilot (53b8bf8e, 0798ea8c, 1710090c, c423c021, 8be4fea7, 0fedbffd, 1458307d, 0b82dba8, 78439070, 5dc47a80, cf778c75). While co-pilot was enabled for some of the development of code contained in these commit messages, chat functions were never used and it was solely for inline autofill of variable names and creation of repetitive dummy data. No inspiration or further assistance was provided by co-pilot.
+
 ## Project status
 **Active Development as of 21.02.26**
 * University of Kent Compuer Science Bachelor's Degree Student Project
