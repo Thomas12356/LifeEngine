@@ -33,17 +33,19 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # saves memory/resources.
 
     # TODO Prep CORS for production, change '*' to the domain of the front end.
-    """     CORS:   Enable CORS for all routes in api/
-            Note:   Vite dev proxy handles this for the dev server but this is needed
-                    for production if the front end is hosted on a different domain.    """
+    # CORS:     Enable CORS for all routes in api/
+    # Note:     Vite dev proxy handles this for the dev server but this is needed
+    #           or production if the front end is hosted on a different domain.
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    db.init_app(app) # Connects the database to the flask app.
+    # Connects the database to the flask app.
+    db.init_app(app)
 
     # TODO import models here: ensure they are registered with SQLAlchemy before creating tables.
 
+    # Create database tables in postgres.
     with app.app_context():
-        db.create_all() # Create database tables in postgres.
+        db.create_all()
 
         
     # TODO Import Blueprints
