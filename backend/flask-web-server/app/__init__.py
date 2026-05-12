@@ -5,6 +5,7 @@ Sets up Flask app and registers Blueprints for the API routes.
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate
@@ -49,17 +50,27 @@ def create_app():
         app.config['SQLALCHEMY_DATABASE_URI'] = fetch_database_uri()
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS', False)
 
+
         secret_key = os.environ.get('SECRET_KEY')
         if not secret_key:
             # Log error and raise to prevent app starting if SECRET_KEY is missing.
             app.logger.error("[Error] SECRET_KEY is not in .env")
             raise ValueError("[Error] SECRET_KEY is not in .env")
-        
         app.config['SECRET_KEY'] = secret_key
 
+        jwt_secret_key = os.environ.get('JWT_SECRET_KEY')
+        if not jwt_secret_key:
+            # Log error and raise to prevent app starting if JWT_SECRET_KEY is missing.
+            app.logger.error("[Error] JWT_SECRET_KEY is not in .env")
+            raise ValueError("[Error] JWT_SECRET_KEY is not in .env")
+        # Set the JWT secret key for Flask-JWT-Extended.
+        app.config['JWT_SECRET_KEY'] = jwt_secret_key
+        # Initialize JWTManager with the app.
+        jwt = JWTManager(app)
+        
     except Exception as e:
         # Log error and raise to prevent app starting if there is a configuration issue.
-        app.logger.error(f"Config error: {e}")
+        app.logger.error(f"[Error] loading and initializing config failed: {e}")
         raise e
     
     
@@ -75,6 +86,7 @@ def create_app():
     db.init_app(app) 
     # Initialize Flask-Migrate with the app and db.
     migrate.init_app(app, db)
+    
 
     from . import models
 
