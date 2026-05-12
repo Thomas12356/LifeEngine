@@ -43,6 +43,8 @@ def create_app():
     """
     # Create Flask app instance.
     app = Flask(__name__) 
+    # TODO CORS needed for production , vite handels for development
+    # CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 
     # Load and configure Flask app and db configuration from ".env".
@@ -77,11 +79,7 @@ def create_app():
     
     
 
-    # TODO Prep CORS for production, change '*' to the domain of the front end and import library.
-    # CORS:     Enable CORS for all routes in api/
-    # Note:     Vite dev proxy handles this for the dev server but this is needed
-    #           for production if the front end is hosted on a different domain.
-    # CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 
     # Initialize SQLAlchemy with the app.
