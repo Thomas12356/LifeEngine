@@ -6,7 +6,7 @@ Authentication blueprint
 
 
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies, get_jwt_identity, jwt_required
 from app.services.auth_services import register_user, authenticate_user
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -25,16 +25,33 @@ def login():
     
     access_token = create_access_token(identity=str(user.id))
 
-    return jsonify({
-        "message": "Login successful.",
-        "access_token": access_token,
+    response = jsonify({
+        "message": "login successful",
         "user": {
             "id": str(user.id),
             "email": user.email,
             "first_name": user.first_name,
             "last_name": user.last_name
         }
-    }), 200
+    })
+
+    set_access_cookies(response, access_token)
+
+    return response
+
+@auth_blueprint.route('/logout', methods=['POST'])
+def logout():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
+#test route for auth with access tokens
+@auth_blueprint.route('/test', methods=['GET'])
+@jwt_required
+def get_user():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register():

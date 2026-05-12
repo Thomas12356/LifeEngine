@@ -46,7 +46,7 @@ const navBarBoxStyles = {
 
 {/* -------------------- Config -------------------- */}
 const navButtons = [
-    { to: "/", Icon: FaBeer, text: "Home" },
+    { to: "/home", Icon: FaBeer, text: "Home" },
     { to: "/calendar", Icon: FaBeer, text: "Calendar" },
     { to: "/habits", Icon: FaBeer, text: "Habits" },
     { to: "/insights", Icon: FaBeer, text: "Insights" },

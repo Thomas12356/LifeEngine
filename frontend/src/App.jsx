@@ -4,6 +4,8 @@ import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { Box } from "@chakra-ui/react"
 //Components
 import NavBar from "@/features/navbar/NavBar"
+import ProtectedRoute from "@features/auth/components/ProtectedRoute"
+import PublicOnlyRoute from "@features/auth/components/PublicOnlyRoute"
 //Pages
 import Home from "@pages/Home"
 import Agent from "@pages/Agent"
@@ -32,11 +34,22 @@ export default function App() {
                 <NavBar />
 
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/calendar" element={<CalendarPage />} />
-                    <Route path="/profile" element={<Profile/>}/>
-                    <Route path="/agent" element={<Agent />} />
-                    <Route path="/" element={<Navigate to="/login" />} />
+
+                    {/* Public Only Routes - must not be logged in */}
+                    <Route element={<PublicOnlyRoute/>}>
+                        <Route path="/login" element={<LoginPage />} />
+                    </Route>
+
+                    {/* Protected routes - must be logged in */}
+                    <Route element = {<ProtectedRoute />} >
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/calendar" element={<CalendarPage />} />
+                        <Route path="/profile" element={<Profile/>}/>
+                        <Route path="/agent" element={<Agent />} />
+                    </Route>
+
+
+                    <Route path="/" element={<Navigate to="/login" replace />} />
 
                 </Routes>
             </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from '@features/auth/utils/authService';
 import LoginForm from "@/features/auth/components/LoginForm";
@@ -9,10 +9,11 @@ export default function LoginPage(){
 
     async function handleLoginAttempt(credentials){
         try{
-            await loginUser(credentials);
+            const user = await loginUser(credentials)
+            localStorage.setItem('user', JSON.stringify(user));
             navigate('/home');
         } catch (err) {
-            setError(err.response?.data?.msg || 'Invalid Credentials')
+            setError(err.response?.data?.msg || 'Invalid Credentials');
         }
     }
 
