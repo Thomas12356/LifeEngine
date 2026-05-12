@@ -1,6 +1,6 @@
 //-----Imports-----//
 import { Provider } from "@/components/ui/provider"
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { Box } from "@chakra-ui/react"
 //Components
 import NavBar from "@/features/navbar/NavBar"
@@ -9,6 +9,7 @@ import Home from "@pages/Home"
 import Agent from "@pages/Agent"
 import Profile from "@pages/Profile"
 import CalendarPage from "@pages/CalendarPage"
+import LoginPage from "@pages/Login"
 
 export default function App() {
     return (
@@ -31,10 +32,12 @@ export default function App() {
                 <NavBar />
 
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/agent" element={<Agent />} />
+                    <Route path="/" element={<Navigate to="/login" />} />
+
                 </Routes>
             </Box>
             
