@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 from urllib.parse import quote_plus
+from datetime import timedelta
 
 db = SQLAlchemy() # SQLAlchemy global instance
 migrate = Migrate() # Flask-Migrate global instance
@@ -32,7 +33,7 @@ def fetch_database_uri():
     safe_pass = quote_plus(DB_PASS)
     safe_name = quote_plus(DB_NAME)
     uri = f"postgresql://{safe_user}:{safe_pass}@{DB_HOST}:{DB_PORT}/{safe_name}"
-    
+
     return uri
 
 
@@ -64,6 +65,8 @@ def create_app():
             raise ValueError("[Error] JWT_SECRET_KEY is not in .env")
         # Set the JWT secret key for Flask-JWT-Extended.
         app.config['JWT_SECRET_KEY'] = jwt_secret_key
+        # Access tokens expire in 1 hour
+        app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
         # Initialize JWTManager with the app.
         jwt = JWTManager(app)
         
