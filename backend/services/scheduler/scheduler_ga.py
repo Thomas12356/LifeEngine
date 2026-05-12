@@ -166,6 +166,63 @@ class SchedulerGA:
 
         # NOTE: Children need to be repaired to ensure schedules stay valid (no repeat events)
         return child1, child2
+    
+    def mutate(self, candidate, mutation_rate):
+        # Only mutate based on probability (mutation rate)
+        # Randomly select either swap mutation or move mutation
+        # Swap mutations provide macro variations where order of events change
+        # Move mutations provide micro variations where flexible events are shifted
+        shift_range = 3
+
+        if random.random() > mutation_rate:
+            return
+        
+        if random.random() > 0.5:
+            self.move_mutation(candidate, shift_range)
+        else:
+            self.swap_mutation(candidate)
+
+    # Given a candidate and shift range, select a random event and adjust the start time
+    def move_mutation(self, candidate, shift_range):
+
+        # Build list of scheduled flexible events
+        # NOTE : This line is re-used in swap_mutation, it could be made a method of Schedule (e.g Schedule.get_flexible_events)
+        flexible_events = list(set(timeslot.event for timeslot in candidate.timeslots if timeslot is not None and timeslot.event.start_time is None))       
+
+        if len(flexible_events) == 0: # No flexible events present so mutation not possible
+            return
+        
+        event = random.choice(flexible_events) # Randomly select an event
+
+        old_start = candidate.find_start_time(event.event_id) # Find the hour in which the event is scheduled to start
+        shift = random.randint(-shift_range, shift_range) # Randomly select a value within the shift range to shift the start time by
+        new_start = max(0, min(23, old_start + shift)) # Calculate and normalise the shifted start time so it does not exceed the 24 hour time period
+
+        candidate.clear_event(event.event_id) # Remove all instances of the event
+        candidate.insert_event(event, new_start) # Attempt to re-insert at the shifted start time
+
+    # Given a candidate, randomly select 2 events and swap their start times
+    def swap_mutation(self, candidate):
+
+        # Build list of scheduled flexible events
+        flexible_events = list(set(timeslot.event for timeslot in candidate.timeslots if timeslot is not None and timeslot.event.start_time is None))
+
+        if len(flexible_events) < 2: # If there is not enough elements to perform a swap, abort the mutation
+            return
+
+        event1, event2 = random.sample(flexible_events, 2) # Randomly select 2 events
+
+        # Fetch the start times of both events
+        event1_start = candidate.find_start_time(event1.event_id)
+        event2_start = candidate.find_start_time(event2.event_id)
+
+        # Clear both events from the schedule
+        candidate.clear_event(event1.event_id)
+        candidate.clear_event(event2.event_id)
+
+        # Attempt to insert each event at the others start time
+        candidate.insert_event(event2, event1_start)
+        candidate.insert_event(event1, event2_start)
 
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
 
