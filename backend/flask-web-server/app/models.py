@@ -31,15 +31,15 @@ class User(db.Model):
         return f"<User: {self.email}: {self.id}>"
     
     @classmethod
-    def find_active_by_email(email):
+    def find_active_by_email(cls, email):
         """
         Finds an active user by their email.
         """
-        return User.query.filter_by(email = email, is_active = True).first()
+        return cls.query.filter_by(email = email, is_active = True).first()
     
     @classmethod
-    def find_by_id(user_id):
+    def find_by_id(cls, user_id):
         """
         Finds a user by their ID.
         """
-        return User.query.filter_by(id = user_id).first()
+        return cls.query.get(id = user_id)
