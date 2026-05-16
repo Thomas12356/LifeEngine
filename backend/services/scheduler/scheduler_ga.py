@@ -76,7 +76,7 @@ MUTATION_RATE = 0.15 # Probability that a child will be mutatated
 WAKE_UP_TIME = 7 # 7am
 SLEEP_DURATION = 8 # User-reported ideal sleep duration
 BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
-SCHEDULE_RESOLUTION = 24
+SCHEDULE_RESOLUTION = 24 # Number of timeslots to divide the day into (24 = 1 timeslot per hour)
 
 # Placeholder for event type categories
 event_types = {
@@ -240,59 +240,63 @@ class SchedulerGA:
         #   5. Add offspring to next_gen
         #   6. Replace current population with next generation
 
-        current_population = self.population
-
         # Elitism
-        num_elits = max(1, int(POPULATION_SIZE * ELITISM_RATE))
+        num_elits = max(1, int(POPULATION_SIZE * ELITISM_RATE)) # Using elitism rate calculate the number of individuals to be directly carried over
         for i in range(num_elits):
-            individual = copy.deepcopy(current_population[i])
-            self.next_gen.append(individual)
+            individual = copy.deepcopy(self.population[i]) # copy.deepcopy() to ensure object integrity
+            self.next_gen.append(individual) # Add the "elite" individual directly to the next population
 
+        # Main loop, repeat until population is full
         while len(self.next_gen) < POPULATION_SIZE:
             
+            # Select parents 
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
 
-            child1, child2 = self.crossover(parent1, parent2)
+            child1, child2 = self.crossover(parent1, parent2) # "Breed" parent 1 & 2 to produce children
 
+            # Mutate each child (only happens with probability MUTATION_RATE)
             self.mutate(child1)
             self.mutate(child2)
 
+            # Repair each child after crossover & mutation to ensure they are valid schedules
             child1.repair()
             child2.repair()
 
-            self.next_gen.append(child1)
+            # Update next generation
+            self.next_gen.append(child1) 
             if len(self.next_gen) < POPULATION_SIZE:
                 self.next_gen.append(child2)
 
-        self.population = self.next_gen
-        self.next_gen = []
+        self.population = self.next_gen # Replace current population with the next generation
+        self.next_gen = [] # Clear next generation
 
     def run(self):
-        # Initalise GA evaluator
-        energy_landscape, _ = zip(*self.energy_focus_landscape)
-        evaluator = Evaluator(self.population, list(energy_landscape))
+        
+        energy_landscape, _ = zip(*self.energy_focus_landscape) # Unpack energy landscape
+        evaluator = Evaluator(self.population, list(energy_landscape)) # Initalise evaluator
+        
+        while self.generation < NUM_GENERATIONS: # Repeat until max number of generations has been reached
+            self.population = evaluator.evaluate_population() # Evalute whole population
 
-        while self.generation < NUM_GENERATIONS:
-           seen = set()
-           unique_scores = 0
-           evaluator.population = self.population
-           self.population = evaluator.evaluate_population()
-           self.population.sort(key=lambda x: x.simulation_score, reverse=True)
-           for ind in self.population:
+            # NOTE : We should sort by total fitness once it has been decided how we weight energy match & simulation scores
+            self.population.sort(key=lambda x: x.simulation_score, reverse=True) # Sort based on simulation score
+
+            # DEBUG - This is used to track number of unique candidates and check genetic diversity across generations
+            seen = set() 
+            for ind in self.population:
                seen.add(ind.simulation_score)
-           #print(f"Generation {self.generation} max fitness : {self.population[0].simulation_score}, n unique scores = {len(seen)}")
-           self.evolve()
-           self.generation += 1
            
-        self.population.sort(key=lambda x: x.simulation_score, reverse=True)
-        self.population[0].visualise()
+            print(f"Generation {self.generation} max fitness : {self.population[0].simulation_score}, n unique scores = {len(seen)}")
+
+            self.evolve() # Evolve population
+            self.generation += 1 # Increment number of generations
+            evaluator.population = self.population # Update evaluator with new population
+           
+        self.population.sort(key=lambda x: x.simulation_score, reverse=True) # Sort population
+        self.population[0].visualise() # DEBUG - Used to visualise the schedule of the best individual across all generations
 
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
 
 scheduler = SchedulerGA(events_to_schedule, energy_focus_landscape=list(zip(baseline_energy, baseline_focus))) # Initalise new GA instance
-scheduler.run()
-
-#scheduler.initialise_population() # Initialise GA population
-#evaluator = Evaluator(scheduler.population, baseline_energy) # Initalise GA evaluator
-#evaluator.evaluate_population() # Evalute GA population
+scheduler.run() # Run the scheduler
