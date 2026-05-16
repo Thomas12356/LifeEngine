@@ -144,8 +144,11 @@ class Evaluator:
                 best_simulation_score = individual.simulation_score
                 best_simulation_individual = individual
 
-        print(f"Best energy match individual : ")
-        best_match_individual.visualise()
-        print(f"Best simulation individual : ")
-        best_simulation_individual.visualise()
+        if False:
+            print(f"Best energy match individual : ")
+            best_match_individual.visualise()
+            print(f"Best simulation individual : ")
+            best_simulation_individual.visualise()
+
+        return self.population
 

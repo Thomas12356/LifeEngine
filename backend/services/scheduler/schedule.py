@@ -104,15 +104,15 @@ class Schedule:
                 continue # Increment pointer and move on if slot is empty
             
             event = self.timeslots[i].event # Select event in current timeslot
-            if event.id in seen: # Event has been seen before, so it is a duplicate and must be removed
+            if event.event_id in seen: # Event has been seen before, so it is a duplicate and must be removed
                 while i < len(self.timeslots):
-                    if self.timeslots[i] != None and (self.timeslots[i].event.event_id == event.id):
+                    if self.timeslots[i] != None and (self.timeslots[i].event.event_id == event.event_id):
                         self.timeslots[i] = None # Clear timeslots
                         i += 1
                     else:
                         break # Empty timeslot or new event found, break out of clearing loop
             else: # Event has not been seen yet
-                seen.add(event.id) # Update set
+                seen.add(event.event_id) # Update set
                 i += event.duration # Jump to end of event block
 
         # STEP 2. Check for fragmented events and clear them
@@ -205,7 +205,7 @@ class Schedule:
         i = 0
         while i < len(self.timeslots): # Iterate over all timeslots
             slot = self.timeslots[i]
-            if slot.event_id is not None and slot.event_id == event_id: # Check if event IDs match
+            if slot is not None and slot.event.event_id == event_id: # Check if event IDs match
                 self.timeslots[i] = None # If so, clear the event
             i += 1
 
@@ -216,9 +216,9 @@ class Schedule:
         i = 0
         while i < len(self.timeslots): # Iterate over all timeslots
             slot = self.timeslots[i]
-            if slot.event_id is not None and slot.event_id == event_id: # Check if IDs match
+            if slot is not None and slot.event.event_id == event_id: # Check if IDs match
                 return slot.hour # If so, return the current timeslots hour
-            
+            i += 1
         return None # Event not in schedule, so return None
             
 

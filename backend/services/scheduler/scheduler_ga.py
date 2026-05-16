@@ -46,31 +46,36 @@
 """
 """
     TODO : 
-    - Implement tournament and elitism for selection of schedules to reproduce
-    - Implement crossover and mutation functions to evolve the population of schedules
+    - Locate bug which results in fitness scores not showing for the found solution
     - Tune the parameters of the simulation (e.g. fatigue build up, recovery rate)
     - Implement a model for focus states and integrate into the simulation and fitness evaluation
     
-    !!!
-    - Maybe implement a base schedule (all fixed events) rather than recalculating from list of events every time
 """
 
-import math
+# Class imports
 from evaluator import Evaluator
 from schedule import Schedule
+
+# Resource predictor import
 from resource_predictor import get_baseline_array
-from scheduler_mvp import compute_net_score
-from models import EventType, Event, TimeSlot
-from dataclasses import dataclass
+
+# Custom data types import
+from models import EventType, Event
+
+# Library imports
 import random
 import copy
 
 # NOTE : These constants should be moved to a GA config file
-population_size = 50
-num_generations = 100
+POPULATION_SIZE = 50 # Number of candidates in a population
+NUM_GENERATIONS = 100 # Number of generations the GA runs for
+ELITISM_RATE = 0.02 # Top % of population carried over for elitism
+TOURNAMENT_SIZE = 5 # The size of the subset of individuals picked from for parent selection
+MUTATION_RATE = 0.15 # Probability that a child will be mutatated
+
 WAKE_UP_TIME = 7 # 7am
-SLEEP_DURATION = 8
-BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24
+SLEEP_DURATION = 8 # User-reported ideal sleep duration
+BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
 SCHEDULE_RESOLUTION = 24
 
 # Placeholder for event type categories
@@ -94,16 +99,18 @@ class SchedulerGA:
     def __init__(self, events, energy_focus_landscape):
         self.events = events
         self.energy_focus_landscape = energy_focus_landscape
+        self.energy_landscape, _ = list(zip(*self.energy_focus_landscape))
         self.population = self.initialise_population()
         self.next_gen = []
         self.fixed_events = []
         self.flexible_events = []
         self.base_schedule = []
+        self.generation = 0
     
     def initialise_population(self):
         population = [] # Initalise population container
 
-        for i in range(population_size): # Iterate over population size
+        for i in range(POPULATION_SIZE): # Iterate over population size
 
             candidate = Schedule(id=i, events=self.events, energy_landscape=self.energy_focus_landscape) # Intialise a new candidate schedule
 
@@ -139,9 +146,9 @@ class SchedulerGA:
 
         return population
     
-    def tournament_selection(self, k):
+    def tournament_selection(self):
 
-        selection = random.sample(self.population, k) # Randomly select k individuals
+        selection = random.sample(self.population, TOURNAMENT_SIZE) # Randomly select k individuals
         return max(selection, key=lambda ind:ind.simulation_score) # Return the best from the selection
 
     def crossover(self, parent1, parent2):
@@ -157,8 +164,8 @@ class SchedulerGA:
         #child2_events = [timeslot.event for timeslot in child2_slots if timeslot is not None]
 
         # Create schedule objects using childrens event lists
-        child1 = Schedule(id=len(self.next_gen), events=self.events)
-        child2 = Schedule(id=len(self.next_gen.len) + 1, events=self.events)
+        child1 = Schedule(id=len(self.next_gen), events=self.events, energy_landscape=self.energy_focus_landscape)
+        child2 = Schedule(id=len(self.next_gen) + 1, events=self.events, energy_landscape=self.energy_focus_landscape)
 
         # Set children timeslots
         child1.timeslots = child1_slots
@@ -167,14 +174,14 @@ class SchedulerGA:
         # NOTE: Children need to be repaired to ensure schedules stay valid (no repeat events)
         return child1, child2
     
-    def mutate(self, candidate, mutation_rate):
+    def mutate(self, candidate):
         # Only mutate based on probability (mutation rate)
         # Randomly select either swap mutation or move mutation
         # Swap mutations provide macro variations where order of events change
         # Move mutations provide micro variations where flexible events are shifted
-        shift_range = 3
+        shift_range = 6
 
-        if random.random() > mutation_rate:
+        if random.random() > MUTATION_RATE:
             return
         
         if random.random() > 0.5:
@@ -184,7 +191,7 @@ class SchedulerGA:
 
     # Given a candidate and shift range, select a random event and adjust the start time
     def move_mutation(self, candidate, shift_range):
-
+        
         # Build list of scheduled flexible events
         # NOTE : This line is re-used in swap_mutation, it could be made a method of Schedule (e.g Schedule.get_flexible_events)
         flexible_events = list(set(timeslot.event for timeslot in candidate.timeslots if timeslot is not None and timeslot.event.start_time is None))       
@@ -203,7 +210,7 @@ class SchedulerGA:
 
     # Given a candidate, randomly select 2 events and swap their start times
     def swap_mutation(self, candidate):
-
+        
         # Build list of scheduled flexible events
         flexible_events = list(set(timeslot.event for timeslot in candidate.timeslots if timeslot is not None and timeslot.event.start_time is None))
 
@@ -224,10 +231,68 @@ class SchedulerGA:
         candidate.insert_event(event2, event1_start)
         candidate.insert_event(event1, event2_start)
 
+    def evolve(self):
+        # EVOLUTION LOOP :
+        #   1. Use elitism to preserve top candidates
+        #   2. Use tournament selection population_size / 2 times to produce offspring
+        #   3. Mutate each offspring with a probability of mutation_rate
+        #   4. Repair offspring to resolve invalid schedules produced by crossover and mutation
+        #   5. Add offspring to next_gen
+        #   6. Replace current population with next generation
+
+        current_population = self.population
+
+        # Elitism
+        num_elits = max(1, int(POPULATION_SIZE * ELITISM_RATE))
+        for i in range(num_elits):
+            individual = copy.deepcopy(current_population[i])
+            self.next_gen.append(individual)
+
+        while len(self.next_gen) < POPULATION_SIZE:
+            
+            parent1 = self.tournament_selection()
+            parent2 = self.tournament_selection()
+
+            child1, child2 = self.crossover(parent1, parent2)
+
+            self.mutate(child1)
+            self.mutate(child2)
+
+            child1.repair()
+            child2.repair()
+
+            self.next_gen.append(child1)
+            if len(self.next_gen) < POPULATION_SIZE:
+                self.next_gen.append(child2)
+
+        self.population = self.next_gen
+        self.next_gen = []
+
+    def run(self):
+        # Initalise GA evaluator
+        energy_landscape, _ = zip(*self.energy_focus_landscape)
+        evaluator = Evaluator(self.population, list(energy_landscape))
+
+        while self.generation < NUM_GENERATIONS:
+           seen = set()
+           unique_scores = 0
+           evaluator.population = self.population
+           self.population = evaluator.evaluate_population()
+           self.population.sort(key=lambda x: x.simulation_score, reverse=True)
+           for ind in self.population:
+               seen.add(ind.simulation_score)
+           #print(f"Generation {self.generation} max fitness : {self.population[0].simulation_score}, n unique scores = {len(seen)}")
+           self.evolve()
+           self.generation += 1
+           
+        self.population.sort(key=lambda x: x.simulation_score, reverse=True)
+        self.population[0].visualise()
+
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
 
 scheduler = SchedulerGA(events_to_schedule, energy_focus_landscape=list(zip(baseline_energy, baseline_focus))) # Initalise new GA instance
+scheduler.run()
 
-scheduler.initialise_population() # Initialise GA population
-evaluator = Evaluator(scheduler.population, baseline_energy) # Initalise GA evaluator
-evaluator.evaluate_population() # Evalute GA population
+#scheduler.initialise_population() # Initialise GA population
+#evaluator = Evaluator(scheduler.population, baseline_energy) # Initalise GA evaluator
+#evaluator.evaluate_population() # Evalute GA population

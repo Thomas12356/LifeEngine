@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-@dataclass
+@dataclass(frozen=True)
 class EventType:
     name: str
     ideal_energy: float
@@ -10,7 +10,7 @@ class EventType:
     impact : float
     burnout_rate : float
 
-@dataclass
+@dataclass(frozen=True)
 class Event:
     event_id : int
     name: str
