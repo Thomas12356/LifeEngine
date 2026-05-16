@@ -1,0 +1,14 @@
+# 1. create a file named .env in the same directory as this file.
+# 2. copy and paste the contents of this file into .env
+
+FLASK_SECRET_KEY = 'flaskSecretKey'
+
+DB_USER = ''
+DB_PASS = ''
+DB_HOST = ''
+DB_PORT = ''
+DB_NAME = ''
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+JWT_SECRET_KEY = 'JWTSecretKey'
