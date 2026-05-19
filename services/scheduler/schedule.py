@@ -29,7 +29,7 @@ class Schedule:
 
     # Given an event and start time, return True if the event can be scheduled at that time, False otherwise
     def check_availability(self, event, start_time):
-        if start_time + event.duration >= 24:
+        if start_time + event.duration > 24:
             return False # Event cannot be scheduled as it exceeds the day boundary
         else:
             for hour in range(event.duration): # Iterate over the duration of the event
