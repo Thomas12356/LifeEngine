@@ -303,7 +303,7 @@ class SchedulerGA:
         
         self.population = evaluator.evaluate_population()
         self.population.sort(key=lambda x: x.total_fitness, reverse=True) # Sort population
-        self.population[0].visualise() # DEBUG - Used to visualise the schedule of the best individual across all generations
+        best_individual.visualise() # DEBUG - Used to visualise the schedule of the best individual across all generations
 
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
 
