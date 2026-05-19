@@ -149,7 +149,7 @@ class SchedulerGA:
     def tournament_selection(self):
 
         selection = random.sample(self.population, TOURNAMENT_SIZE) # Randomly select k individuals
-        return max(selection, key=lambda ind:ind.simulation_score) # Return the best from the selection
+        return max(selection, key=lambda ind:ind.total_fitness) # Return the best from the selection
 
     def crossover(self, parent1, parent2):
 
@@ -280,20 +280,20 @@ class SchedulerGA:
             self.population = evaluator.evaluate_population() # Evalute whole population
 
             # NOTE : We should sort by total fitness once it has been decided how we weight energy match & simulation scores
-            self.population.sort(key=lambda x: x.simulation_score, reverse=True) # Sort based on simulation score
+            self.population.sort(key=lambda x: x.total_fitness, reverse=True) # Sort based on simulation score
 
             # DEBUG - This is used to track number of unique candidates and check genetic diversity across generations
             seen = set() 
             for ind in self.population:
                seen.add(ind.simulation_score)
            
-            print(f"Generation {self.generation} max fitness : {self.population[0].simulation_score}, n unique scores = {len(seen)}")
+            print(f"Generation {self.generation} max fitness : {self.population[0].total_fitness}, n unique scores = {len(seen)}")
 
             self.evolve() # Evolve population
             self.generation += 1 # Increment number of generations
             evaluator.population = self.population # Update evaluator with new population
            
-        self.population.sort(key=lambda x: x.simulation_score, reverse=True) # Sort population
+        self.population.sort(key=lambda x: x.total_fitness, reverse=True) # Sort population
         self.population[0].visualise() # DEBUG - Used to visualise the schedule of the best individual across all generations
 
 baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
