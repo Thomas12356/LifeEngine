@@ -275,6 +275,7 @@ class SchedulerGA:
         
         energy_landscape, _ = zip(*self.energy_focus_landscape) # Unpack energy landscape
         evaluator = Evaluator(self.population, list(energy_landscape)) # Initalise evaluator
+        best_individual = None
         
         while self.generation < NUM_GENERATIONS: # Repeat until max number of generations has been reached
             self.population = evaluator.evaluate_population() # Evalute whole population
@@ -288,6 +289,13 @@ class SchedulerGA:
                seen.add(ind.simulation_score)
            
             print(f"Generation {self.generation} max fitness : {self.population[0].total_fitness}, n unique scores = {len(seen)}")
+
+            # Compare best individual of current generation against overall best
+            if best_individual:
+                if self.population[0].total_fitness > best_individual.total_fitness:
+                    best_individual = self.population[0]
+            else:
+                best_individual = self.population[0]
 
             self.evolve() # Evolve population
             self.generation += 1 # Increment number of generations
