@@ -3,8 +3,8 @@ import { Text, chakra } from "@chakra-ui/react";
 export default function LifeEngineLogo() {
     return(
         <Text fontSize = "lg" fontWeight="medium">
-            <chakra.span color="brand.blueDark">Life</chakra.span>
-            <chakra.span color="brand.blueLight">Engine</chakra.span>
+            <chakra.span color="blueDark.500">Life</chakra.span>
+            <chakra.span color="blueLight.500">Engine</chakra.span>
         </Text>
     )
 }
