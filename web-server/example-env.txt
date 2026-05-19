@@ -10,5 +10,5 @@ DB_PORT = ''
 DB_NAME = ''
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+PEPPER = 'pepper'
 JWT_SECRET_KEY = 'JWTSecretKey'
