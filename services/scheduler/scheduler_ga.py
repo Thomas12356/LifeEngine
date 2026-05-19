@@ -292,7 +292,8 @@ class SchedulerGA:
             self.evolve() # Evolve population
             self.generation += 1 # Increment number of generations
             evaluator.population = self.population # Update evaluator with new population
-           
+        
+        self.population = evaluator.evaluate_population()
         self.population.sort(key=lambda x: x.total_fitness, reverse=True) # Sort population
         self.population[0].visualise() # DEBUG - Used to visualise the schedule of the best individual across all generations
 
