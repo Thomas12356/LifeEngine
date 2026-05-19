@@ -1,9 +1,10 @@
 //-----Imports-----//
 import { Provider } from "@/components/ui/provider"
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
-import { Box } from "@chakra-ui/react"
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Box, Stack } from "@chakra-ui/react"
 //Components
-import NavBar from "@/features/navbar/NavBar"
+import  NavBar from "@/features/navbar/NavBar"
+import { NavBarLogin } from "@/features/navbar/NavBar"
 import ProtectedRoute from "@features/auth/components/ProtectedRoute"
 import PublicOnlyRoute from "@features/auth/components/PublicOnlyRoute"
 //Pages
@@ -14,11 +15,11 @@ import CalendarPage from "@pages/CalendarPage"
 import LoginPage from "@pages/Login"
 
 export default function App() {
+    const location = useLocation();
+    const isLoginPage = location.pathname === "/login";
+
     return (
-        <Provider>
-
-            <BrowserRouter>
-
+            <div>
             <Box
                 position="fixed"
                 top="0"
@@ -26,12 +27,10 @@ export default function App() {
                 w="100vw"
                 h="100vh"
                 bg="radial-gradient(circle, #EDEDED, #EDEDED)"
-                zIndex="-1">
-            </Box>
+                zIndex="-1"/>
 
             <Box pt={"widget.mTopBottom"} pb={"widget.mTopBottom"} pl={"widget.mLeftRight"} pr={"widget.mLeftRight"}>
-
-                <NavBar />
+                {isLoginPage ? <NavBarLogin/> : <NavBar/>}
 
                 <Routes>
 
@@ -53,9 +52,6 @@ export default function App() {
 
                 </Routes>
             </Box>
-            
-            </BrowserRouter>
-
-        </Provider>
+            </div> 
     )
 }

@@ -1,6 +1,6 @@
 {/* -------------------- Imports -------------------- */}
 {/* Chakra UI */}
-import { Link as ChakraLink, Icon as ChakraIcon, Text, Box, Flex, HStack } from "@chakra-ui/react";
+import { Icon as ChakraIcon, Text, Box, Flex, HStack, Center } from "@chakra-ui/react";
 {/* Router */}
 import { NavLink } from "react-router-dom";
 {/* UI Components */}
@@ -31,7 +31,8 @@ const navBarIconStyles = {
 }
 {/* NavBar Styles */}
 const navBarBoxStyles = {
-    bg: "brand.white",
+    bg: "white",
+     boxShadow: "md",
     borderRadius: "widgetRadii",
     marginLeft: "widget.mLeftRight",
     marginRight: "widget.mLeftRight",
@@ -67,7 +68,7 @@ const NavButton = ({ to, Icon, text}) => {
             {({ isActive }) => (
                 <Box
                     {...navButtonLinkStyles}
-                    color={isActive ? "brand.blueLight" : "brand.gray"}
+                    color={isActive ? "blueLight.500" : "gray.500"}
                 >
                     {/* TODO: icon size is hardcoded for now, will need to be changed when we have real icons */}
                     <ChakraIcon as={Icon} {...navBarIconStyles} />
@@ -85,7 +86,7 @@ const IconNavButton = ({ to, Icon }) => {
             {({ isActive }) => (
                 <Box
                     {...iconNavButtonLinkStyles}
-                    color={isActive ? "brand.blueLight" : "brand.gray"}
+                    color={isActive ? "blueLight.500" : "gray.500"}
                 >
                     <ChakraIcon as={Icon} {...navBarIconStyles} />
                 </Box>
@@ -119,6 +120,14 @@ export default function NavBar() {
                 </HStack>
 
             </Flex>
+        </Box>
+    )
+}
+
+export function NavBarLogin(){
+    return(
+        <Box {...navBarBoxStyles}>
+            <Center><LifeEngineLogo /></Center>
         </Box>
     )
 }
