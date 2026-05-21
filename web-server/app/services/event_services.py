@@ -39,4 +39,33 @@ def create_event(user_id_str: str, name, start_time_str: str, end_time_str: str,
     except Exception as e:
         db.session.rollback()
         return {"success": False, "error": "Internal database error.", "status_code": 500}
-        
+
+def delete_event(user_id_str : str, event_id_str : str):
+    """
+    Soft deletes and event by setting the columns is_active to False
+    """
+
+    try:
+        event = Event.find_by_id(event_id_str) # Fetch event by ID
+
+        # Return error if event could not be found
+        if not event:
+            return {"success" : False, "error" : "Event does not exist.", "status_code" : 404}
+
+        # Return error if event does not belong to user making request
+        if event.user_id != user_id_str:
+            return {"success" : False, "error" : "User does not have permission to delete this event.", "status_code" : 403}
+
+        event.is_active = False # Soft delete
+        db.session.commit()
+        return {"success" : True} # Return success
+
+    except ValueError as e:
+        return {"success": False, "error": f"Invalid data format: {str(e)}", "status_code": 400}
+    
+    except Exception as e:
+        db.session.rollback()
+        return {"success": False, "error": "Internal database error.", "status_code": 500}
+
+
+
