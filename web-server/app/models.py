@@ -108,3 +108,10 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event: {self.name} | Start: {self.start_time}>"
+
+    @classmethod
+    def find_by_id(cls, event_id):
+        """
+        Finds an event by its ID.
+        """
+        return cls.query.get(event_id)
