@@ -32,3 +32,27 @@ def add_event():
         "message": "Event created successfully", 
         "event_id": result["event_id"]
     }), 201
+
+@event_blueprint.route('/deleteevent', methods=['DELETE'])
+def delete_event():
+    data = request.get_json()
+
+    required_fields  = ["user_id", "event_id"]
+
+    for field in required_fields:
+        if field not in data or not data[field]:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+    
+    result = event_services.delete_event(
+        user_id_str = data["user_id"],
+        event_id_str = data["event_id"]
+    )
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), result["status_code"]
+
+    return jsonify({
+        "message" : "Event deleted successfully."
+    }), 200
+
+
