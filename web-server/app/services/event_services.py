@@ -46,14 +46,17 @@ def delete_event(user_id_str : str, event_id_str : str):
     """
 
     try:
-        event = Event.find_by_id(event_id_str) # Fetch event by ID
+        event_uuid = uuid.UUID(event_id_str)
+        user_uuid = uuid.UUID(user_id_str)
+
+        event = Event.find_by_id(event_uuid) # Fetch event by ID
 
         # Return error if event could not be found
         if not event:
             return {"success" : False, "error" : "Event does not exist.", "status_code" : 404}
 
         # Return error if event does not belong to user making request
-        if event.user_id != user_id_str:
+        if event.user_id != user_uuid:
             return {"success" : False, "error" : "User does not have permission to delete this event.", "status_code" : 403}
 
         event.is_active = False # Soft delete
