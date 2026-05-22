@@ -28,7 +28,7 @@ export default function AddEventButton() {
         onOpenChange={(e) => setOpen(e.open)}
         positioning={{ placement: "bottom" }}
         >
-            <Popover.Trigger> {/* Use asChild to render the trigger as a Chakra UI Button */}
+            <Popover.Trigger>
                 Add Event
             </Popover.Trigger>
             <Portal> {/* Render the popover content in a portal to avoid z-index and overflow issues */}
