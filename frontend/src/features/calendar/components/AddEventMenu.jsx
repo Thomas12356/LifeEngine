@@ -1,7 +1,8 @@
 import DropDown from "@ui-components/DropDown"
-import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput } from "@chakra-ui/react"
+import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput, Checkbox } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
 import { useState } from "react"
+import useAddEvent from "../hooks/useAddEvent"
 
 export default function AddEventMenu({ onClose }){
 
@@ -13,7 +14,8 @@ export default function AddEventMenu({ onClose }){
         category : "",
         idealEnergy : "",
         priority : "",
-        burnoutRate : ""
+        burnoutRate : "",
+        isMoveable : false
     })
 
     function updateField(field, value) {
@@ -23,10 +25,17 @@ export default function AddEventMenu({ onClose }){
         }))
     }
 
-    function handleSave() {
-        console.log("Event saved : ")
-        console.log(formData)
-        onClose()
+    const { sumbitEvent, loading, error} = useAddEvent()
+
+    async function handleSave() {
+
+        const result = await sumbitEvent(formData)
+        
+        if (result.success) {
+            console.log("Event saved : ")
+            console.log(formData)
+            onClose()
+        }
     }
 
     return (
@@ -123,6 +132,15 @@ export default function AddEventMenu({ onClose }){
                             placeholder="Default"
                             allowClear={true}
                         />
+                    </Field.Root>
+                    <Field.Root>
+                        <Checkbox.Root>
+                            <Checkbox.HiddenInput/>
+                            <Checkbox.Label>
+                                Allow auto-rescheduling
+                            </Checkbox.Label>
+                            <Checkbox.Control/>
+                        </Checkbox.Root>
                     </Field.Root>
                 </Collapsible.Content>
             </Collapsible.Root>
