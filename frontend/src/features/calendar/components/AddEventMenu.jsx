@@ -4,6 +4,8 @@ import { LuChevronRight } from "react-icons/lu"
 import { useState } from "react"
 import useAddEvent from "../hooks/useAddEvent"
 
+import buildEventPayload from "../utils/buildEventPayload"
+
 export default function AddEventMenu({ onClose }){
 
     const[formData, setFormData] = useState({
@@ -31,6 +33,8 @@ export default function AddEventMenu({ onClose }){
         // DEBUG 
         console.log("Event saved : ")
         console.log(formData)
+
+        console.log(buildEventPayload(formData))
         
         const result = await sumbitEvent(formData)
         
