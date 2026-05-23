@@ -21,8 +21,8 @@ export default function buildEventPayload(eventData) {
         name : eventData.eventName,
         start_time : startTimeISO,
         end_time : endTimeISO,
-        event_type_id : eventCategoryID,
-        is_moveable : eventData.isMoveable,
+        //event_type_id : eventCategoryID,
+        is_moveable : eventData.isMoveable
     }
 
 }
