@@ -10,7 +10,7 @@ import VerticalDivider from "@ui-components/VerticalDivider";
 {/* TODO - replace with actual icons */}
 {/* Temporary Dev Imports */}
 import { FaBeer } from "react-icons/fa";
-import LogoutButton from "@features/auth/components/LogoutButton";
+import LogoutLink from "@/features/auth/components/LogoutLink";
 
 
 {/* -------------------- Styling -------------------- */}
@@ -118,7 +118,7 @@ export default function NavBar() {
                     {IconNavButtons.map((button) => (
                         <IconNavButton key={button.to} {...button} />
                     ))}
-                    <LogoutButton/>
+                    <LogoutLink/>
                 </HStack>
             </Flex>
         </Box>
