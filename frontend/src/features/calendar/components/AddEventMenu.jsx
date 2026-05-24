@@ -38,11 +38,7 @@ export default function AddEventMenu({ onClose, onEventAdded }){
         
         const result = await sumbitEvent(payload)
         
-        onEventAdded({
-            title : payload.name,
-            start : payload.start_time,
-            end : payload.end_time
-        })
+        onEventAdded()
         onClose()
     }
 

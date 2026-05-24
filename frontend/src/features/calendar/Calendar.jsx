@@ -58,9 +58,14 @@ export default function Calendar() {
         loadEvents()
     }, [])
 
-    function handleEventAdded(newEvent) {
-        console.log("Calendar received new event:", newEvent)
-        setAllEvents((prevEvents) => [...prevEvents, newEvent])
+    async function handleEventAdded() {
+        try {
+            const userId = JSON.parse(localStorage.getItem("user"))?.id
+            const events = await fetchEvents(userId)
+            setAllEvents(events)
+        } catch (err) {
+            console.log("Failed to refresh user's events:", err)
+        }
     }
 
     const weekEvents = useWeekEvents(allEvents, selectedDate)
