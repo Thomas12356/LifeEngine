@@ -4,9 +4,9 @@ export default function LoadingScreen(){
     return(
         <AbsoluteCenter>
         <VStack >
-            <Spinner size="xl" color={"brand.blueLight"}/>
+            <Spinner size="xl" color={"blueLight.500"}/>
             <Text textStyle = "defaultGrey">Loading LifeEngine ...</Text>
         </VStack>
         </AbsoluteCenter>
-    );
+    )
 }
