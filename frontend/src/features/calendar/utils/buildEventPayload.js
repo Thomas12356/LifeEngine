@@ -21,11 +21,11 @@ export default function buildEventPayload(eventData) {
         start_time : startTimeISO,
         end_time : endTimeISO,
         event_type_id : eventCategoryID,
+        is_moveable : eventData.isMoveable,
         parameters : {
             ideal_energy : eventData.idealEnergy,
             priority : eventData.priority,
-            burnout_rate : eventData.burnoutRate,
-            is_moveable : eventData.isMoveable
+            burnout_rate : eventData.burnoutRate
         }
     }
 
