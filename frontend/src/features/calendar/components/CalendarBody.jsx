@@ -12,6 +12,7 @@
 /* --- IMPORTS --- */
 import { HStack, VStack, Text, Box } from "@chakra-ui/react"
 import { calculateEventPosition } from "../utils/dateHelpers.js"
+import { useRef, useEffect } from "react"
 
 /* --- LOCAL COMPONENTS --- */
 
@@ -105,10 +106,17 @@ const TimeIndicator = () => {
  */
 export default function CalendarBody({ events}) {
 
+    const scrollContainerRef = useRef(null) // Initalise scroll reference
     const hours = Array.from({ length: 24 }, (_, i) => i) // Create an array of hours from 0 to 23 for the time axis
 
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = 8 * 60 // On page load auto scroll to 8 AM (1px = 1 minute)
+        }
+    })
+
     return (
-        <Box w="100%" h="100%" overflowY="auto" overflowX="hidden" position="relative"> {/* Main container for the calendar body */}
+        <Box w="100%" h="100%" overflowY="auto" overflowX="hidden" position="relative" ref={scrollContainerRef}> {/* Main container for the calendar body */}
             <HStack align="start" spacing={0} w="100%" h="100%">
                 <VStack w="60px" h="1440px" position="relative"> {/* Container for the time axis */}
                     {hours.map(hour => ( // Loop through hours and render time labels inside the container
