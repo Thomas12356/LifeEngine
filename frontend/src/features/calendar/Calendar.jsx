@@ -73,7 +73,7 @@ export default function Calendar() {
     //console.log("ALL EVENTS:", allEvents)
 
     return (
-        <Box h="100%" border="1px solid" borderColor="gray.200" borderRadius="xl" bg="white" overflow="hidden">
+        <Box h="100%" border="1px solid" borderColor="gray.200" borderRadius="xl" p={25} bg="white" overflow="hidden">
             <VStack h="100%" spacing={0} align="stretch">
                 <CalendarMenu 
                     selectedDate={selectedDate}
