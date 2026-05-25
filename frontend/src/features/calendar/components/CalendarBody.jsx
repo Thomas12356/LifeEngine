@@ -27,19 +27,25 @@ const GridBackground = () => {
             h="1440px"
             flex="1"
             bgImage={`
-                repeating-linear-gradient( /* Vertical lines every hour */
-                to bottom, /* Run vertically */
-                transparent,
-                transparent 59px, /* 59px of blank space */
-                #e2e8f0 60px /* 1px line at 60px (1 hour) */
+                repeating-linear-gradient( /* Horizontal hour lines */
+                    to bottom, /* Run vertically */
+                    transparent 0,
+                    transparent 59px, /* 59px of blank space */
+                    #94949442 60px /* 1px line at 60px (1 hour) */
                 ),
-                repeating-linear-gradient( /* Horizontal lines every day */
-                to right, /* Run horizontally */
-                transparent, 
-                transparent calc(100% / 7 - 1px), /* Calculate width of 1/7th of container minus 1px for line */
-                #e2e8f0 calc(100% / 7)
+                linear-gradient( /* Vertical day lines */
+                    to right, /* Run horizontally */
+                    transparent 0, 
+                    transparent calc(100% - 1px),
+                    #94949442 calc(100% - 1px),
+                    #94949442 100%
                 )
             `}
+            bgSize={`
+                100% 60px, /* Width and height, for hour lines */
+                calc(100% / 7) 100% /* Width and height, for day lines */
+            `}
+            bgRepeat="repeat" // Repeat both gradient layers across full grid area
         />
     )
 }
