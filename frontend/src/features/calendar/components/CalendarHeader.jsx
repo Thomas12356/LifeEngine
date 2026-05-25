@@ -28,9 +28,26 @@ export default function CalendarHeader({ selectedDate }) {
             <Box w="60px"/>
             {days.map((day, index) => ( // Loop through the days of the week and render a header cell for each day
                 <VStack key={index} flex="1">
-                    <Text>{day.toLocaleString('en-US', { weekday: 'short' })}</Text>
-                    <Box bgColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}> {/* Highlight the current day */}
-                        <Text>{day.getDate()}</Text>
+                    <Text fontWeight="medium" fontSize="sm" color="#3a3a3a">
+                        {day.toLocaleString('en-US', { weekday: 'short' })}
+                    </Text>
+                    <Box   
+                        mx="auto"
+                        w="32px"
+                        h="32px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        borderRadius="full"
+                        border={isSameDay(day, new Date()) ? "2px solid" : "2px solid transparent"} // Apply border to indicate current day
+                        borderColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}
+                    > {/* Highlight the current day */}
+                        <Text 
+                            fontSize="md" 
+                            fontWeight={isSameDay(day, new Date()) ? "semibold" : "normal"}
+                        >
+                            {day.getDate()}
+                        </Text>
                     </Box>
                 </VStack>
             ))}
