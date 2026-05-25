@@ -6,10 +6,10 @@ const eventCategoryMap = {
 
 export default function buildEventPayload(eventData) {
 
-    // Format date and start/end times into ISO string
-    const startTimeISO = `${eventData.date}T${eventData.startTime}`
-    const endTimeISO = `${eventData.date}T${eventData.endTime}`
-    
+    // Build local date object using form data
+    const localStart = new Date(`${eventData.date}T${eventData.startTime}`)
+    const localEnd = new Date(`${eventData.date}T${eventData.endTime}`)
+
     // Map category name -> ID
     const eventCategoryID = eventCategoryMap[eventData.category]
 
@@ -18,8 +18,8 @@ export default function buildEventPayload(eventData) {
     return {
         user_id : user.id,
         name : eventData.eventName,
-        start_time : startTimeISO,
-        end_time : endTimeISO,
+        start_time : localStart.toISOString(), // Convert local date to UTC
+        end_time : localEnd.toISOString(), // Convert local date to UTC
         event_type_id : eventCategoryID,
         is_moveable : eventData.isMoveable,
         parameters : {
