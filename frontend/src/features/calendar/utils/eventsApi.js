@@ -23,3 +23,16 @@ export async function fetchEvents(userID) {
 
     return calendarEvents
 }
+
+export async function deleteEvent(userID, eventID) {
+
+    const response = await api.delete("/event/deleteevent", {
+        data : {
+            user_id : userID,
+            event_id : eventID
+        }
+    })
+
+    return response
+
+}
