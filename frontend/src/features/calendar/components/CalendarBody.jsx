@@ -56,17 +56,16 @@ const GridBackground = () => {
  * @param {Array} events - An array of event objects to be displayed on the calendar.
  * @returns {JSX.Element} A Box component containing the event elements.
  */
-const EventLayer = ({ events }) => {
+const EventLayer = ({ events, onEventDelete }) => {
 
     return (
         <Box position="absolute" top="0" left="0" w="100%" h="1440px">
             {events.map((event, index) => { // Loop through events and calculate their positions
                 const { top, height, left, width } = calculateEventPosition(event)
                 return (
-                    <Menu.Root>
+                    <Menu.Root key={index}>
                         <Menu.ContextTrigger asChild>
                             <Box
-                                key={index}
                                 position="absolute" // Position each event absolutely within the calendar body
                                 top={`${top}%`} // Position from the top based on event start time
                                 left={`${left}%`} // Position from the left based on event weekday
@@ -91,7 +90,7 @@ const EventLayer = ({ events }) => {
 
                         <Menu.Positioner>
                             <Menu.Content>
-                                <Menu.Item>
+                                <Menu.Item onClick={() => onEventDelete(event.id)}>
                                     Delete event
                                 </Menu.Item>
                             </Menu.Content>
@@ -132,7 +131,7 @@ const TimeIndicator = () => {
  * @param {Array} events - An array of event objects to be displayed on the calendar.
  * @returns {JSX.Element} A Box component representing the calendar body.
  */
-export default function CalendarBody({ events}) {
+export default function CalendarBody({ events, onEventDelete }) {
 
     const scrollContainerRef = useRef(null) // Initalise scroll reference
     const hours = Array.from({ length: 24 }, (_, i) => i) // Create an array of hours from 0 to 23 for the time axis
@@ -155,7 +154,7 @@ export default function CalendarBody({ events}) {
                 </VStack>
                 <Box flex="1" h="1440px" position="relative"> {/* Main calendar body container */}
                     <GridBackground />
-                    <EventLayer events={events} />
+                    <EventLayer events={events} onEventDelete={onEventDelete} />
                     <TimeIndicator />
                 </Box>
             </HStack>

@@ -4,7 +4,7 @@ import CalendarHeader from "@/features/calendar/components/CalendarHeader"
 import CalendarBody from "@/features/calendar/components/CalendarBody"
 import { useState, useEffect } from "react"
 import { useWeekEvents } from "@/features/calendar/hooks/useWeekEvents"
-import { fetchEvents } from "./utils/eventsApi"
+import { fetchEvents, deleteEvent } from "./utils/eventsApi"
 
 // Dummy event data for testing
 const allEvents2 = [
@@ -45,28 +45,34 @@ export default function Calendar() {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [allEvents, setAllEvents] = useState(([]))
 
-    useEffect(() => {
-        async function loadEvents() {
-            try {
-                const events = await fetchEvents(JSON.parse(localStorage.getItem('user'))?.id)
-                setAllEvents(events)
-            } catch (err) {
-                console.log("Failed to fetch users events :", err)
-            }
+    async function loadEvents() {
+        try {
+            const events = await fetchEvents(JSON.parse(localStorage.getItem('user'))?.id)
+            setAllEvents(events)
+        } catch (err) {
+            console.log("Failed to fetch users events :", err)
         }
+    }
 
+    useEffect(() => {
         loadEvents()
     }, [])
 
     async function handleEventAdded() {
+        await loadEvents()
+    }
+
+    async function handleEventDelete(eventID) {
         try {
-            const userId = JSON.parse(localStorage.getItem("user"))?.id
-            const events = await fetchEvents(userId)
-            setAllEvents(events)
+            const userID = JSON.parse(localStorage.getItem("user"))?.id
+
+            await deleteEvent(userID, eventID)
+            await loadEvents()
         } catch (err) {
-            console.log("Failed to refresh user's events:", err)
+            console.log("Failed to delete event:", err)
         }
     }
+
 
     const weekEvents = useWeekEvents(allEvents, selectedDate)
 
@@ -82,7 +88,7 @@ export default function Calendar() {
                 />
                 <CalendarHeader selectedDate={selectedDate} />
                 <Box flex="1" minH={0} overflow="hidden">
-                    <CalendarBody events={weekEvents}/>
+                    <CalendarBody events={weekEvents} onEventDelete={handleEventDelete}/>
                 </Box>
             </VStack>
         </Box>
