@@ -25,7 +25,8 @@ export default function buildEventPayload(eventData) {
         parameters : {
             ideal_energy : eventData.idealEnergy,
             priority : eventData.priority,
-            burnout_rate : eventData.burnoutRate
+            burnout_rate : eventData.burnoutRate,
+            colour : eventData.colour
         }
     }
 
