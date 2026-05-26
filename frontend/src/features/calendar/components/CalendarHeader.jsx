@@ -24,7 +24,7 @@ export default function CalendarHeader({ selectedDate }) {
     const days = getWeekDays(selectedDate); // Fetch the dates of the current week being viewed based on the selected date
 
     return (
-        <HStack w="100%" spacing={0}>
+        <HStack w="100%" spacing={0} borderBottom="2px solid" borderColor="#94949442" pb={5}>
             <Box w="60px"/>
             {days.map((day, index) => ( // Loop through the days of the week and render a header cell for each day
                 <VStack key={index} flex="1">
