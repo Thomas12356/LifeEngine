@@ -19,13 +19,31 @@ import NextEvent from "@features/next-event-widget/NextEventWidget";
 export default function Home() {
     const user = JSON.parse(localStorage.getItem('user'));
     return (
-        <Box>
-            <Stack direction={"row"} width={"100%"} justifyContent={"space-between"}>
-                <VStack width={"60%"}  px={5}>
+        <Box width="100%" px={{ base: 3, md: 5 }} py={4}>
+            <Stack
+                direction={{ base: "column", lg: "row" }}
+                width="100%"
+                justifyContent="space-between"
+                alignItems="stretch"
+                gap={6}
+            >
+                {/* Left Column */}
+                <VStack
+                    width={{ base: "100%", lg: "55%" }}
+                    align="stretch"
+                    gap={5}
+                >
                     <ResourceSelectorHeading />
                     <NextEvent />
                 </VStack>
-                <VStack width={"40%"}  px={5}>
+
+                {/* Right Column */}
+                <VStack
+                    width={{ base: "100%", lg: "40%" }}
+                    align="stretch"
+                    gap={5}
+                >
+                    {/* Add future widgets/components here */}
                 </VStack>
             </Stack>
         </Box>
