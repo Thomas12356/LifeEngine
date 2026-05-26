@@ -18,7 +18,8 @@ export async function fetchEvents(userID) {
         id : event.id,
         title : event.name,
         start : event.start_time,
-        end : event.end_time
+        end : event.end_time,
+        colour : event.colour
     }))
 
     return calendarEvents
