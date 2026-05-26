@@ -1,3 +1,4 @@
+import { WidgetBox } from "@ui-components/WidgetBox";
 /**
  * Resource Selector Heading Layout
  *
@@ -17,9 +18,10 @@
 import DropDown from "@ui-components/DropDown";
 import { HStack, VStack, Text, Stack } from "@chakra-ui/react";
 
-export default function ResourceSelectorHeading() {
+export default function ResourceSelectorHeading(e) {
     const username = "Thomas";
     return(
+        <WidgetBox width={"100%"}>
         <HStack>
 
             <Stack gap={0}>
@@ -28,10 +30,11 @@ export default function ResourceSelectorHeading() {
             </Stack>
 
             <HStack>
-                <DropDown title={"Energy"} type={"ResourceLevel"} value={0} allowClear={false}></DropDown>
-                <DropDown title={"Energy"} type={"ResourceLevel"} value={0} allowClear={false}></DropDown>
+                {/* <DropDown title={"Energy"} type={"ResourceLevel"} value={0} allowClear={false}></DropDown> */}
+                {/*<DropDown title={"Energy"} type={"ResourceLevel"} value={0} allowClear={false}></DropDown> */}
             </HStack>
         
         </HStack>
+        </WidgetBox>
     )
 }

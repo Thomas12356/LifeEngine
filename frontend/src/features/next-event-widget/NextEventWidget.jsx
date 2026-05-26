@@ -1,3 +1,5 @@
+import { WidgetBox } from "@ui-components/WidgetBox";
+
 /**
  * Next Event Loayout
  *
@@ -14,27 +16,30 @@
  */
 
 /* ---------- Imports Chakra UI ----------*/
-import { Box, HStack, Stack } from "@chakra-ui/react";
+import { Box, HStack, Spacer, Stack } from "@chakra-ui/react";
 import { Text, Button } from "@chakra-ui/react";
 
 export default function NextEvent() {
     
     return(
-        <HStack>
+        <WidgetBox width={"100%"}>
+        <HStack height={"100%"} justifyContent={"space-between"}>
             <Stack>
-                <Text>Next Up</Text>
-                <Text textStyle="headingSolid">Code LifeEngine</Text>
-                {/*<Text>Starts in -- Minutes</Text> */}
-                {/* How long till user needs to begin commute */}
+                <Stack alignItems={"start"} gap={0}>
+                    <Text textStyle="blueText">Next Up</Text>
+                    <Text textStyle="headingSolid">Code LifeEngine</Text>
+                </Stack>
+                <Text>10:00 AM - 11:00 AM</Text>
             </Stack>
 
-            <Stack>
-                <Text>10:00 AM - 11:00 AM</Text>
-                <HStack>
-                    <Button>Cancel</Button>
-                    <Button>Reschedule</Button>
+            <Stack gap={8} alignItems={"end"}>
+                <Text>Starts in -- Minutes</Text>   
+                <HStack >
+                    <Button bg="warningYellow">Reschedule</Button>
+                    <Button bg="errorRed">Cancel</Button>
                 </HStack>
             </Stack>
         </HStack>
+        </WidgetBox>
     )
 }

@@ -40,6 +40,13 @@ const customConfig = defineConfig({
                     color: "errorRed"
                 }
             },
+            blueText: {
+                value: {
+                    fontSize: "sm",
+                    fontWeight: "normal",
+                    color: "blueLight.500"
+                } 
+            },
             linkText: {
                 value: {
                     fontSize: "sm",
@@ -100,7 +107,8 @@ const customConfig = defineConfig({
 
                 white: { value: "#ffffff" },
 
-                errorRed: { value: "#ff7272" },
+                errorRed: { value: "#ff5a5a" },
+                warningYellow: { value: "#ffc233" },
 
                 text: {
                     "solid": { value: "#393939" },

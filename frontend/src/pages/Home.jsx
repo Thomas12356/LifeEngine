@@ -10,7 +10,7 @@
  */
 
 /* ---------- Imports Chakra UI ----------*/
-import { Box } from "@chakra-ui/react";
+import { Box, HStack, Spacer, Stack, VStack } from "@chakra-ui/react";
 
 /* ---------- Imports Custom Layout Components ----------*/
 import ResourceSelectorHeading from "@features/resource-selector-heading/ResourceSelectorHeading";
@@ -20,8 +20,14 @@ export default function Home() {
     const user = JSON.parse(localStorage.getItem('user'));
     return (
         <Box>
-            <ResourceSelectorHeading username={user?.first_name}/>
-            <NextEvent/>
+            <Stack direction={"row"} width={"100%"} justifyContent={"space-between"}>
+                <VStack width={"60%"}  px={5}>
+                    <ResourceSelectorHeading />
+                    <NextEvent />
+                </VStack>
+                <VStack width={"40%"}  px={5}>
+                </VStack>
+            </Stack>
         </Box>
     )
 }
