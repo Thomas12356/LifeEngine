@@ -99,8 +99,7 @@ const EventLayer = ({ events, onEventDelete }) => {
                                     color={"red"}
                                     cursor="pointer"
                                     _hover={{
-                                        bg: "red.50",
-                                        bg: "gray.200",
+                                        bg: "gray.200"
                                     }}
                                     onClick={() => onEventDelete(event.id)}
                                 >
