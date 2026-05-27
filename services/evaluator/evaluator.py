@@ -17,6 +17,7 @@
 
 """
 import math
+from services.config import SCHEDULE_RESOLUTION, SLOT_SIZE
 
 WAKE_UP_TIME = 7
 BED_TIME = 23
@@ -29,8 +30,7 @@ RECOVERY_RATE = 0.7 # Rate at which residual fatigue decreases during rest
 WASTE_COST_WEIGHT = 0.5
 UNSCHEDULED_EVENTS_PENALTY = 1000
 
-SCHEDULE_RESOLUTION = 24 # TODO : Import constant from global constant file
-POPULATION_SIZE = 50 # TODO : Import from GA parameters
+SLOT_HOURS = SLOT_SIZE / 60
 
 class Evaluator:
 
@@ -63,41 +63,52 @@ class Evaluator:
     def simulate_schedule(self, candidate):
         def calculate_s(s_inital):
             t = 30
-            return (1 - (1 - s_inital) * math.exp(-1/t)) # Placeholder exponential decay function, to be replaced with a more complex function based on user state dynamics
+            return (1 - (1 - s_inital) * math.exp(-SLOT_HOURS/t)) # Placeholder exponential decay function, to be replaced with a more complex function based on user state dynamics
         
         residual_fatigue = 0.0
-        consecutive_hours = 0
+        consecutive_active_slots = 0
         total_fitness = 0.0
         s = S
 
-        # ---- SIMULATION LOOP ----
-        for i in range(24):
-            clock_hour = (i + WAKE_UP_TIME) % 24 # Simulate a 24 hour period starting from the user's wake up time
+        SLOT_HOURS = SLOT_SIZE / 60
+        WAKE_UP_SLOT = (WAKE_UP_TIME * 60) // SLOT_SIZE
+        BED_SLOT = (BED_TIME * 60) // SLOT_SIZE
 
-            timeslot = candidate.timeslots[clock_hour] # Get the event scheduled for the current timeslot, if any
-            predicted_energy = self.energy_landscape[clock_hour] # Get the predicted energy level for the current timeslot from the energy landscape
+        # ---- SIMULATION LOOP ----
+        for i in range(SCHEDULE_RESOLUTION):
+            clock_slot = (i + WAKE_UP_SLOT) % SCHEDULE_RESOLUTION # Simulate a 24 hour period starting from the user's wake up time
+
+            timeslot = candidate.timeslots[clock_slot] # Get the event scheduled for the current timeslot, if any
+            predicted_energy = self.energy_landscape[clock_slot] # Get the predicted energy level for the current timeslot from the energy landscape
 
             effective_energy = predicted_energy - (s * 0.5) - residual_fatigue # Calculate the effective energy for the current timeslot by subtracting the effects of sleep pressure and residual fatigue from the predicted energy level
 
             if timeslot is not None: # If there is an event scheduled for the current timeslot, calculate the task yield and update the residual fatigue
                 event = timeslot.event
-                if clock_hour < BED_TIME and clock_hour >= WAKE_UP_TIME: # Only apply yield if the event is scheduled during waking hours
+                if clock_slot < BED_SLOT and clock_slot >= WAKE_UP_SLOT: # Only apply yield if the event is scheduled during waking hours
                     if effective_energy < 0: # Check if effective energy is below 0
-                        task_yield = (IMPORTANCE * FATIGUE_MODIFIER) + (effective_energy * 0.5) # Apply a heavy penatly to task yield
+                        task_yield = (IMPORTANCE * FATIGUE_MODIFIER) + (effective_energy * 0.5) * SLOT_HOURS # Apply a heavy penatly to task yield
                     else:
-                        task_yield = IMPORTANCE * math.pow(effective_energy, K)
+                        task_yield = (IMPORTANCE * math.pow(effective_energy, K)) * SLOT_HOURS # 
                 else:
-                    task_yield = -500 # Heavy penalty for scheduling events during sleep hours
+                    task_yield = -500 * SLOT_HOURS # Heavy penalty for scheduling events during sleep hours
 
-                consecutive_hours += 1 # Increment consecutive hours of work
-                drain = event.EventType.impact * math.pow((1 + event.EventType.burnout_rate), consecutive_hours - 1) # Calculate fatigue drain using event impact and burnout rate (alpha)
+                consecutive_active_slots += 1 # Increment consecutive hours of work
+                consecutive_active_hours = consecutive_active_slots * SLOT_HOURS
+
+                drain = (
+                    event.EventType.impact
+                    * SLOT_HOURS
+                    * math.pow((1 + event.EventType.burnout_rate), consecutive_active_hours)
+                ) # Calculate fatigue drain using event impact and burnout rate (alpha)
                 residual_fatigue += drain # Update residual fatigue
                 total_fitness += task_yield # Update total schedule fitness
-                candidate.timeslots[clock_hour].effective_energy = effective_energy # Update effective energy
+                candidate.timeslots[clock_slot].effective_energy = effective_energy # Update effective energy
 
             else: # If no event is scheduled
-                consecutive_hours = 0 # Reset consecutive work hours
-                residual_fatigue *= RECOVERY_RATE # Reduce resididual fatigue by % value ()
+                consecutive_active_slots = 0 # Reset consecutive work hours
+                slot_recovery = RECOVERY_RATE ** SLOT_HOURS
+                residual_fatigue *= slot_recovery # Reduce resididual fatigue by % value 
             
             if False: # Set to True to enable detailed logging of the simulation process
                 if event is not None:
@@ -113,10 +124,11 @@ class Evaluator:
     def evaluate_individual(self, candidate):
 
         candidate.reset_scores() # Reset scores to avoid adding to existing score
+        SLOT_HOURS = SLOT_SIZE / 60
 
         for timeslot in candidate.timeslots: # Calculate energy match score for each timeslot
             if timeslot is not None:
-                candidate.match_fitness += self.calculate_energy_match(timeslot.event, timeslot)
+                candidate.match_fitness += self.calculate_energy_match(timeslot.event, timeslot) * SLOT_HOURS
 
         self.simulate_schedule(candidate) # Simulate the candidate schedule
 
