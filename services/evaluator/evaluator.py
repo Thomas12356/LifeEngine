@@ -29,6 +29,7 @@ FATIGUE_MODIFIER = -2.0 # Modifier for the fatigue penalty applied to task yield
 RECOVERY_RATE = 0.7 # Rate at which residual fatigue decreases during rest 
 WASTE_COST_WEIGHT = 0.5
 UNSCHEDULED_EVENTS_PENALTY = 1000
+PREFERENCE_WINDOW_PENATLY = 2
 
 SLOT_HOURS = SLOT_SIZE / 60
 
@@ -76,6 +77,7 @@ class Evaluator:
         negative_energy_penalty_total = 0.0
         sleep_penalty_total = 0.0
         fatigue_drain_total = 0.0
+        preference_penalty_total = 0.0
 
         # ---- SIMULATION LOOP ----
         for i in range(SCHEDULE_RESOLUTION):
@@ -88,6 +90,7 @@ class Evaluator:
 
             if timeslot is not None: # If there is an event scheduled for the current timeslot, calculate the task yield and update the residual fatigue
                 event = timeslot.event
+
                 if clock_slot < BED_SLOT and clock_slot >= WAKE_UP_SLOT: # Only apply yield if the event is scheduled during waking hours
                     if effective_energy < 0: # Check if effective energy is below 0
                         task_yield = (event.importance * FATIGUE_MODIFIER) + (effective_energy * 0.5) * SLOT_HOURS # Apply a heavy penatly to task yield
@@ -107,11 +110,16 @@ class Evaluator:
                     * SLOT_HOURS
                     * math.pow((1 + event.EventType.burnout_rate), consecutive_active_hours)
                 ) # Calculate fatigue drain using event impact and burnout rate (alpha)
+
                 residual_fatigue += drain # Update residual fatigue
                 total_fitness += task_yield # Update total schedule fitness
 
                 fatigue_drain_total += drain
                 candidate.timeslots[clock_slot].effective_energy = effective_energy # Update effective energy
+
+                preference_penalty = self.calc_preference_penalty(slot_index=clock_slot, event=event)
+                total_fitness -= preference_penalty
+                preference_penalty_total += preference_penalty
 
             else: # If no event is scheduled
                 consecutive_active_slots = 0 # Reset consecutive work hours
@@ -132,6 +140,7 @@ class Evaluator:
         candidate.negative_energy_penalty_total = negative_energy_penalty_total
         candidate.sleep_penalty_total = sleep_penalty_total
         candidate.fatigue_drain_total = fatigue_drain_total
+        candidate.preference_penalty_total = preference_penalty_total
 
     # Given a candidate Schedule object, fetch the individual and calculate an energy match & simulation fitness
     def evaluate_individual(self, candidate):
@@ -174,4 +183,22 @@ class Evaluator:
             best_simulation_individual.visualise()
 
         return population
+    
+    def is_in_preferred_window(self, slot_index, event):
+        (start, end) = event.EventType.preferred_window
+        return start <= slot_index < end
+    
+    def calc_preference_penalty(self, slot_index, event):
+        if not event.is_moveable:
+            return 0.0
+        
+        if self.is_in_preferred_window(slot_index, event):
+            return 0.0
+        
+        return PREFERENCE_WINDOW_PENATLY * SLOT_HOURS
+
+        
+
+
+        
 

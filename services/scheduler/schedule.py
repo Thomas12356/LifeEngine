@@ -28,9 +28,11 @@ class Schedule:
         self.negative_energy_penalty_total = 0.0
         self.sleep_penalty_total = 0.0
         self.fatigue_drain_total = 0.0
+        self.preference_penalty_total = 0.0
 
     # Given an event and start slot index, return True if the event can be scheduled at that index, False otherwise
     def check_availability(self, event, start_slot):
+        
         if start_slot + event.duration_slots > SLOTS_PER_DAY:
             return False # Event cannot be scheduled as it exceeds the day boundary
         
@@ -40,6 +42,11 @@ class Schedule:
             
             if start_slot + event.duration_slots > BED_SLOT:
                 return False
+
+        (start, end) = event.EventType.availability_window
+
+        if start_slot < start or start_slot + event.duration_slots >= end: # NOTE : Timeslots are end-exclusive
+            return False
 
         for slot in range(event.duration_slots): # Iterate over the duration of the event
             if self.timeslots[start_slot + slot] is not None:
@@ -76,21 +83,27 @@ class Schedule:
               (Sleep penalty) : {self.sleep_penalty_total}
               (Fatigue Drain total) : {self.fatigue_drain_total}
               (Unscheduled Events) : {self.unscheduled_events}
+              (Preference Window Penalty) : {self.preference_penalty_total}
         """)
         input("Press ENTER to view schedule : ")
         i = 0
-        for timeslot in self.timeslots:
+        while i < len(self.timeslots):
+            timeslot = self.timeslots[i]
             if timeslot is not None:
+                end_time = i + timeslot.event.duration_slots
                 print(f"""
-                      Time {slot_to_time(timeslot.slot_index)},
-                      Event : {timeslot.event.name}
-                      Predicted Energy: {timeslot.predicted_energy},
-                      Ideal Energy: {timeslot.event.EventType.ideal_energy},
-                      Effective Energy: {timeslot.effective_energy},
+                Time {slot_to_time(i)} - {slot_to_time(end_time)} ,
+                Event : {timeslot.event.name}
                 """)
+                #print(f"""
+                #      Predicted Energy: {timeslot.predicted_energy},
+                #      Ideal Energy: {timeslot.event.EventType.ideal_energy},
+                #      Effective Energy: {timeslot.effective_energy},
+                #""")
+                i += timeslot.event.duration_slots
             else:
-                print(f"Time {slot_to_time(i)}: Free")
-            i += 1
+                #print(f"Time {slot_to_time(i)}: Free")
+                i += 1
         print("\n")
 
     # Utility function to reset fitness scores

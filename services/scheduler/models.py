@@ -11,6 +11,9 @@ class EventType:
     impact : float
     burnout_rate : float
 
+    availability_window : tuple
+    preferred_window : tuple
+
 @dataclass(frozen=True)
 class Event:
     event_id : int
