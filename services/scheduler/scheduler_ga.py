@@ -69,8 +69,15 @@ MUTATION_RATE = 0.15 # Probability that a child will be mutatated
 
 WAKE_UP_TIME = 7 # 7am
 SLEEP_DURATION = 8 # User-reported ideal sleep duration
-BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
-SCHEDULE_RESOLUTION = 24 # Number of timeslots to divide the day into (24 = 1 timeslot per hour)
+#BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
+#SCHEDULE_RESOLUTION = 24 # Number of timeslots to divide the day into (24 = 1 timeslot per hour)
+
+SLOT_SIZE = 60 # time slots size in minutes
+SLOTS_PER_DAY = 24 * 60 // SLOT_SIZE
+SCHEDULE_RESOLUTION = SLOTS_PER_DAY
+
+SHIFT_RANGE_HOURS = 2
+SHIFT_RANGE = (SHIFT_RANGE_HOURS * 60) // SLOT_SIZE
 
 class SchedulerGA:
     def __init__(self, events, energy_focus_landscape):
@@ -100,7 +107,7 @@ class SchedulerGA:
             # NOTE : We may want to expand this so some events can be carried over when day-to-day scheduling is implemented
             unscheduled_count = 0 # Track number of events that could not be scheduled so they can be penalised 
             for event in fixed_events:
-                success = candidate.insert_event(event, event.start_time) # Attempt to insert event
+                success = candidate.insert_event(event, event.start_slot) # Attempt to insert event
                 if not success:
                     unscheduled_count += 1 # If unsuccesfull increment the count
 
@@ -109,7 +116,7 @@ class SchedulerGA:
                 attempts = 0
                 while not assigned and attempts < 100: # Randomly select slots until limit is reached
                     attempts += 1
-                    slot = random.randint(0, 23) # Randomly select a slot NOTE : We could limit this to not schedule <WAKEUP & >BEDTIME
+                    slot = random.randint(0, SCHEDULE_RESOLUTION - event.slot_duration) # Randomly select a slot NOTE : We could limit this to not schedule <WAKEUP & >BEDTIME
 
                     success = candidate.insert_event(event, slot) # Attempt to insert into time slot
                     if success:
@@ -130,7 +137,7 @@ class SchedulerGA:
 
     def crossover(self, parent1, parent2):
 
-        crossover_point = random.randint(0, 23) # Randomly select a point to split each parent
+        crossover_point = random.randint(0, SCHEDULE_RESOLUTION - 1) # Randomly select a point to split each parent
 
         # Breed parents to create offspring using deep copy to break references
         child1_slots = copy.deepcopy(parent1.timeslots[:crossover_point] + parent2.timeslots[crossover_point:])
@@ -156,13 +163,11 @@ class SchedulerGA:
         # Randomly select either swap mutation or move mutation
         # Swap mutations provide macro variations where order of events change
         # Move mutations provide micro variations where flexible events are shifted
-        shift_range = 6
-
         if random.random() > MUTATION_RATE:
             return
         
         if random.random() > 0.5:
-            self.move_mutation(candidate, shift_range)
+            self.move_mutation(candidate, SHIFT_RANGE)
         else:
             self.swap_mutation(candidate)
 
@@ -178,9 +183,9 @@ class SchedulerGA:
         
         event = random.choice(flexible_events) # Randomly select an event
 
-        old_start = candidate.find_start_time(event.event_id) # Find the hour in which the event is scheduled to start
+        old_start = candidate.find_start_slot(event.event_id) # Find the slot in which the event is scheduled to start
         shift = random.randint(-shift_range, shift_range) # Randomly select a value within the shift range to shift the start time by
-        new_start = max(0, min(23, old_start + shift)) # Calculate and normalise the shifted start time so it does not exceed the 24 hour time period
+        new_start = max(0, min(SCHEDULE_RESOLUTION - event.slot_duration, old_start + shift)) # Calculate and normalise the shifted start time so it does not exceed the 24 hour time period
 
         candidate.clear_event(event.event_id) # Remove all instances of the event
         candidate.insert_event(event, new_start) # Attempt to re-insert at the shifted start time
@@ -197,8 +202,8 @@ class SchedulerGA:
         event1, event2 = random.sample(flexible_events, 2) # Randomly select 2 events
 
         # Fetch the start times of both events
-        event1_start = candidate.find_start_time(event1.event_id)
-        event2_start = candidate.find_start_time(event2.event_id)
+        event1_start = candidate.find_start_slot(event1.event_id)
+        event2_start = candidate.find_start_slot(event2.event_id)
 
         # Clear both events from the schedule
         candidate.clear_event(event1.event_id)
