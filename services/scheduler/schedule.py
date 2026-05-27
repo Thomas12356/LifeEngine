@@ -11,7 +11,7 @@
 
 from dataclasses import dataclass
 from .models import Event, TimeSlot
-from services.config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, WAKE_UP_SLOT, BED_SLOT
+from services.config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, WAKE_UP_SLOT, BED_SLOT, SLOT_SIZE
 import random
 
 class Schedule:
@@ -60,6 +60,12 @@ class Schedule:
         
     # Utility function to visualise the schedule in a readable format
     def visualise(self):
+        def slot_to_time(slot_index):
+            minutes = slot_index * SLOT_SIZE
+            hour = minutes // 60
+            minute = minutes % 60
+            return f"{hour:02d}:{minute:02d}"
+        
         print(f"""
               Candidate Schedule {self.id}
               (Match fitness: {self.match_fitness}
@@ -76,13 +82,14 @@ class Schedule:
         for timeslot in self.timeslots:
             if timeslot is not None:
                 print(f"""
-                      Slot {timeslot.slot_index}: {timeslot.event.name},
+                      Time {slot_to_time(timeslot.slot_index)},
+                      Event : {timeslot.event.name}
                       Predicted Energy: {timeslot.predicted_energy},
                       Ideal Energy: {timeslot.event.EventType.ideal_energy},
                       Effective Energy: {timeslot.effective_energy},
                 """)
             else:
-                print(f"Slot {i}: Free")
+                print(f"Time {slot_to_time(i)}: Free")
             i += 1
         print("\n")
 

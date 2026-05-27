@@ -1,6 +1,5 @@
-# This is just a temp file to test each package works individually
+# This is just a temp file to test the scheduler
 
-"""
 from services.scheduler.scheduler_ga import SchedulerGA
 
 # Custom data types import
@@ -8,6 +7,9 @@ from services.scheduler.models import EventType, Event
 
 # Resource predictor import
 from services.energy_predictor import get_baseline_array
+
+from services.config import SCHEDULE_RESOLUTION
+
 
 # Placeholder for event type categories
 event_types = {
@@ -18,16 +20,14 @@ event_types = {
 
 # Placeholder for storing events fed into the GA
 events_to_schedule = [
-    Event(1, "Task 1", event_types["Work"], start_time=9, duration=2),
-    Event(2, "Task 2", event_types["Work"], start_time=None, duration=2),
-    Event(3, "Work meeting", event_types["Work"], start_time=12, duration=1),
-    Event(4, "Evening Workout", event_types["Exercise"], start_time=17, duration=1),
-    Event(5, "Study Session", event_types["Study"], start_time=None, duration=2),
-    Event(6, "Read budget report", event_types["Work"], start_time=None, duration=1),
+    Event(1, "Task 1", event_types["Work"], start_slot=36, duration_slots=8, importance=1, is_moveable=True),
+    Event(2, "Task 2", event_types["Work"], start_slot=72, duration_slots=8, importance=1, is_moveable=False),
+    Event(3, "Work meeting", event_types["Work"], start_slot=48, duration_slots=4, importance=1, is_moveable=False),
+    Event(4, "Evening Workout", event_types["Exercise"], start_slot=68, duration_slots=4, importance=10, is_moveable=True),
+    Event(5, "Study Session", event_types["Study"], start_slot=52, duration_slots=8, importance=1, is_moveable=True),
 ]
 
-baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12) # Fetch baseline energy landscape from resource predictor
+baseline_energy, baseline_focus = get_baseline_array(phi1=7, phi2=12, resolution=SCHEDULE_RESOLUTION) # Fetch baseline energy landscape from resource predictor
 
 scheduler = SchedulerGA(events_to_schedule, energy_focus_landscape=list(zip(baseline_energy, baseline_focus))) # Initalise new GA instance
 scheduler.run() # Run the scheduler
-"""

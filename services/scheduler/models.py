@@ -17,6 +17,7 @@ class Event:
     name: str
     EventType: EventType
     is_moveable : bool
+    importance : int
 
     start_slot : int
     duration_slots : int

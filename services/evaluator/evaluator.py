@@ -90,10 +90,10 @@ class Evaluator:
                 event = timeslot.event
                 if clock_slot < BED_SLOT and clock_slot >= WAKE_UP_SLOT: # Only apply yield if the event is scheduled during waking hours
                     if effective_energy < 0: # Check if effective energy is below 0
-                        task_yield = (IMPORTANCE * FATIGUE_MODIFIER) + (effective_energy * 0.5) * SLOT_HOURS # Apply a heavy penatly to task yield
+                        task_yield = (event.importance * FATIGUE_MODIFIER) + (effective_energy * 0.5) * SLOT_HOURS # Apply a heavy penatly to task yield
                         negative_energy_penalty_total += task_yield
                     else:
-                        task_yield = (IMPORTANCE * math.pow(effective_energy, K)) * SLOT_HOURS #
+                        task_yield = (event.importance * math.pow(effective_energy, K)) * SLOT_HOURS #
                         positive_yield_total += task_yield
                 else:
                     task_yield = -500 * SLOT_HOURS # Heavy penalty for scheduling events during sleep hours
