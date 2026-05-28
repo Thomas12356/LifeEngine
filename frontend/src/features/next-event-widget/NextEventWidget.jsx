@@ -33,14 +33,14 @@ export default function NextEvent() {
                 {/* Left Section */}
                 <Stack gap={1} minW={0}>
                     <Stack alignItems="start" gap={0}>
-                        <Text textStyle="blueText">Next Up</Text>
+                        <Text textStyle="darkBlueText">Next Up</Text>
 
                         <Text textStyle="headingSolid" wordBreak="break-word">
                             Code LifeEngine
                         </Text>
                     </Stack>
 
-                    <Text>10:00 AM - 11:00 AM</Text>
+                    <Text textStyle="defaultText">10:00 AM - 11:00 AM</Text>
                 </Stack>
 
                 {/* Right Section */}
@@ -49,7 +49,7 @@ export default function NextEvent() {
                     gap={4}
                     width={{ base: "100%", md: "auto" }}
                 >
-                    <Text>
+                    <Text textStyle="defaultText">
                         Starts in -- Minutes
                     </Text>
 
@@ -63,6 +63,7 @@ export default function NextEvent() {
                             px={{ base: 4, md: 7 }}
                             width={{ base: "100%", sm: "auto" }}
                             bg="warningYellow"
+                            fontSize="sm"
                         >
                             Reschedule
                         </Button>
@@ -72,6 +73,7 @@ export default function NextEvent() {
                             px={{ base: 4, md: 7 }}
                             width={{ base: "100%", sm: "auto" }}
                             bg="errorRed"
+                            fontSize="sm"
                         >
                             Cancel
                         </Button>
