@@ -18,7 +18,7 @@ import { RiChatAiFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 
-import LogoutLink from "@/features/auth/components/LogoutLink";
+import LogoutButton from "@/features/auth/components/LogoutButton"
 
 
 {/* -------------------- Styling -------------------- */}
@@ -33,6 +33,7 @@ const iconNavButtonLinkStyles = {
 const navBarIconStyles = {
     boxSize: "20px",
 }
+
 {/* NavBar Styles */}
 const navBarBoxStyles = {
     bg: "white",
@@ -137,7 +138,7 @@ export default function NavBar() {
                         {IconNavButtons.map((button) => (
                             <IconNavButton key={button.to} {...button} />
                         ))}
-                        <LogoutLink/>
+                        <LogoutButton/>
                     </HStack>
 
                     {/* Mobile Toggle Menu */}
@@ -170,7 +171,7 @@ export default function NavBar() {
                             />
                         ))}
                         <Center>
-                            <LogoutLink/>
+                            <LogoutButton isMobile={true}/>
                         </Center>
                     </VStack>
                 </Box>
