@@ -12,7 +12,27 @@ export default function AgentChatWindow({ chatHistory }) {
 
     return (
             <BlueWidgetBox width="100%" my={2}>
-            <VStack width="100%" height="200px" overflowY="scroll" p={2} gap={1} align="start">
+            <VStack
+                width="100%" 
+                height="200px" 
+                overflowY="scroll" 
+                p={2}
+                my={2}
+                gap={1} 
+                align="start"
+                css={{
+                    "&::-webkit-scrollbar": {
+                    width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                    background: "blueLight.100", 
+                    borderRadius: "4px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                    background: "blueLight.200", 
+                    borderRadius: "4px",},
+                }}>
+
                 {chatHistory.map((msg, index) => {
                     const MessageComponent = messageTypes[msg.sender];
                     return <MessageComponent key={index} message={msg} />;

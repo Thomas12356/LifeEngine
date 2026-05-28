@@ -16,6 +16,7 @@ import { Box, HStack, Spacer, Stack, VStack } from "@chakra-ui/react";
 import ResourceSelectorHeading from "@features/resource-selector-heading/ResourceSelectorHeading";
 import NextEvent from "@features/next-event-widget/NextEventWidget";
 import AgentWidget from "@features/agent-widget/AgentWidget";
+import ScheduleWidget from "@features/schedule-widget/ScheduleWidget";
 
 export default function Home() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -46,7 +47,7 @@ export default function Home() {
                 >
                     {/* Add future widgets/components here */}
                     <NextEvent />
-                    
+                    <ScheduleWidget />
                     
                 </VStack>
             </Stack>
