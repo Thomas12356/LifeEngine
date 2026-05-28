@@ -18,8 +18,22 @@ export async function fetchEvents(userID) {
         id : event.id,
         title : event.name,
         start : event.start_time,
-        end : event.end_time
+        end : event.end_time,
+        colour : event.colour
     }))
 
     return calendarEvents
+}
+
+export async function deleteEvent(userID, eventID) {
+
+    const response = await api.delete("/event/deleteevent", {
+        data : {
+            user_id : userID,
+            event_id : eventID
+        }
+    })
+
+    return response
+
 }

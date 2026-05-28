@@ -10,8 +10,10 @@
  */
 
 /* --- IMPORTS --- */
-import { HStack, VStack, Text, Box } from "@chakra-ui/react"
+import { HStack, VStack, Text, Box, Menu } from "@chakra-ui/react"
 import { calculateEventPosition } from "../utils/dateHelpers.js"
+import { useRef, useEffect } from "react"
+import { formatEventTime } from "../utils/dateHelpers.js"
 
 /* --- LOCAL COMPONENTS --- */
 
@@ -26,19 +28,25 @@ const GridBackground = () => {
             h="1440px"
             flex="1"
             bgImage={`
-                repeating-linear-gradient( /* Vertical lines every hour */
-                to bottom, /* Run vertically */
-                transparent,
-                transparent 59px, /* 59px of blank space */
-                #e2e8f0 60px /* 1px line at 60px (1 hour) */
+                repeating-linear-gradient( /* Horizontal hour lines */
+                    to bottom, /* Run vertically */
+                    transparent 0,
+                    transparent 59px, /* 59px of blank space */
+                    #94949442 60px /* 1px line at 60px (1 hour) */
                 ),
-                repeating-linear-gradient( /* Horizontal lines every day */
-                to right, /* Run horizontally */
-                transparent, 
-                transparent calc(100% / 7 - 1px), /* Calculate width of 1/7th of container minus 1px for line */
-                #e2e8f0 calc(100% / 7)
+                linear-gradient( /* Vertical day lines */
+                    to right, /* Run horizontally */
+                    transparent 0, 
+                    transparent calc(100% - 1px),
+                    #94949442 calc(100% - 1px),
+                    #94949442 100%
                 )
             `}
+            bgSize={`
+                100% 60px, /* Width and height, for hour lines */
+                calc(100% / 7) 100% /* Width and height, for day lines */
+            `}
+            bgRepeat="repeat" // Repeat both gradient layers across full grid area
         />
     )
 }
@@ -48,26 +56,58 @@ const GridBackground = () => {
  * @param {Array} events - An array of event objects to be displayed on the calendar.
  * @returns {JSX.Element} A Box component containing the event elements.
  */
-const EventLayer = ({ events }) => {
+const EventLayer = ({ events, onEventDelete }) => {
 
     return (
         <Box position="absolute" top="0" left="0" w="100%" h="1440px">
             {events.map((event, index) => { // Loop through events and calculate their positions
                 const { top, height, left, width } = calculateEventPosition(event)
                 return (
-                    <Box
-                        key={index}
-                        position="absolute" // Position each event absolutely within the calendar body
-                        top={`${top}%`} // Position from the top based on event start time
-                        left={`${left}%`} // Position from the left based on event weekday
-                        w={`${width}%`}
-                        h={`${height}%`}
-                        bg="blue.500"
-                        color="white"
-                        p={2}
-                    >
-                        {event.title}
-                    </Box>
+                    <Menu.Root key={index}>
+                        <Menu.Trigger asChild>
+                            <Box
+                                position="absolute" // Position each event absolutely within the calendar body
+                                top={`${top}%`} // Position from the top based on event start time
+                                left={`${left}%`} // Position from the left based on event weekday
+                                w={`${width}%`}
+                                h={`${height}%`}
+                                bg={event.colour || "blue.500"}
+                                color="white"
+                                px={2}
+                                py={1}
+                                borderRadius={"md"}
+                                boxShadow={"md"}
+                                overflow="hidden"
+                                cursor="pointer"
+                                transition="filter 0.15s ease"
+                                _hover={{
+                                    filter: "brightness(0.92)",
+                                }}
+                            >
+                                <Text fontWeight="semibold" noOfLines={1}>
+                                    {event.title}
+                                </Text>
+                                <Text noOfLines={1}>
+                                    {formatEventTime(event.start)} - {formatEventTime(event.end)} {/* Slice ISO strings to only contain HH:MM */}
+                                </Text>
+                            </Box>
+                        </Menu.Trigger>
+
+                        <Menu.Positioner>
+                            <Menu.Content>
+                                <Menu.Item
+                                    color={"red"}
+                                    cursor="pointer"
+                                    _hover={{
+                                        bg: "gray.200"
+                                    }}
+                                    onClick={() => onEventDelete(event.id)}
+                                >
+                                    Delete event
+                                </Menu.Item>
+                            </Menu.Content>
+                        </Menu.Positioner>
+                    </Menu.Root>
                 )
             })}
         </Box>
@@ -103,23 +143,30 @@ const TimeIndicator = () => {
  * @param {Array} events - An array of event objects to be displayed on the calendar.
  * @returns {JSX.Element} A Box component representing the calendar body.
  */
-export default function CalendarBody({ events}) {
+export default function CalendarBody({ events, onEventDelete }) {
 
+    const scrollContainerRef = useRef(null) // Initalise scroll reference
     const hours = Array.from({ length: 24 }, (_, i) => i) // Create an array of hours from 0 to 23 for the time axis
 
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = 8 * 60 // On page load auto scroll to 8 AM (1px = 1 minute)
+        }
+    })
+
     return (
-        <Box w="100%" h="calc(100vh - 200px)" overflowY="auto" position="relative"> {/* Main container for the calendar body */}
-            <HStack align="start" spacing={0} w="100%">
+        <Box w="100%" h="100%" overflowY="auto" overflowX="hidden" position="relative" ref={scrollContainerRef}> {/* Main container for the calendar body */}
+            <HStack align="start" spacing={0} w="100%" h="100%">
                 <VStack w="60px" h="1440px" position="relative"> {/* Container for the time axis */}
                     {hours.map(hour => ( // Loop through hours and render time labels inside the container
-                        <Text key={hour} top={`${hour * 60}px`} position="absolute">
+                        <Text key={hour} top={`${hour * 60}px`} position="absolute" transform={hour === 0 ? "none" : "translateY(-50%)"}>
                             {hour}:00
                         </Text>
                     ))}
                 </VStack>
                 <Box flex="1" h="1440px" position="relative"> {/* Main calendar body container */}
                     <GridBackground />
-                    <EventLayer events={events} />
+                    <EventLayer events={events} onEventDelete={onEventDelete} />
                     <TimeIndicator />
                 </Box>
             </HStack>

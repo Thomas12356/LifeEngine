@@ -98,6 +98,7 @@ class Event(db.Model):
     end_time = db.Column(db.DateTime(timezone=True), nullable=False, index=True)
     is_moveable = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
+    colour = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -108,6 +109,13 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event: {self.name} | Start: {self.start_time}>"
+
+    @classmethod
+    def find_by_id(cls, event_id):
+        """
+        Finds an event by its ID.
+        """
+        return cls.query.get(event_id)
     
     @classmethod
     def get_by_user_id(cls, user_id):
@@ -123,5 +131,6 @@ class Event(db.Model):
             "start_time": self.start_time.isoformat() if self.start_time else None,
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "is_moveable": self.is_moveable,
-            "is_active": self.is_active
+            "is_active": self.is_active,
+            "colour" : self.colour if self.colour else None
         }

@@ -3,7 +3,7 @@ from app.services import event_services
 
 event_blueprint = Blueprint('event',__name__)
 
-REQUIRED_EVENT_FIELDS = ['user_id', 'name', 'start_time', 'end_time', 'parameters']
+REQUIRED_EVENT_FIELDS = ['user_id', 'name', 'start_time', 'end_time', 'parameters', "colour"]
 REQUIRED_EVENT_PARAMETER_FIELDS = ["ideal_energy", "burnout_rate", "priority"]
 REQUIRED_EVENT_TYPE_FIELDS = ["user_id", "event_parameter_id", "name"]
 REQUIRED_GET_EVENTS_FIELDS = ["user_id"]
@@ -28,7 +28,8 @@ def add_event():
         event_type_id_str=data.get('event_type_id'),
         event_parameters=data["parameters"],
         is_moveable=data["is_moveable"],
-        is_active=data.get('is_active', True)
+        is_active=data.get('is_active', True),
+        colour=data.get("colour", None)
     )
 
     if not result["success"]:
@@ -38,6 +39,31 @@ def add_event():
         "message": "Event created successfully", 
         "event_id": result["event_id"]
     }), 201
+
+@event_blueprint.route('/deleteevent', methods=['DELETE'])
+def delete_event():
+    data = request.get_json()
+
+    required_fields  = ["user_id", "event_id"]
+
+    for field in required_fields:
+        if field not in data or not data[field]:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+    
+    result = event_services.delete_event(
+        user_id_str = data["user_id"],
+        event_id_str = data["event_id"]
+    )
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), result["status_code"]
+
+    return jsonify({
+        "message" : "Event deleted successfully."
+    }), 200
+
+
+
 
 @event_blueprint.route("/createparameters", methods=['POST'])
 def create_parameters():

@@ -1,6 +1,6 @@
 
 // --- IMPORTS ---
-import { HStack } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import DateSelectMenu from "./DateSelectMenu"
 import ViewSelectMenu from "./ViewSelectMenu"
 import AddEventButton from "./AddEventButton"
@@ -15,10 +15,14 @@ import AddEventButton from "./AddEventButton"
  */
 export default function CalendarMenu( { selectedDate, setSelectedDate, onEventAdded }) {
     return (
-        <HStack>
+        <Flex
+            align="center"
+            justify="space-between"
+            px={4}
+            py={3}
+        >
             <DateSelectMenu selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            <ViewSelectMenu />
             <AddEventButton onEventAdded={onEventAdded}/>
-        </HStack>
+        </Flex>
     )
 }

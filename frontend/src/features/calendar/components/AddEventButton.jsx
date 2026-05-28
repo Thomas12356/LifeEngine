@@ -9,7 +9,8 @@
 
 /* --- IMPORTS --- */
 import { Popover, Button, Portal } from "@chakra-ui/react"
-import { useRef, useState } from "react"
+import { useState } from "react"
+import { LuPlus } from "react-icons/lu"
 
 import AddEventMenu from "./AddEventMenu"
 
@@ -24,12 +25,22 @@ export default function AddEventButton({ onEventAdded }) {
 
     return (
         <Popover.Root 
-        open={open} 
-        onOpenChange={(e) => setOpen(e.open)}
-        positioning={{ placement: "bottom" }}
+            open={open} 
+            onOpenChange={(e) => setOpen(e.open)}
+            positioning={{ placement: "bottom" }}
         >
-            <Popover.Trigger>
-                Add Event
+            <Popover.Trigger asChild>
+                <Button
+                    bg="blue.500"
+                    color="white"
+                    borderRadius="lg"
+                    _hover={{
+                        filter: "brightness(0.92)",
+                    }}
+                >
+                    Add Event
+                    <LuPlus />
+                </Button>
             </Popover.Trigger>
             <Portal> {/* Render the popover content in a portal to avoid z-index and overflow issues */}
                 <Popover.Positioner>

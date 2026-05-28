@@ -1,5 +1,6 @@
 import DropDown from "@ui-components/DropDown"
 import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput, Checkbox } from "@chakra-ui/react"
+import ColourPicker from "@ui-components/ColourPicker"
 import { LuChevronRight } from "react-icons/lu"
 import { useState } from "react"
 import useAddEvent from "../hooks/useAddEvent"
@@ -17,7 +18,8 @@ export default function AddEventMenu({ onClose, onEventAdded }){
         idealEnergy : "",
         priority : "",
         burnoutRate : "",
-        isMoveable : false
+        isMoveable : false,
+        color : ""
     })
 
     function updateField(field, value) {
@@ -93,6 +95,10 @@ export default function AddEventMenu({ onClose, onEventAdded }){
                     allowClear={true}
                 />
             </Field.Root>
+            <Field.Root>
+                <Field.Label>Label Colour</Field.Label>
+                <ColourPicker value={formData.colour} onChange={(value) => updateField("colour", value)}/>
+            </Field.Root>
             <Collapsible.Root>
                 <Collapsible.Trigger>
                     <Collapsible.Indicator>
@@ -103,58 +109,66 @@ export default function AddEventMenu({ onClose, onEventAdded }){
                     </Collapsible.Indicator>
                 </Collapsible.Trigger>
                 <Collapsible.Content>
-                    <Field.Root>
-                        <HStack>
-                            <Field.Label>Priority</Field.Label>
-                            <NumberInput.Root 
-                                min={1} 
-                                max={10}
-                                value = {formData.priority}
-                                onValueChange={(e) => updateField("priority", e.value)}
+                    <Stack gap={3}>
+                        <Field.Root>
+                            <HStack>
+                                <Field.Label fontWeight="normal">Priority</Field.Label>
+                                <NumberInput.Root 
+                                    min={1} 
+                                    max={10}
+                                    width="80px"
+                                    value = {formData.priority}
+                                    onValueChange={(e) => updateField("priority", e.value)}
+                                >
+                                    <NumberInput.Control/>
+                                    <NumberInput.Input/>
+                                </NumberInput.Root>
+                            </HStack>
+                        </Field.Root>
+                        <Field.Root>
+                            <DropDown
+                                title="Ideal Energy"
+                                type="ResourceLevel"
+                                value={formData.idealEnergy}
+                                onChange={(value) => updateField("idealEnergy", value)}
+                                placeholder="Default"
+                                allowClear={true}
+                            />
+                        </Field.Root>
+                        <Field.Root>
+                            <DropDown 
+                                title="Burnout Rate"
+                                type="ResourceLevel"
+                                value={formData.burnoutRate}
+                                onChange={(value) => updateField("burnoutRate", value)}
+                                placeholder="Default"
+                                allowClear={true}
+                            />
+                        </Field.Root>
+                        <Field.Root>
+                            <Checkbox.Root
+                                value = {formData.isMoveable}
+                                onCheckedChange={(e) => updateField("isMoveable", e.checked)}
                             >
-                                <NumberInput.Control/>
-                                <NumberInput.Input/>
-                            </NumberInput.Root>
-                        </HStack>
-                    </Field.Root>
-                    <Field.Root>
-                        <DropDown
-                            title="Ideal Energy"
-                            type="ResourceLevel"
-                            value={formData.idealEnergy}
-                            onChange={(value) => updateField("idealEnergy", value)}
-                            placeholder="Default"
-                            allowClear={true}
-                        />
-                    </Field.Root>
-                    <Field.Root>
-                        <DropDown 
-                            title="Burnout Rate"
-                            type="ResourceLevel"
-                            value={formData.burnoutRate}
-                            onChange={(value) => updateField("burnoutRate", value)}
-                            placeholder="Default"
-                            allowClear={true}
-                        />
-                    </Field.Root>
-                    <Field.Root>
-                        <Checkbox.Root
-                            value = {formData.isMoveable}
-                            onCheckedChange={(e) => updateField("isMoveable", e.checked)}
-                        >
-                            <Checkbox.HiddenInput/>
-                            <Checkbox.Label>
-                                Allow auto-rescheduling
-                            </Checkbox.Label>
-                            <Checkbox.Control/>
-                        </Checkbox.Root>
-                    </Field.Root>
+                                <Checkbox.HiddenInput/>
+                                <Checkbox.Label>
+                                    Allow auto-rescheduling
+                                </Checkbox.Label>
+                                <Checkbox.Control/>
+                            </Checkbox.Root>
+                        </Field.Root>
+                    </Stack>
                 </Collapsible.Content>
             </Collapsible.Root>
             <Button 
-                colorScheme="blue" 
                 size="sm" 
                 onClick={handleSave}
+                bg="blue.500"
+                color="white"
+                borderRadius="lg"
+                _hover={{
+                    filter: "brightness(0.92)",
+                }}
             >
                 Save to Calendar
             </Button>

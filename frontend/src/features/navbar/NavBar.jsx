@@ -12,6 +12,12 @@ import { VerticalDivider } from "@/components/ui-components/Dividers";
 {/* Temporary Dev Imports */}
 import { FaBeer } from "react-icons/fa";
 import { TiThMenuOutline } from "react-icons/ti";
+import { GoHomeFill } from "react-icons/go";
+import { FaCalendar } from "react-icons/fa6";
+import { RiChatAiFill } from "react-icons/ri";
+import { FaUser } from "react-icons/fa";
+import { IoNotifications } from "react-icons/io5";
+
 import LogoutLink from "@/features/auth/components/LogoutLink";
 
 
@@ -45,17 +51,17 @@ const navBarBoxStyles = {
 
 {/* -------------------- Config -------------------- */}
 const navButtons = [
-    { to: "/home", Icon: FaBeer, text: "Home" },
-    { to: "/calendar", Icon: FaBeer, text: "Calendar" },
-    { to: "/habits", Icon: FaBeer, text: "Habits" },
-    { to: "/insights", Icon: FaBeer, text: "Insights" },
-    { to: "/agent", Icon: FaBeer, text: "Agent" },
-    { to: "/profile", Icon: FaBeer, text: "Profile" },
-    { to: "/social", Icon: FaBeer, text: "Social" },
+    { to: "/home", Icon: GoHomeFill, text: "Home" },
+    { to: "/calendar", Icon: FaCalendar, text: "Calendar" },
+    //{ to: "/habits", Icon: FaBeer, text: "Habits" },
+    //{ to: "/insights", Icon: FaBeer, text: "Insights" },
+    { to: "/agent", Icon: RiChatAiFill, text: "Agent" },
+    { to: "/profile", Icon: FaUser, text: "Profile" }
+    //{ to: "/social", Icon: FaBeer, text: "Social" },
 ];
 
 const IconNavButtons = [
-    { to: "/notifications", Icon: FaBeer },
+    { to: "/notifications", Icon: IoNotifications },
 ]
 
 {/* -------------------- Local Components -------------------- */}

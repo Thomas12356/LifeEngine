@@ -10,10 +10,11 @@ def create_event(
         user_id_str: str,
         name, start_time_str: str,
         end_time_str: str,
+        colour: str,
         event_type_id_str: str = None,
         event_parameters: dict = None,
         is_moveable: bool = False,
-        is_active: bool = True
+        is_active: bool = True,
     ):
     """
     Creates an event and validates data format, saves to db.
@@ -52,7 +53,9 @@ def create_event(
                            start_time=start_dt,
                            end_time=end_dt,
                            is_moveable=is_moveable,
-                           is_active=is_active)
+                           is_active=is_active,
+                           colour=colour
+                        )
         
         db.session.add(new_event)
         db.session.commit()
@@ -64,6 +67,41 @@ def create_event(
     
     except Exception as e:
         db.session.rollback()
+        return {"success": False, "error": "Internal database error.", "status_code": 500}
+
+def delete_event(user_id_str : str, event_id_str : str):
+    """
+    Soft deletes and event by setting the columns is_active to False
+    """
+
+    try:
+        event_uuid = uuid.UUID(event_id_str)
+        user_uuid = uuid.UUID(user_id_str)
+
+        event = Event.find_by_id(event_uuid) # Fetch event by ID
+
+        # Return error if event could not be found
+        if not event:
+            return {"success" : False, "error" : "Event does not exist.", "status_code" : 404}
+
+        # Return error if event does not belong to user making request
+        if event.user_id != user_uuid:
+            return {"success" : False, "error" : "User does not have permission to delete this event.", "status_code" : 403}
+
+        event.is_active = False # Soft delete
+        db.session.commit()
+        return {"success" : True} # Return success
+
+    except ValueError as e:
+        return {"success": False, "error": f"Invalid data format: {str(e)}", "status_code": 400}
+    
+    except Exception as e:
+        db.session.rollback()
+        return {"success": False, "error": "Internal database error.", "status_code": 500}
+
+
+
+
         return {"success": False, "error": f"Internal database error : {str(e)}", "status_code": 500}
 
 def create_event_parameters(params):
@@ -91,14 +129,14 @@ def create_event_parameters(params):
                 return {"success": False, "error": "ideal_energy must be between 0 and 1", "status_code": 400}
         else:
             ideal_energy = None
-        
+
         created_at = datetime.now()
 
         new_parameters =  EventParameter(
             ideal_energy=ideal_energy,
             burnout_rate=burnout_rate,
             priority=priority,
-            created_at=created_at
+            created_at=created_at,
         )
 
         db.session.add(new_parameters)
