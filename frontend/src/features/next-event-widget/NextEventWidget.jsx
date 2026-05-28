@@ -31,18 +31,16 @@ export default function NextEvent() {
                 width="100%"
             >
                 {/* Left Section */}
-                <Stack gap={1} minW={0}>
-                    <Stack alignItems="start" gap={0}>
-                        <Text textStyle="darkBlueText" fontSize="sm">
+                <Stack gap={0} minW={0}>
+
+                        <Text textStyle="darkBlueText">
                             Next Up
                         </Text>
 
                         <Text textStyle="headingSolid" wordBreak="break-word">
                             Code LifeEngine
                         </Text>
-                    </Stack>
-
-                    <Text textStyle="defaultText">
+                        <Text textStyle="defaultText">
                         10:00 AM - 11:00 AM
                     </Text>
                 </Stack>
