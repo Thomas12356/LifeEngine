@@ -19,7 +19,7 @@ export default function AddEventMenu({ onClose, onEventAdded }){
         priority : "",
         burnoutRate : "",
         isMoveable : false,
-        color : ""
+        colour : "#3182CE",
     })
 
     function updateField(field, value) {
