@@ -17,9 +17,6 @@ def get_default_event_type(user_id_str):
             EventType.query.filter_by(user_id=user_uuid, name="Default").one_or_none()
         )
 
-        print(existing_defaults)
-        print(type(existing_defaults))
-
         if existing_defaults:
             return {
                 "success" : True,
@@ -309,8 +306,6 @@ def get_user_events_details(user_id_str : str):
             }
             for event in events
         ]
-
-        print(events_list)
 
         return {"success" : True, "events" : events_list}
     

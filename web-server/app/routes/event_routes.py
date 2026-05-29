@@ -11,9 +11,6 @@ REQUIRED_GET_EVENTS_FIELDS = ["user_id"]
 @event_blueprint.route('/addevent', methods=['POST'])
 def add_event():
     data = request.get_json()
-
-    # DEBUG - Remove later
-    print(data)
     
     # check required data has been given.
     for field in REQUIRED_EVENT_FIELDS:
