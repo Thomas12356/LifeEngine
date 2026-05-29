@@ -191,13 +191,13 @@ def create_event_type(user_id_str : str, parameters : dict, name : str):
         db.session.rollback()
         return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}
     
-def get_user_events(user_id_str : str):
+def get_user_events_details(user_id_str : str):
 
     try:
 
         user_uuid = uuid.UUID(user_id_str)
 
-        events = Event.get_by_user_id(user_uuid)
+        events = Event.get_details_by_user_id(user_uuid)
 
         return {"success" : True, "events" : [event.to_dict() for event in events]}
     
