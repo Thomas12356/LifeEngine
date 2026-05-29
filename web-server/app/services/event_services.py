@@ -1,10 +1,76 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from app import db
 from app.models import Event, EventParameter, EventType
+from dotenv import load_dotenv
+import os
+
 
 from app.utils.events_util import clean_parameters
 
+
+def get_default_event_type(user_id_str):
+    try:
+        user_uuid = uuid.UUID(user_id_str)
+
+        existing_defaults = (
+            EventType.query.filter_by(user_id=user_uuid, name="Default").one_or_none()
+        )
+
+        print(existing_defaults)
+        print(type(existing_defaults))
+
+        if existing_defaults:
+            return {
+                "success" : True,
+                "event_type_id" : str(existing_defaults.id),
+                "event_parameter_id" : str(existing_defaults.parameter.id)
+                if existing_defaults.event_parameter_id else None
+            }
+
+        defaults = {
+            "ideal_energy": os.environ.get("DEFAULT_IDEAL_ENERGY"),
+            "burnout_rate": os.environ.get("DEFAULT_BURNOUT_RATE"),
+            "priority": os.environ.get("DEFAULT_PRIORITY"),
+        }
+
+        result = create_event_parameters(defaults)
+
+        if not result["success"]:
+            return result
+
+        parameter_uuid = uuid.UUID(result["event_parameters_id"])
+
+        default_event_type = EventType(
+            user_id=user_uuid,
+            event_parameter_id=parameter_uuid,
+            name="Default",
+            created_at=datetime.now()
+        )
+
+        db.session.add(default_event_type)
+        db.session.commit()
+
+        return {
+            "success" : True,
+            "event_type_id" : str(default_event_type.id),
+            "event_parameter_id" : str(default_event_type.parameter.id)
+        }
+    except ValueError as e:
+        return {
+            "success": False,
+            "error": f"Invalid data format: {str(e)}",
+            "status_code": 400
+        }
+
+    except Exception as e:
+        db.session.rollback()
+        return {
+            "success": False,
+            "error": f"Internal database error. {str(e)}",
+            "status_code": 500
+        }
+    
 
 def create_event(
         user_id_str: str,
@@ -30,7 +96,18 @@ def create_event(
 
         event_parameters = clean_parameters(event_parameters)
 
+        if event_type_id_str:
+            event_type_uuid = uuid.UUID(event_type_id_str) 
+        else:
+            result = get_default_event_type(user_id_str)
+
+            if not result["success"]:
+                return result
+            
+            event_type_uuid = uuid.UUID(result["event_type_id"])
+
         has_custom_params = False
+        parameter_uuid = None
         for param in event_parameters:
             if event_parameters[param] is not None:
                 has_custom_params = True
@@ -40,11 +117,8 @@ def create_event(
             if not result["success"]:
                 return result
             
-            parameter_uuid = result["event_parameters_id"]
-        else:
-            parameter_uuid = None
-
-        event_type_uuid = uuid.UUID(event_type_id_str) if event_type_id_str else None
+            parameter_uuid = uuid.UUID(result["event_parameters_id"])
+        
         
         new_event = Event(user_id=user_uuid,
                            event_type_id=event_type_uuid,
@@ -99,6 +173,8 @@ def delete_event(user_id_str : str, event_id_str : str):
         db.session.rollback()
         return {"success": False, "error": "Internal database error.", "status_code": 500}
 
+
+
 def create_event_parameters(params):
     """
     Creates a record of event parameters, validates data and saves to db.
@@ -146,13 +222,21 @@ def create_event_parameters(params):
         db.session.rollback()
         return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}
 
-def create_event_type(user_id_str : str, parameters : dict, name : str):
+def create_event_type(user_id_str : str, parameters : dict, name : str, is_default: bool = False):
     """
     Creates a new event type and saves to db.
     """
-    default_parameters_id = "b0763a86-0d62-48a1-8cf8-cd881159405e"
+    if not is_default and name == "Default":
+        return {"success": False, "error": "name cannot be default", "status_code": 400}
     try:
         user_uuid = uuid.UUID(user_id_str)
+
+        existing_type = (
+            EventType.query.filter_byt(user_id=user_uuid, name=name)
+        )
+
+        if existing_type:
+            return {"success" : False, "error" : "EventType with this name already exists", "status_code" : 409}
 
         parameters = clean_parameters(parameters)
 
@@ -166,9 +250,26 @@ def create_event_type(user_id_str : str, parameters : dict, name : str):
             if not result["success"]:
                 return result
             
-            parameters_uuid = result["event_parameters_id"]
+            parameters_uuid = uuid.UUID(result["event_parameters_id"])
+        elif is_default:
+
+            
+            defaults = {
+                "ideal_energy": os.environ.get("DEFAULT_IDEAL_ENERGY"),
+                "burnout_rate": os.environ.get("DEFAULT_BURNOUT_RATE"),
+                "priority": os.environ.get("DEFAULT_PRIORITY"),
+            }
+
+            result = create_event_parameters(defaults)
+
+            parameters_uuid = uuid.UUID(result["event_parameters_id"])
         else:
-            parameters_uuid = default_parameters_id
+            default_result = get_default_event_type(user_id_str)
+
+            if not default_result["success"]:
+                return default_result
+            
+            parameters_uuid = uuid.UUID(default_result["event_parameters_id"])
 
         created_at = datetime.now()
 
