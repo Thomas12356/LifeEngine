@@ -124,9 +124,10 @@ def get_user_events_details(user_id):
         "events": result["events"]
     }), 200 
 
-@event_blueprint.route("/getevents/user/<user_id>/", methods=["GET"])
-def get_user_events_by_range(user_id):
+@event_blueprint.route("/getevents/byrange", methods=["GET"])
+def get_user_events_by_range():
 
+    user_id = request.args.get("user_id")
     range_start = request.args.get("range_start")
     range_end = request.args.get("range_end")
 
