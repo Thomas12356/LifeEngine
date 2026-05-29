@@ -123,5 +123,23 @@ def get_user_events_details(user_id):
         "message": f"User {user_id} events fetched.", 
         "events": result["events"]
     }), 200 
+
+@event_blueprint.route("getevents/byday", methods={"GET"})
+def get_user_events_by_day():
+    user_id_str = request.args.get("user_id")
+    day_str = request.args.get("day")
+
+
+    result = event_services.get_user_events_by_day(user_id_str=user_id_str, date_str=day_str)
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), result["status_code"]
+    else:
+        return jsonify({
+            "message": f"Events for {user_id_str} on {day_str} fetched.",
+            "events" : result["events"]
+        }), result["status_code"]
+
+
         
     

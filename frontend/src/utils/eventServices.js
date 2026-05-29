@@ -23,6 +23,27 @@ export async function fetchEvents(userID) {
     return calendarEvents
 }
 
+export async function fetchEventsByDay(userID, day){
+    
+    try {
+        const response = await api.get('/event/getevents', 
+            {
+                params : {
+                    user_id : userID,
+                    day : day
+                }
+            }
+        );
+
+        const events = response.data;
+        return events;
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        throw error;
+    }
+}
+
 export async function deleteEvent(userID, eventID) {
 
     const response = await api.delete("/event/deleteevent", {

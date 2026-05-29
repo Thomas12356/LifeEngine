@@ -218,3 +218,44 @@ def get_user_events_details(user_id_str : str):
     
     except Exception as e:
         return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}
+    
+
+
+#------------------- GET USER EVENTS -> BY DAY -------------------
+def get_user_events_by_day(user_id_str : str, date_str : str):
+    if not date_str:
+        return {"success": False, "error": "date parameter is required", "status_code": 400}
+    elif not user_id_str:
+        return {"success": False, "error": "user_id parameter is required", "status_code": 400}
+    
+    try:
+        user_uuid = uuid.UUID(user_id_str)
+        iso_date = datetime.fromisoformat(date_str)
+
+        events = (
+            Event.query
+            .filter_by(user_id=user_uuid,start_time=iso_date)
+            .all()
+            )
+
+        if not events:
+            return {"success": False, "error": "No events found for the given date and user", "status_code": 404}
+
+        events_list = [
+            {
+                "id": event.id,
+                "name": event.name,
+                "start_time": event.start_time.isoformat(),
+                "end_time": event.end_time.isoformat(),
+                "colour": event.colour
+            }
+            for event in events
+        ]
+
+        return {"success": True, "events": events_list, "status_code": 200}
+
+    except ValueError as e:
+        return {"success": False, "error": f"Invalid data format: {str(e)}", "status_code": 400}
+    
+    except Exception as e:
+        return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}

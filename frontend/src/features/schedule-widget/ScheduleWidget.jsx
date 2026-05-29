@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text, VStack, HStack } from '@chakra-ui/react';
 import { WidgetBox } from '@ui-components/WidgetBox';
+import { fetchEvents } from "@utils/eventServices"
 
 export default function ScheduleWidget() {
   const scheduleItems = [
@@ -11,6 +12,8 @@ export default function ScheduleWidget() {
     { time: '02:00 PM', event: 'University Lecture' },
     { time: '02:00 PM', event: 'University Lecture' },
   ];
+
+  const todaysDate = new Date();
 
   return (
     <WidgetBox>
