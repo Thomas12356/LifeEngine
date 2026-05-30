@@ -53,9 +53,9 @@
 """
 
 # Class imports
-from services.evaluator import Evaluator
+from services.schedule_optimiser.evaluator import Evaluator
 from .schedule import Schedule
-from services.config import SCHEDULE_RESOLUTION, SLOT_SIZE
+from services.schedule_optimiser.config import SCHEDULE_RESOLUTION, SLOT_SIZE
 
 # Library imports
 import random
