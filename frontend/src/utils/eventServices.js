@@ -79,9 +79,10 @@ export async function fetchEventsByRange(userID, rangeStart, rangeEnd) {
         title : event.name,
         start : event.start_time,
         end : event.end_time,
+        is_moveable : event.is_moveable,
         colour : event.colour
     }))
-    console.log(calendarEvents)
+
     return calendarEvents
 }
 

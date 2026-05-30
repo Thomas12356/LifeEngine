@@ -140,6 +140,7 @@ class Event(db.Model):
             cls.name,
             cls.start_time,
             cls.end_time,
+            cls.is_moveable,
             cls.colour
         ]
 

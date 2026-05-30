@@ -215,6 +215,7 @@ def get_user_events_by_range(user_id_str : str, range_start_str : str, range_end
                 "name" : event.name,
                 "start_time" : event.start_time.isoformat() if event.start_time else None,
                 "end_time" : event.end_time.isoformat() if event.end_time else None,
+                "is_moveable" : event.is_moveable,
                 "colour" : event.colour
             }
             for event in events
