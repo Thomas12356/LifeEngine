@@ -9,6 +9,7 @@ REQUIRED_EVENT_FIELDS = ['user_id', 'name', 'start_time', 'end_time', 'parameter
 REQUIRED_EVENT_PARAMETER_FIELDS = ["ideal_energy", "burnout_rate", "priority"]
 REQUIRED_EVENT_TYPE_FIELDS = ["user_id", "parameters", "name"]
 REQUIRED_GET_EVENTS_FIELDS = ["user_id"]
+REQUIRED_RESCHEDULE_EVENT_FIELDS = ["user_id", "event_id","new_start", "new_end"]
 
 @event_blueprint.route('/addevent', methods=['POST'])
 def add_event():
@@ -170,6 +171,30 @@ def get_user_events_by_day():
             "events" : result["events"]
         }), result["status_code"]
 
+@event_blueprint.route("/reschedule", methods=["POST"])
+def reschedule_event():
 
+    data = request.get_json()
+
+    for field in REQUIRED_RESCHEDULE_EVENT_FIELDS:
+        if field not in data or not data[field]:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+        
+    result = event_services.reschedule_event(
+        user_id_str=data["user_id"],
+        event_id_str=data["event_id"],
+        new_start=data["new_start"],
+        new_end=data["new_end"]
+    )
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), result["status_code"]
+    else:
+        return jsonify({
+            "message": f"Events {data["event_id"]} rescheduled",
+        }), result["status_code"]
+
+        
+    
         
     
