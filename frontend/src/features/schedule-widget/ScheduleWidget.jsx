@@ -7,6 +7,14 @@ import { useHomepage } from '@/context/HomepageContext';
 export default function ScheduleWidget() {
   const { todaysEvents } = useHomepage()
 
+  function formatEventTime(time) {
+    return new Date(time).toLocaleTimeString([],{
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    )
+  }
+
   return (
     <WidgetBox>
       <Text textStyle="headingSolid" mb="3">
@@ -38,7 +46,7 @@ export default function ScheduleWidget() {
             <HStack key={event.id} spaceX="6" align="baseline">
 
               <Text textStyle="darkBlueText">
-                {event.start_time}
+                {formatEventTime(event.start_time)}
               </Text>
 
               <Text textStyle="defaultText">
