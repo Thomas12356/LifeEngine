@@ -44,9 +44,8 @@ export default function AddEventButton({ onEventAdded }) {
             </Popover.Trigger>
             <Portal> {/* Render the popover content in a portal to avoid z-index and overflow issues */}
                 <Popover.Positioner>
-                    <Popover.Content p="4"> {/* Portalled content for better positioning */}
+                    <Popover.Content p="4" maxH="60vh" overflowY="auto"> {/* Portalled content for better positioning */}
                         <Popover.Arrow />
-                        <Popover.Title fontWeight="medium">Add New Event</Popover.Title>   
                         <AddEventMenu onClose={() => setOpen(false)} onEventAdded={onEventAdded}/> 
                     </Popover.Content>
                 </Popover.Positioner>
