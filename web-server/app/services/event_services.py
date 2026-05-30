@@ -166,12 +166,13 @@ def get_user_events_by_day(user_id_str : str, date_str : str):
             Event.query
             .filter(Event.user_id == user_uuid,
                     Event.start_time >= day_start,
-                    Event.end_time <= day_end
+                    Event.end_time <= day_end,
+                    Event.is_active == True
             ).all()
         )
 
         if not events:
-            return {"success": False, "error": "No events found for the given date and user", "status_code": 404}
+            return {"success": True, "events": [], "status_code": 200}
 
         events_list = [
             {
@@ -179,7 +180,8 @@ def get_user_events_by_day(user_id_str : str, date_str : str):
                 "name": event.name,
                 "start_time": event.start_time.isoformat(),
                 "end_time": event.end_time.isoformat(),
-                "colour": event.colour
+                "colour": event.colour,
+                "is_moveable" : event.is_moveable
             }
             for event in events
         ]
@@ -224,6 +226,59 @@ def get_user_events_by_range(user_id_str : str, range_start_str : str, range_end
         return {"success": False, "error": f"Invalid data format: {str(e)}", "status_code": 400}
     
     except Exception as e:
+        return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}
+    
+def reschedule_event(user_id_str : str, event_id_str : str, new_start: str, new_end : str):
+    """
+        Given a user ID and event ID, fetch the event and reschedule its start and end time
+    """
+
+    try:
+        new_start = datetime.fromisoformat(new_start)
+        new_end = datetime.fromisoformat(new_end)
+
+        print(new_start, new_end)
+
+        if new_end < new_start:
+            return {"success": False, "error": "new_start must be after new_end", "status_code": 400}
+
+        user_uuid = uuid.UUID(user_id_str)
+
+        overlapping_event = (
+            Event.query
+            .filter(Event.user_id==user_uuid)
+            .filter(Event.is_active==True)
+            .filter(Event.start_time < new_end)
+            .filter(Event.end_time > new_start)
+            .first()
+        )
+
+        if overlapping_event:
+            return {"success": False, "error": "Event overlaps with existing event", "status_code": 409}
+
+        event_uuid = uuid.UUID(event_id_str)
+        event = Event.find_by_id(event_uuid) # Fetch event by ID
+
+        # Return error if event could not be found
+        if not event:
+            return {"success" : False, "error" : "Event does not exist.", "status_code" : 404}
+
+        # Return error if event does not belong to user making request
+        if event.user_id != user_uuid:
+            return {"success" : False, "error" : "User does not have permission to reschedule this event.", "status_code" : 403}
+        
+        event.start_time = new_start
+        event.end_time = new_end
+
+        db.session.commit()
+
+        return {"success" : True, "status_code" : 200}
+
+    except ValueError as e:
+        return {"success": False, "error": f"Invalid data format: {str(e)}", "status_code": 400}
+    
+    except Exception as e:
+        db.session.rollback()
         return {"success": False, "error": f"Internal database error. {str(e)}", "status_code": 500}
 
 

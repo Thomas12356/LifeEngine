@@ -1,5 +1,8 @@
 import { WidgetBox } from "@ui-components/WidgetBox";
+import { useHomepage } from "@/context/HomepageContext";
+import { useState } from "react";
 
+import RescheduleMenu from "../reschedule-menu/RescheduleMenu";
 /**
  * Next Event Loayout
  *
@@ -21,67 +24,131 @@ import { Text, Button } from "@chakra-ui/react";
 
 export default function NextEvent() {
     
+    const { nextEvent, cancelEvent, refreshHomepageEvents } = useHomepage()
+    const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+
+    function formatEventTime(time) {
+        return new Date(time).toLocaleTimeString([],{
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+        )
+    }
+
+    function getTimeUntil(time) {
+        const now = new Date()
+        const eventStart = new Date(time)
+
+        const differenceMs = eventStart - now // Get difference in ms
+        const differenceMins = Math.max(0, Math.round(differenceMs / 1000 / 60)) // Convert ms to minutes
+
+        if (differenceMins >= 60) {
+            const differenceHours = Math.floor(differenceMins / 60)
+            if (differenceHours > 1) {
+                return `${differenceHours} hours`
+            }
+            else {
+                return `${differenceHours} hour`
+            }
+        }
+        else {
+            if (differenceMins == 1){
+                `${differenceMins} minutes`
+            }
+            return `${differenceMins} minutes`
+        }
+    }
+
+    if (!nextEvent) {
+        return (
+            <WidgetBox>
+                <Text textStyle="darkBlueText">
+                    Next Up
+                </Text>
+
+                <Text textStyle="headingSolid">
+                    No upcoming events
+                </Text>
+
+                <Text textStyle="defaultText">
+                    You're clear for the rest of the day.
+                </Text>
+            </WidgetBox>
+        );
+    }
+
     return(
-        <WidgetBox>
-            <Stack
-                direction={{ base: "column", lg: "row" }}
-                justifyContent="space-between"
-                align={{ base: "start", lg: "center" }}
-                gap={5}
-                width="100%"
-            >
-                {/* Left Section */}
-                <Stack gap={0} minW={0}>
+        <>
+            <WidgetBox>
+                <Stack
+                    direction={{ base: "column", xl: "row" }}
+                    justifyContent="space-between"
+                    align={{ base: "start", xl: "center" }}
+                    gap={5}
+                    width="100%"
+                >
+                    {/* Left Section */}
+                    <Stack gap={0} minW={0}>
 
                         <Text textStyle="darkBlueText">
                             Next Up
                         </Text>
 
                         <Text textStyle="headingSolid" wordBreak="break-word">
-                            Code LifeEngine
+                            {nextEvent.name}
                         </Text>
                         <Text textStyle="defaultText">
-                        10:00 AM - 11:00 AM
-                    </Text>
-                </Stack>
+                            {formatEventTime(nextEvent.start_time)} - {formatEventTime(nextEvent.end_time)}
+                        </Text>
+                    </Stack>
 
-                {/* Right Section */}
-                <Stack
-                    align={{ base: "start", lg: "end" }}
-                    gap={4}
-                    width={{ base: "100%", lg: "auto" }}
-                >
-                    <Text textStyle="defaultText" fontSize="sm">
-                        Starts in -- Minutes
-                    </Text>
-
-                    <HStack
-                        wrap="wrap"
-                        spacing={3}
-                        width={{ base: "100%", lg: "auto" }}
+                    {/* Right Section */}
+                    <Stack
+                        align={{ base: "start", xl: "end" }}
+                        gap={4}
+                        width={{ base: "100%", xl: "auto" }}
                     >
-                        <Button
-                            borderRadius="100px"
-                            px={{ base: 4, lg: 7 }}
-                            width={{ base: "100%", lg: "100%" }}
-                            bg="warningYellow"
-                            fontSize="md"
-                        >
-                            Reschedule
-                        </Button>
+                        <Text textStyle="defaultText" fontSize="sm">
+                            Starts in {getTimeUntil(nextEvent.start_time)}
+                        </Text>
 
-                        <Button
-                            borderRadius="100px"
-                            px={{ base: 4, lg: 7 }}
-                            width={{ base: "100%", lg: "100%" }}
-                            bg="errorRed"
-                            fontSize="md"
+                        <HStack
+                            wrap="wrap"
+                            spacing={3}
+                            width={{ base: "100%", xl: "auto" }}
                         >
-                            Cancel
-                        </Button>
-                    </HStack>
+                            <Button
+                                borderRadius="100px"
+                                px={{ base: 4, xl: 7 }}
+                                width={{ base: "100%", xl: "auto" }}
+                                bg="warningYellow"
+                                fontSize="md"
+                                onClick={() => setIsRescheduleOpen(true)}
+                            >
+                                Reschedule
+                            </Button>
+
+                            <Button
+                                borderRadius="100px"
+                                px={{ base: 4, xl: 7 }}
+                                width={{ base: "100%", xl: "auto" }}
+                                bg="errorRed"
+                                fontSize="md"
+                                onClick={() => cancelEvent(nextEvent.id)}
+                            >
+                                Cancel
+                            </Button>
+                        </HStack>
+                    </Stack>
                 </Stack>
-            </Stack>
-        </WidgetBox>
+            </WidgetBox>
+
+            <RescheduleMenu 
+                isOpen={isRescheduleOpen} 
+                onOpenChange={setIsRescheduleOpen}
+                event={nextEvent}
+                onSuccess={refreshHomepageEvents}
+            />
+        </>
     )
 }
