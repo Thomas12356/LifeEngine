@@ -1,5 +1,5 @@
 import DropDown from "@ui-components/DropDown"
-import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput, Checkbox } from "@chakra-ui/react"
+import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput, Checkbox, Text } from "@chakra-ui/react"
 import ColourPicker from "@ui-components/ColourPicker"
 import { LuChevronRight } from "react-icons/lu"
 import { useState } from "react"
@@ -82,16 +82,16 @@ export default function CreateEventTypeMenu({ onClose, onEventTypeCreated }){
                 <Collapsible.Trigger>
                     <Collapsible.Indicator>
                         <HStack>
-                            Advanced Options
+                            <Text fontWeight={"normal"}>Advanced Options</Text>
                             <LuChevronRight />
                         </HStack>
                     </Collapsible.Indicator>
                 </Collapsible.Trigger>
                 <Collapsible.Content>
-                    <Stack gap={3}>
+                    <Stack gap={3} paddingTop={4}>
                         <Field.Root>
                             <HStack>
-                                <Field.Label fontWeight="normal">Priority</Field.Label>
+                                <Field.Label fontWeight={"unset"}>Priority</Field.Label>
                                 <NumberInput.Root 
                                     min={1} 
                                     max={10}
