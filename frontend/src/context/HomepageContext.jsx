@@ -32,6 +32,15 @@ export function HomepageProvider({ children }) {
         }
     }
 
+    // Given an event array find the upcoming event
+    function findNextEvent(events) {
+        const now = new Date();
+
+        return events
+            .filter((event) => new Date(event.start_time) > now) // Get all events that take place from now onwards
+            .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))[0] || null; // Order events by start time and return first element
+    }
+
     // Refresh on userID change
     useEffect(() => {
         refreshHomepageEvents();
@@ -40,13 +49,19 @@ export function HomepageProvider({ children }) {
     // DEBUG - REMOVE LATER
     useEffect(() => {
         console.log("todaysEvents state changed:", todaysEvents);
+        console.log(findNextEvent(todaysEvents))
     }, [todaysEvents]);
+
+    const nextEvent = useMemo(() => {
+        return findNextEvent(todaysEvents)
+    }, [todaysEvents])
 
     // Package home page data
     const value = useMemo(() => ({
         todaysEvents,
-        refreshHomepageEvents
-    }), [todaysEvents])
+        refreshHomepageEvents,
+        nextEvent
+    }), [todaysEvents, nextEvent])
 
     return (
         <HomepageContext.Provider value={value}>
