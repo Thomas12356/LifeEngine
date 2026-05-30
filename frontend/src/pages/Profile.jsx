@@ -11,13 +11,15 @@
 import { Box, Stack, Flex } from "@chakra-ui/react";
 import UserInfoWidget from "@/features/user-info-widget/UserInfoWidget";
 import EventPreferenceWidget from "@/features/event-preferences-widget/EventPreferencesWidget";
+import UserMenu from "@/features/profile-menu/UserMenu";
+import EventTypesMenu from "@/features/profile-menu/EventTypesMenu"
 
 export default function Profile(){
     return(
         <Box>
             <Stack direction={"row"}>
-                    <UserInfoWidget />
-                    <EventPreferenceWidget/>
+                    <UserMenu/>
+                    <EventTypesMenu/>  
             </Stack>
         </Box>    
         
