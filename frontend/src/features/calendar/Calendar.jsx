@@ -5,11 +5,13 @@ import CalendarBody from "@/features/calendar/components/CalendarBody"
 import { useState, useEffect } from "react"
 import { startOfWeek, endOfWeek } from "date-fns"
 import { fetchEventsByRange, deleteEvent } from "@utils/eventServices"
+import { useHomepage } from "@context/HomepageContext"
 
 export default function Calendar() {
 
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [visibleEvents, setVisibleEvents] = useState(([]))
+    const { refreshHomepageEvents } = useHomepage()
 
     async function loadEvents() {
         try {
@@ -36,6 +38,7 @@ export default function Calendar() {
 
     async function handleEventAdded() {
         await loadEvents()
+        await refreshHomepageEvents()
     }
 
     async function handleEventDelete(eventID) {
@@ -44,6 +47,7 @@ export default function Calendar() {
 
             await deleteEvent(userID, eventID)
             await loadEvents()
+            await refreshHomepageEvents()
         } catch (err) {
             console.log("Failed to delete event:", err)
         }

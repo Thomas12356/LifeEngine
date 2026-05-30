@@ -4,7 +4,7 @@ import { Flex } from "@chakra-ui/react"
 import DateSelectMenu from "./DateSelectMenu"
 import ViewSelectMenu from "./ViewSelectMenu"
 import AddEventButton from "./AddEventButton"
-import CreateEventButton from "./CreateEventButton"
+import CreateEventTypeButton from "./CreateEventTypeButton"
 
 /**
  * CalendarMenu renders the menu for the LifeEngine calendar, providing options to select the date and view.
@@ -25,7 +25,7 @@ export default function CalendarMenu( { selectedDate, setSelectedDate, onEventAd
             <DateSelectMenu selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             <Flex gap={2}>
 
-                <CreateEventButton/>
+                <CreateEventTypeButton/>
                 <AddEventButton onEventAdded={onEventAdded}/>
             </Flex>
         </Flex>

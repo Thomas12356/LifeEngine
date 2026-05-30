@@ -8,7 +8,7 @@ import { createEventType } from "@utils/eventServices"
 
 //import buildEventPayload from "../utils/buildEventPayload"
 
-export default function CreateEventMenu({ onClose, onEventTypeCreated }){
+export default function CreateEventTypeMenu({ onClose, onEventTypeCreated }){
 
     const[formData, setFormData] = useState({
         eventTypeName : "",
