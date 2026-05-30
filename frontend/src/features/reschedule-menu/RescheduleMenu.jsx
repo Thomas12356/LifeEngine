@@ -1,7 +1,7 @@
 import { Button, Dialog, CloseButton, Portal, Text } from "@chakra-ui/react";
 
 
-export default function RescheduleMenu({ isOpen, onOpenChange }) {
+export default function RescheduleMenu({ isOpen, onOpenChange, event }) {
     return (
         <Dialog.Root 
             open={isOpen} 
@@ -13,12 +13,12 @@ export default function RescheduleMenu({ isOpen, onOpenChange }) {
                     <Dialog.Content>
                         <Dialog.Header>
                             <Dialog.Title>
-                                Reschedule
+                                Reschedule {event.name}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
                             <Text>
-                                Forms go here
+                                Form go here
                             </Text>
                         </Dialog.Body>
                         <Dialog.Footer>

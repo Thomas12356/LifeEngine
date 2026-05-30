@@ -142,7 +142,11 @@ export default function NextEvent() {
                 </Stack>
             </WidgetBox>
 
-            <RescheduleMenu isOpen={isRescheduleOpen} onOpenChange={setIsRescheduleOpen}/>
+            <RescheduleMenu 
+                isOpen={isRescheduleOpen} 
+                onOpenChange={setIsRescheduleOpen}
+                event={nextEvent}
+            />
         </>
     )
 }
