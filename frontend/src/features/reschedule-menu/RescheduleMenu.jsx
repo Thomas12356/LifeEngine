@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import buildReschedulePayload from "./utils/buildReschedulePayload";
 
 
-export default function RescheduleMenu({ isOpen, onOpenChange, event }) {
+export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess }) {
 
     const [formData, setFormData] = useState({
         newDate : "",
@@ -30,6 +30,8 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event }) {
                 newStart: "",
                 newEnd : ""
             })
+
+            await onSuccess() // Refresh relevant data, e.g refresh homepage events, refresh calendar events
 
             onOpenChange(false)
         } catch (err) {

@@ -24,7 +24,7 @@ import { Text, Button } from "@chakra-ui/react";
 
 export default function NextEvent() {
     
-    const { nextEvent, cancelEvent } = useHomepage()
+    const { nextEvent, cancelEvent, refreshHomepageEvents } = useHomepage()
     const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
 
     function formatEventTime(time) {
@@ -54,8 +54,6 @@ export default function NextEvent() {
         else {
             return `${differenceMins} hours`
         }
-
-        
     }
 
     if (!nextEvent) {
@@ -146,6 +144,7 @@ export default function NextEvent() {
                 isOpen={isRescheduleOpen} 
                 onOpenChange={setIsRescheduleOpen}
                 event={nextEvent}
+                onSuccess={refreshHomepageEvents}
             />
         </>
     )
