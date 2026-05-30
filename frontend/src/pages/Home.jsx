@@ -19,7 +19,7 @@ import AgentWidget from "@features/agent-widget/AgentWidget";
 import ScheduleWidget from "@features/schedule-widget/ScheduleWidget";
 
 export default function Home() {
-    const user = JSON.parse(localStorage.getItem('user'));
+    
     return (
         <Box width="100%" px={{ base: 3, lg: 5 }} py={2}>
             <Stack
