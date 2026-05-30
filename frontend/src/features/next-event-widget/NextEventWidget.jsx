@@ -1,4 +1,5 @@
 import { WidgetBox } from "@ui-components/WidgetBox";
+import { useHomepage } from "@/context/HomepageContext";
 
 /**
  * Next Event Loayout
@@ -21,6 +22,57 @@ import { Text, Button } from "@chakra-ui/react";
 
 export default function NextEvent() {
     
+    const { nextEvent } = useHomepage()
+
+    function formatEventTime(time) {
+        return new Date(time).toLocaleTimeString([],{
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+        )
+    }
+
+    function getTimeUntil(time) {
+        const now = new Date()
+        const eventStart = new Date(time)
+
+        const differenceMs = eventStart - now // Get difference in ms
+        const differenceMins = Math.max(0, Math.round(differenceMs / 1000 / 60)) // Convert ms to minutes
+
+        if (differenceMins >= 60) {
+            const differenceHours = Math.floor(differenceMins / 60)
+            if (differenceHours > 1) {
+                return `${differenceHours} hours`
+            }
+            else {
+                return `${differenceHours} hour`
+            }
+        }
+        else {
+            return `${differenceMins} hours`
+        }
+
+        
+    }
+
+    if (!nextEvent) {
+        return (
+            <WidgetBox>
+                <Text textStyle="darkBlueText">
+                    Next Up
+                </Text>
+
+                <Text textStyle="headingSolid">
+                    No upcoming events
+                </Text>
+
+                <Text textStyle="defaultText">
+                    You're clear for the rest of the day.
+                </Text>
+            </WidgetBox>
+        );
+    }
+
     return(
         <WidgetBox>
             <Stack
@@ -33,15 +85,15 @@ export default function NextEvent() {
                 {/* Left Section */}
                 <Stack gap={0} minW={0}>
 
-                        <Text textStyle="darkBlueText">
-                            Next Up
-                        </Text>
+                    <Text textStyle="darkBlueText">
+                        Next Up
+                    </Text>
 
-                        <Text textStyle="headingSolid" wordBreak="break-word">
-                            Code LifeEngine
-                        </Text>
-                        <Text textStyle="defaultText">
-                        10:00 AM - 11:00 AM
+                    <Text textStyle="headingSolid" wordBreak="break-word">
+                        {nextEvent.name}
+                    </Text>
+                    <Text textStyle="defaultText">
+                        {formatEventTime(nextEvent.start_time)} - {formatEventTime(nextEvent.end_time)}
                     </Text>
                 </Stack>
 
@@ -52,7 +104,7 @@ export default function NextEvent() {
                     width={{ base: "100%", xl: "auto" }}
                 >
                     <Text textStyle="defaultText" fontSize="sm">
-                        Starts in -- Minutes
+                        Starts in {getTimeUntil(nextEvent.start_time)}
                     </Text>
 
                     <HStack
