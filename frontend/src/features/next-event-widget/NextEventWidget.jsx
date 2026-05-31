@@ -62,7 +62,7 @@ export default function NextEvent() {
     if (!nextEvent) {
         return (
             <WidgetBox>
-                <Text textStyle="defaultText">
+                <Text textStyle="darkBlueText">
                     Next Up
                 </Text>
 

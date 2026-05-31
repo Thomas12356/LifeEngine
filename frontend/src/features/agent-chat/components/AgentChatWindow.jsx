@@ -14,7 +14,8 @@ export default function AgentChatWindow({ chatHistory }) {
         <BlueWidgetBox
             width="100%"
             height="100%"
-            my={2}
+            borderRadius="10px"
+            mt="2px"
             display="flex"
             overflow="hidden"
         >

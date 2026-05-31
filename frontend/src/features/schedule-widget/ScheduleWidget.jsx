@@ -26,7 +26,7 @@ export default function ScheduleWidget() {
         display="flex"
         flexDirection="column"
       >
-        <Text textStyle="headingSolid" mb="3">
+        <Text textStyle="darkBlueText" mb="3">
           Todays Schedule
         </Text>
         <Text textStyle="headingSolid" color="grey.300">
@@ -50,7 +50,7 @@ export default function ScheduleWidget() {
     display="flex"
     flexDirection="column"
     >
-      <Text textStyle="headingSolid" mb="3">
+      <Text textStyle="darkBlueText" mb="3">
         Todays Schedule
       </Text>
 

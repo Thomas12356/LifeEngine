@@ -7,7 +7,7 @@
  */
 
 /*------------------Imports------------------*/
-import { HStack, Text, Link } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 
 /**
  * AgentChatHeader
@@ -19,13 +19,8 @@ import { HStack, Text, Link } from "@chakra-ui/react"
 **/
 export default function AgentChatHeader() {
     return (
-        <HStack justifyContent="space-between" width="100%">
-            <Text textStyle="headingSolid">Ellie Agent</Text>
-
-            <HStack alignItems="end" gap={2} alignSelf="flex-end">
-                {/* <Link textStyle="linkText">Action history</Link>
-                <Link textStyle="linkText">Customise Ellie</Link> */}
-            </HStack>
-        </HStack>
+        <Stack direction="row" justifyContent="space-between" width="100%" align="center">
+            <Text textStyle="darkBlueText">Ellie Agent</Text>
+        </Stack>
     )
 }

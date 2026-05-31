@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, Stack, Text } from "@chakra-ui/react";
 
 const timeStyles = {
-    textStyle: "5xl",
+    textStyle: "defaultText",
     fontWeight: "400",
     color: "grey.800",
 };
@@ -39,8 +39,10 @@ export default function DigitalClock() {
 
     return (
         <Stack direction="column" justifyContent="start" gap={0}>
-            <Text {...timeStyles}>{formattedTime(time)}</Text>
             <Text {...dateStyles}>{formattedDate(time)}</Text>
+            <Stack direction="row" justifyContent="end" width="100%">
+                <Text {...timeStyles}>{formattedTime(time)}</Text>
+            </Stack>
         </Stack>
     );
 }
