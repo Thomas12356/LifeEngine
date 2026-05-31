@@ -71,6 +71,12 @@ class EventType(db.Model):
     name = db.Column(db.String(255), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    colour = db.Column(db.String, nullable=False)
+    is_moveable = db.Column(db.Boolean, default=False)
+    availability_start = db.Column(db.DateTime(timezone=True))
+    availability_end = db.Column(db.DateTime(timezone=True))
+    preference_start = db.Column(db.DateTime(timezone=True))
+    preference_end = db.Column(db.DateTime(timezone=True))
 
     # ----- Relationships -----
     user = db.relationship('User', backref=db.backref('event_types', lazy=True, cascade="all, delete-orphan"))
@@ -98,7 +104,6 @@ class Event(db.Model):
     end_time = db.Column(db.DateTime(timezone=True), nullable=False, index=True)
     is_moveable = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
-    colour = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
