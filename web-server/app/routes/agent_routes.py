@@ -24,3 +24,10 @@ def chat():
         "session_id" : session_id,
         "result" : result,
     })
+
+@agent_blueprint.get("/health")
+def agent_health():
+    return jsonify({
+        "ok" : True,
+        "service" : "ellie_agent"
+    })
