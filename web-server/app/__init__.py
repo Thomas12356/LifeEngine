@@ -85,8 +85,11 @@ def create_app():
     # Import and Register Blueprints for routes.
     from app.routes.auth_routes import auth_blueprint
     from app.routes.event_routes import event_blueprint
+    from app.routes.agent_routes import agent_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/api/auth')
     app.register_blueprint(event_blueprint, url_prefix='/api/event')
+    app.register_blueprint(agent_blueprint, url_prefix='/api/agent')
+
 
 
     # Initialize SQLAlchemy with the app.
