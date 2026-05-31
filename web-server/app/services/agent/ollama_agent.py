@@ -27,6 +27,9 @@ Rules:
 - For dates and times, pass natural language text to the tool.
 - Do not calculate ISO dates yourself.
 - Keep replies short and direct. Use one sentence when possible.
+- Correct obvious spelling mistakes in extracted date/time phrases before calling tools.
+- Do not guess unclear dates or times. If unsure, ask a clarification question.
+- If the user is just chatting and not asking you to run a tool, find a short funny way to avoid their conversation and bring the topic back to how you can assist them.
 """
 
 
@@ -71,7 +74,7 @@ def parse_tool_call(tool_call):
 
 
 
-def run_tool(function_name: str, function_args: dict):
+def run_tool(function_name: str, function_args: dict, runtime_context: dict | None = None):
     if function_name not in AVAILABLE_TOOLS:
         return {
             "ok": False,
@@ -79,9 +82,23 @@ def run_tool(function_name: str, function_args: dict):
         }
 
     tool_function = AVAILABLE_TOOLS[function_name]
+    runtime_context = runtime_context or {}
 
     try:
+        if function_name == "create_event":
+            function_args = {
+                **function_args,
+                "timezone" : runtime_context.get("timezone", "UTC"),
+                "base_time" : runtime_context.get("base_time"),
+            }
         return tool_function(**function_args)
+    
+    except TypeError as e:
+        return {
+            "ok": False,
+            "message": f"Invalid tool arguments: {str(e)}",
+            "function_args": function_args,
+        }
 
     except TypeError as e:
         return {
@@ -111,7 +128,7 @@ def build_summary(results):
         
     return "Done."
     
-def ask_llm(user_message: str, session_id: str):
+def ask_llm(user_message: str, session_id: str, timezone: str = "UTC", base_time=None):
     message_history = get_messages(session_id)
 
     messages = [
@@ -151,12 +168,19 @@ def ask_llm(user_message: str, session_id: str):
 
     results = []
     log = []
+
+    runtime_context = {
+        "timezone" : timezone,
+        "base_time" : base_time,
+    }
+
     for tool_call in tool_calls:
         function_name, function_args = parse_tool_call(tool_call)
 
         result = run_tool(
             function_name=function_name,
             function_args=function_args,
+            runtime_context=runtime_context,
         )
 
         results.append(result)

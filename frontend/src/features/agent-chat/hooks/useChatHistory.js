@@ -5,7 +5,6 @@ import api from "@/api/api";
 
 // Dummy API data
 import { chatHistory as dummyChatHistory } from "../util/chatService";
-import { registerUser } from "@/features/auth/utils/authService";
 
 function getTimezone(){
     return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -16,7 +15,6 @@ function createMessage(sender, content, extra = {}){
         id : crypto.randomUUID(),
         sender,
         content,
-        timestamp: new Date().toISOString(),
         ...extra,
     }
 }
@@ -71,6 +69,7 @@ export default function useChatHistory(chat_session_id) {
             const response = await api.post("/agent/chat", {
                 session_id: chat_session_id,
                 message: trimmedMessage,
+                timezone: getTimezone(),
             });
 
             const agentMessage = createMessage(
