@@ -128,8 +128,7 @@ class Event(db.Model):
             cls.id,
             cls.name,
             cls.start_time,
-            cls.end_time,
-            cls.colour
+            cls.end_time
         ]
         return (cls.query.filter_by(user_id=user_id, is_active=True).with_entities(*selected_columns).all())
 
@@ -145,8 +144,7 @@ class Event(db.Model):
             cls.name,
             cls.start_time,
             cls.end_time,
-            cls.is_moveable,
-            cls.colour
+            cls.is_moveable
         ]
 
         result =  (cls.query.filter(
@@ -168,8 +166,7 @@ class Event(db.Model):
             "start_time": self.start_time.isoformat() if self.start_time else None,
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "is_moveable": self.is_moveable,
-            "is_active": self.is_active,
-            "colour" : self.colour if self.colour else None
+            "is_active": self.is_active
         }
 
 class UserPreferences(db.Model):
