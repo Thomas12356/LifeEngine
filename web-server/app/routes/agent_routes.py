@@ -26,8 +26,13 @@ def chat():
     })
 
 @agent_blueprint.get("/health")
-def agent_health():
+def get_agent_health():
     return jsonify({
         "ok" : True,
         "service" : "ellie_agent"
     })
+
+# --------------- TEST ROUTES -----------------------
+@agent_blueprint.get("/test/chat/sessions")
+def get_chat_sessions():
+    return
