@@ -123,6 +123,8 @@ def create_event_type(user_id_str : str, parameters : dict, name : str, colour: 
             
             parameters_uuid = uuid.UUID(default_result["event_parameter_id"])
 
+        user_preferences = UserPreferences.get_user_preferences(user_uuid)
+
         created_at = datetime.now()
 
         new_event_type = EventType(
@@ -130,7 +132,12 @@ def create_event_type(user_id_str : str, parameters : dict, name : str, colour: 
             event_parameter_id = parameters_uuid,
             name = name,
             created_at = created_at,
-            colour = colour
+            colour = colour,
+            availability_start = user_preferences.wakeup_time,
+            availability_end = user_preferences.bed_time,
+            preference_start = user_preferences.wakeup_time,
+            preference_end = user_preferences.bed_time
+
         )
 
         db.session.add(new_event_type)
