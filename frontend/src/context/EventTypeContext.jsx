@@ -78,6 +78,7 @@ export function EventTypeProvider({ children }) {
 
     const value = {
         eventTypes,
+        refreshEventTypes,
         getEventTypeByID,
         getEventTypeByName,
         getEventTypeIDByName,
