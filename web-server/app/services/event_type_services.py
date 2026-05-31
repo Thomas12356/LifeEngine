@@ -40,7 +40,8 @@ def get_default_event_type(user_id_str):
             user_id=user_uuid,
             event_parameter_id=parameter_uuid,
             name="Default",
-            created_at=datetime.now()
+            created_at=datetime.now(),
+            colour=os.environ.get("DEFAULT_COLOUR")
         )
 
         db.session.add(default_event_type)
