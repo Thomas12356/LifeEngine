@@ -71,7 +71,11 @@ export default function EventTypesMenu({...props}){
                 ideal_energy: formData.idealEnergy,
                 burnout_rate: formData.burnoutRate,
                 priority: formData.priority
-            }
+            },
+            availability_start : minutesToTime(formData.availabilityWindow[0]),
+            availability_end : minutesToTime(formData.availabilityWindow[1]),
+            preference_start : minutesToTime(formData.preferenceWindow[0]),
+            preference_end : minutesToTime(formData.preferenceWindow[1])
         }
 
         try {

@@ -226,6 +226,18 @@ def update_event_type(event_type_id_str : str, data: dict):
         if "parameters" in data:
             update_event_type_parameters(event_type, data["parameters"], data["user_id"])
 
+        if "availability_start" in data:
+            event_type.availability_start = data["availability_start"]
+
+        if "availability_end" in data:
+            event_type.availability_end = data["availability_end"]
+
+        if "preference_start" in data:
+            event_type.preference_start = data["preference_start"]
+
+        if "preference_end" in data:
+            event_type.preference_end = data["preference_end"]
+
         db.session.commit()
 
         return {"success": True, "event_type": event_type.to_dict(), "status_code": 200}
