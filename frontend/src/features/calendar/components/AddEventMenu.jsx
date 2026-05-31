@@ -1,6 +1,5 @@
 import DropDown from "@ui-components/DropDown"
 import { Button, Input, Stack, Field, HStack, Collapsible, NumberInput, Checkbox, Text } from "@chakra-ui/react"
-import ColourPicker from "@ui-components/ColourPicker"
 import { LuChevronRight } from "react-icons/lu"
 import { useState } from "react"
 import useAddEvent from "../hooks/useAddEvent"
@@ -18,8 +17,7 @@ export default function AddEventMenu({ onClose, onEventAdded }){
         idealEnergy : "",
         priority : "",
         burnoutRate : "",
-        isMoveable : false,
-        colour : "#3182CE",
+        isMoveable : false
     })
 
     function updateField(field, value) {
@@ -94,10 +92,6 @@ export default function AddEventMenu({ onClose, onEventAdded }){
                     placeholder="No Category"
                     allowClear={true}
                 />
-            </Field.Root>
-            <Field.Root>
-                <Field.Label>Label Colour</Field.Label>
-                <ColourPicker value={formData.colour} onChange={(value) => updateField("colour", value)}/>
             </Field.Root>
             <Collapsible.Root>
                 <Collapsible.Trigger>
