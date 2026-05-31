@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from app import db
-from app.models import EventType, EventParameter
+from app.models import EventType, EventParameter, UserPreferences
 import os
 
 from app.services.event_parameter_services import create_event_parameters
@@ -36,12 +36,18 @@ def get_default_event_type(user_id_str):
 
         parameter_uuid = uuid.UUID(result["event_parameters_id"])
 
+        user_preferences = UserPreferences.get_user_preferences(user_uuid)
+
         default_event_type = EventType(
             user_id=user_uuid,
             event_parameter_id=parameter_uuid,
             name="Default",
             created_at=datetime.now(),
-            colour=os.environ.get("DEFAULT_COLOUR")
+            colour=os.environ.get("DEFAULT_COLOUR"),
+            availability_start = user_preferences.wakeup_time,
+            availability_end = user_preferences.bed_time,
+            preference_start = user_preferences.wakeup_time,
+            preference_end = user_preferences.bed_time
         )
 
         db.session.add(default_event_type)

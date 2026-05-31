@@ -107,10 +107,10 @@ class EventType(db.Model):
             "is_moveable": self.is_moveable,
             "is_active": self.is_active,
             "colour" : self.colour,
-            "availability_start" : self.availability_start,
-            "availability_end" : self.availability_end,
-            "preference_start" : self.preference_start,
-            "preference_end" : self.preference_end,
+            "availability_start": self.availability_start.strftime("%H:%M") if self.availability_start else None,
+            "availability_end": self.availability_end.strftime("%H:%M") if self.availability_end else None,
+            "preference_start": self.preference_start.strftime("%H:%M") if self.preference_start else None,
+            "preference_end": self.preference_end.strftime("%H:%M") if self.preference_end else None,
             "parameters" : self.parameter.to_dict()
         }
 
