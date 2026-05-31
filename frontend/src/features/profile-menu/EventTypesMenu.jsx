@@ -9,7 +9,7 @@ import { updateEventType } from "@/utils/eventServices";
 
 export default function EventTypesMenu({...props}){
 
-    const { eventTypes, getEventTypeByName, getEventTypeIDByName } = useEventTypes()
+    const { eventTypes, getEventTypeByName, refreshEventTypes } = useEventTypes()
     const eventTypeNames = eventTypes.map((type) => type.name)
 
     const [formData, setFormData] = useState({
@@ -56,6 +56,7 @@ export default function EventTypesMenu({...props}){
 
         try {
             await updateEventType(payload)
+            await refreshEventTypes()
         } catch (err) {
             console.log("Failed to update event type", err)
         }

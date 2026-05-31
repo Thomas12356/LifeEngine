@@ -113,5 +113,5 @@ export async function fetchEventTypes(userID) {
 export async function updateEventType(payload) {
     const response = await api.patch("event/updateeventtype", payload)
 
-    console.log(response)
+    return response.data
 }
