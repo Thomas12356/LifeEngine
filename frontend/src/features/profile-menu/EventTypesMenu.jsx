@@ -5,6 +5,7 @@ import { NumberInput } from "@chakra-ui/react";
 import ColourPicker from "@/components/ui-components/ColourPicker";
 import { useState, useEffect } from "react"
 import { useEventTypes } from "@/context/EventTypeContext";
+import { updateEventType } from "@/utils/eventServices";
 
 export default function EventTypesMenu({...props}){
 
@@ -35,6 +36,31 @@ export default function EventTypesMenu({...props}){
 
         return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
     }
+
+    async function handleSave() {
+        if (!formData.eventTypeID) return
+
+        const user = JSON.parse(localStorage.getItem("user"))
+
+        const payload = {
+            
+            user_id : user.id,
+            event_type_id : formData.eventTypeID,
+            colour: formData.labelColour,
+            parameters: {
+                ideal_energy: formData.idealEnergy,
+                burnout_rate: formData.burnoutRate,
+                priority: formData.priority
+            }
+        }
+
+        try {
+            await updateEventType(payload)
+        } catch (err) {
+            console.log("Failed to update event type", err)
+        }
+    }
+
 
     // Fill formdata with selected event type
     useEffect(() => {
@@ -167,7 +193,7 @@ export default function EventTypesMenu({...props}){
                         {minutesToTime(formData.preferenceWindow[1])}
                     </Text>
                 </Field.Root>
-                <Button onClick={() => console.log(formData)}> {/* DEBUG */}
+                <Button onClick={handleSave}> {/* DEBUG */}
                     Save Preferences
                 </Button>
             </Stack>
