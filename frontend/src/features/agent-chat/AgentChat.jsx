@@ -24,14 +24,14 @@ import useChatHistory from "./hooks/useChatHistory"
 **/
 export default function AgentChat() {
 
-    const { chatHistory, sendMessage } = useChatHistory("dummy-id") // Hook to manage chat history and sending messages, 
+    const { chatHistory, sendMessage, isLoading } = useChatHistory("dummy-id") // Hook to manage chat history and sending messages, 
     // currently using a dummy ID for testing purposes.
 
     return (
         <VStack>
             <AgentChatHeader />
             <AgentChatWindow chatHistory={chatHistory} />
-            <AgentTextInput onSendMessage={sendMessage} />
+            <AgentTextInput onSendMessage={sendMessage} isLoading={isLoading} />
         </VStack>
     )
 }

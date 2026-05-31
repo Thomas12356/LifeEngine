@@ -1,16 +1,45 @@
+//TODO use cookie id instead of conversation id.
 
-
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import api from "@/api/api";
 
 // Dummy API data
-import { chatHistory as dummyChatHistory } from "../util/chatService"
+import { chatHistory as dummyChatHistory } from "../util/chatService";
+import { registerUser } from "@/features/auth/utils/authService";
 
-export default function useChatHistory(conversationId) {
+function createMessage(sender, content, extra = {}){
+    return {
+        id : crypto.randomUUID(),
+        sender,
+        content,
+        timestamp: new Date().toISOString(),
+        ...extra,
+    }
+}
+
+function getAgentReply(data){
+    const result = data?.result;
+
+    if (!result) {
+        return "Sorry, I did not get a valid response.";
+    }
+    if (result.type ==="chat"){
+        return result.message || result.response || "How can I help?";
+    }
+    if (result.type === "tool_result"){
+        const firstResult = result.results?.[0];
+        return firstResult?.message || "Done.";
+    }
+    return "Done.";
+}
+
+export default function useChatHistory(chat_session_id) {
     const [chatHistory, setChatHistory] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (!conversationId) return
-        loadInitial()}, [conversationId])
+        if (!chat_session_id) return
+        loadInitial()}, [chat_session_id])
 
     async function loadInitial() {        
         // Simulate API call to fetch inital chat history
@@ -21,16 +50,54 @@ export default function useChatHistory(conversationId) {
 
     async function sendMessage(message) {
         // Simulate API call to send message and get response
-        const response = {
-            id: Date.now(),
-            sender: "agent",
-            content: `Echo: ${message}`,
-            timestamp: new Date().toISOString()
-        }
+        const trimmedMessage = message.trim();
 
-        // Update chat history with new message and response
-        setChatHistory(prev => [...prev, { id: Date.now(), sender: "user", content: message, timestamp: new Date().toISOString() }, response])
+        if (!trimmedMessage || isLoading) return;
+
+        const userMessage = createMessage("user", trimmedMessage);
+
+        setChatHistory((prev) => [
+            ...prev,
+            userMessage,
+        ]);
+
+        setIsLoading(true);
+
+        try{
+            const response = await api.post("/agent/chat", {
+                session_id: chat_session_id,
+                message: trimmedMessage,
+            });
+
+            const agentMessage = createMessage(
+                "agent",
+                getAgentReply(response.data),
+                {
+                    raw: response.data,
+                }
+            );
+
+            setChatHistory((prev) => [
+                ...prev,
+                agentMessage,
+
+            ]);
+        } catch (error){
+            const errorMessage = 
+            error.response?.data?.error || 
+            error.message ||
+            "Could not connect to Ellie.";
+
+            const agentErrorMessage = createMessage("agent", errorMessage);
+
+            setChatHistory((prev) => [
+                ...prev,
+                agentErrorMessage,
+            ]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-    return { chatHistory, sendMessage }
+    return { chatHistory, sendMessage, isLoading };
 }

@@ -14,8 +14,9 @@ export default function AgentChatWindow({ chatHistory }) {
             <BlueWidgetBox width="100%" my={2}>
             <VStack
                 width="100%" 
-                height="200px" 
-                overflowY="scroll" 
+                overflowY="scroll"
+                height="325px"
+                
                 p={2}
                 my={2}
                 gap={1} 
@@ -29,7 +30,7 @@ export default function AgentChatWindow({ chatHistory }) {
                     borderRadius: "4px",
                     },
                     "&::-webkit-scrollbar-thumb": {
-                    background: "blueLight.200", 
+                    background: "blueLight.500", 
                     borderRadius: "4px",},
                 }}>
 
