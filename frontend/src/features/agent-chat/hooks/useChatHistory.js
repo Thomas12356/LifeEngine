@@ -7,6 +7,10 @@ import api from "@/api/api";
 import { chatHistory as dummyChatHistory } from "../util/chatService";
 import { registerUser } from "@/features/auth/utils/authService";
 
+function getTimezone(){
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+}
+
 function createMessage(sender, content, extra = {}){
     return {
         id : crypto.randomUUID(),
