@@ -37,7 +37,7 @@ export default function AgentWidget() {
             flexDirection="column"
         >
             <Stack direction="row" width="100%"  justifyContent="space-between" align="center">
-                <Text textStyle="defaultText" fontSize="40px" >
+                <Text textStyle="defaultText" fontSize="40px" color="blueDark.500">
                     {getGreeting()}, {user.first_name}.
                 </Text>
                 <DigitalClock />
