@@ -46,7 +46,11 @@ export default function EventTypesMenu({...props}){
         setFormData((prev) => ({
             ...prev,
             eventTypeID: selectedEventType.id,
-            labelColour: selectedEventType.colour
+            labelColour: selectedEventType.colour,
+
+            idealEnergy: selectedEventType.parameters.ideal_energy,
+            burnoutRate: selectedEventType.parameters.burnout_rate,
+            priority: selectedEventType.parameters.priority
         }))
     }, [formData.eventTypeName, getEventTypeByName])
 
