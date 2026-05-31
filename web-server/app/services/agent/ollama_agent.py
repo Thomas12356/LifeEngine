@@ -1,6 +1,6 @@
 import json
 from ollama import Client
-from tools import create_event
+from app.services.agent.tools import create_event
 from tools_schema import TOOLS_SCHEMA
 from datetime import datetime, timedelta
 from config import OLLAMA_HOST, MODEL
