@@ -15,4 +15,19 @@ def add_message(session_id, role, content):
         "role" : role,
         "content" : content,
     })
-    
+
+def get_messages(session_id):
+    session = get_session(session_id)
+    return session["messages"]
+
+def set_pending_action(session_id, pending_action):
+    session = get_session(session_id)
+    session['pending_action'] = pending_action
+
+def get_pending_action(session_id):
+    session = get_session(session_id)
+    return session["pending_action"]
+
+def clear_pending_action(session_id):
+    session = get_session(session_id)
+    session["pending_action"] = None
