@@ -62,15 +62,15 @@ export default function NextEvent() {
     if (!nextEvent) {
         return (
             <WidgetBox>
-                <Text textStyle="darkBlueText">
+                <Text textStyle="defaultText">
                     Next Up
                 </Text>
 
-                <Text textStyle="headingSolid">
+                <Text textStyle="headingSolid" color="grey.300">
                     No upcoming events
                 </Text>
 
-                <Text textStyle="defaultText">
+                <Text textStyle="defaultText" color="grey.300">
                     You're clear for the rest of the day.
                 </Text>
             </WidgetBox>

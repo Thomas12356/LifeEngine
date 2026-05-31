@@ -14,6 +14,32 @@ export default function ScheduleWidget() {
       }
     )
   }
+  console.log(todaysEvents == false)
+
+  if (todaysEvents == false){
+    return(
+      <WidgetBox
+        width="100%"
+        flex="1"
+        minH={0}
+        height="100%"
+        display="flex"
+        flexDirection="column"
+      >
+        <Text textStyle="headingSolid" mb="3">
+          Todays Schedule
+        </Text>
+        <Text textStyle="headingSolid" color="grey.300">
+          No upcoming events
+        </Text>
+
+        <Text textStyle="defaultText" color="grey.300">
+          You're clear for the rest of the day.
+        </Text>
+
+      </WidgetBox>
+    );
+  }
 
   return (
     <WidgetBox
