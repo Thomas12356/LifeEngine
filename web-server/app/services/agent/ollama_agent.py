@@ -2,7 +2,6 @@ import json
 from ollama import Client
 from app.services.agent.tools import create_event
 from app.services.agent.tools_schema import TOOLS_SCHEMA
-from datetime import datetime, timedelta
 from app.services.agent.config import OLLAMA_HOST, MODEL
 from app.services.agent.chat_session import add_message, get_messages
 
@@ -133,6 +132,7 @@ def ask_llm(user_message: str, session_id: str):
         options={
             "temperature": 0,
             "num_ctx": 4096,
+            "top_p": 0.8
         },
     )
 
@@ -142,7 +142,7 @@ def ask_llm(user_message: str, session_id: str):
 
     if not tool_calls:
         llm_message = get_content(message) or "How can I help?"
-        add_message(session_id, "llm", llm_message)
+        add_message(session_id, "assistant", llm_message)
         return {
             "type": "chat",
             "message": llm_message,
@@ -164,9 +164,9 @@ def ask_llm(user_message: str, session_id: str):
     summary = build_summary(results)
     add_message(session_id, "assistant", summary)
 
+    print(log)
     return {
         "type": "tool_result",
         "message" : summary,
         "results": results,
-        "log" : log,
     }
