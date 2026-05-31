@@ -107,5 +107,5 @@ export async function fetchEventTypes(userID) {
         }
     )
 
-    return response.data
+    return response.data.event_types
 }
