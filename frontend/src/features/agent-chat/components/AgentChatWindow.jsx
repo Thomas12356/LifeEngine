@@ -11,15 +11,19 @@ export default function AgentChatWindow({ chatHistory }) {
     }
 
     return (
-            <BlueWidgetBox width="100%" my={2}>
+        <BlueWidgetBox
+            width="100%"
+            height="100%"
+            my={2}
+            display="flex"
+            overflow="hidden"
+        >
             <VStack
-                width="100%" 
+                width="100%"
+                height="100%"
                 overflowY="scroll"
-                height="325px"
-                
                 p={2}
-                my={2}
-                gap={1} 
+                gap={1}
                 align="start"
                 css={{
                     "&::-webkit-scrollbar": {

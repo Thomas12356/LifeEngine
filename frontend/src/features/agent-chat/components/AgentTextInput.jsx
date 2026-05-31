@@ -42,7 +42,7 @@ export default function AgentTextInput({ onSendMessage, isLoading }) {
             disabled={isLoading}
             />
 
-            <IconButton bg="blueLight.500" borderRadius="10px" disabled={isLoading}>
+            <IconButton bg="blueLight.500" onClick={handleSendMessage} borderRadius="10px" disabled={isLoading}>
                 <IoMdSend />
             </IconButton>
 

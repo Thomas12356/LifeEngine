@@ -28,7 +28,12 @@ export default function AgentChat() {
     // currently using a dummy ID for testing purposes.
 
     return (
-        <VStack>
+        <VStack
+            width="100%"
+            height="100%"
+            align="start"
+            overflow="hidden"
+        >
             <AgentChatHeader />
             <AgentChatWindow chatHistory={chatHistory} />
             <AgentTextInput onSendMessage={sendMessage} isLoading={isLoading} />

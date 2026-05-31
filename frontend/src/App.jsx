@@ -16,12 +16,12 @@ import LoginPage from "@pages/Login"
 import Register from "@pages/Register"
 
 export default function App() {
-    const location = useLocation();
-    const isLoginPage = location.pathname === "/login";
-    const isRegisterPage = location.pathname === "/register";
+    const location = useLocation()
+    const isLoginPage = location.pathname === "/login"
+    const isRegisterPage = location.pathname === "/register"
 
     return (
-            <div>
+        <Box h="100dvh" overflow="hidden">
             <Box
                 position="fixed"
                 top="0"
@@ -29,32 +29,40 @@ export default function App() {
                 w="100vw"
                 h="100vh"
                 bg="radial-gradient(circle, #EDEDED, #EDEDED)"
-                zIndex="-1"/>
+                zIndex="-1"
+            />
 
-            <Box pt={"widget.mTopBottom"} pl={"widget.mLeftRight"} pr={"widget.mLeftRight"}>
-                {isLoginPage || isRegisterPage ? <NavBarLogin/> : <NavBar/>}
+            <Box
+                h="100%"
+                pt="widget.mTopBottom"
+                pl="widget.mLeftRight"
+                pr="widget.mLeftRight"
+                display="grid"
+                gridTemplateRows="auto minmax(0, 1fr)"
+                overflow="hidden"
+            >
+                <Box flexShrink={0}>
+                    {isLoginPage || isRegisterPage ? <NavBarLogin /> : <NavBar />}
+                </Box>
 
-                <Routes>
+                <Box minH={0} overflow="hidden" display="flex">
+                    <Routes>
+                        <Route element={<PublicOnlyRoute />}>
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/register" element={<Register />} />
+                        </Route>
 
-                    {/* Public Only Routes - must not be logged in */}
-                    <Route element={<PublicOnlyRoute/>}>
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<Register />} />
-                    </Route>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/calendar" element={<CalendarPage />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/agent" element={<Agent />} />
+                        </Route>
 
-                    {/* Protected routes - must be logged in */}
-                    <Route element = {<ProtectedRoute />} >
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/calendar" element={<CalendarPage />} />
-                        <Route path="/profile" element={<Profile/>}/>
-                        <Route path="/agent" element={<Agent />} />
-                    </Route>
-
-
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-
-                </Routes>
+                        <Route path="/" element={<Navigate to="/login" replace />} />
+                    </Routes>
+                </Box>
             </Box>
-            </div> 
+        </Box>
     )
 }

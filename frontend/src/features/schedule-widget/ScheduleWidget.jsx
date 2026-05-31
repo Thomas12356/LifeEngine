@@ -16,7 +16,14 @@ export default function ScheduleWidget() {
   }
 
   return (
-    <WidgetBox>
+    <WidgetBox
+    width="100%"
+    flex="1"
+    minH={0}
+    height="100%"
+    display="flex"
+    flexDirection="column"
+    >
       <Text textStyle="headingSolid" mb="3">
         Todays Schedule
       </Text>

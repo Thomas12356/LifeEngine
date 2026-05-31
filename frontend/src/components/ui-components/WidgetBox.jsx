@@ -10,7 +10,7 @@ export function WidgetBox({ children, ...props }){
         paddingTop={"widget.pTopBottom"}
         paddingBottom={"widget.pTopBottom"}
         borderRadius={"widgetRadii"}
-        height={"fit-content"}
+        overflow="hidden"
         {...props}>
             {children}
         </Box>
@@ -26,7 +26,7 @@ export function BlueWidgetBox({ children, ...props }){
         paddingTop={"widget.pTopBottom"}
         paddingBottom={"widget.pTopBottom"}
         borderRadius={"widgetRadii"}
-        height={"fit-content"}
+        overflow="hidden"
         {...props}>
             {children}
         </Box>

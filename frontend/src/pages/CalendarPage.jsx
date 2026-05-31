@@ -14,7 +14,17 @@ import Calendar from "@/features/calendar/Calendar";
 
 export default function CalendarPage() {
     return (
-        <Box height="calc(100vh - 70px - 70px)" p={4} overflow="hidden"> {/* Temporary height calculation */ }
+        <Box
+            height="calc(100vh - 70px - 70px)"
+            width="100%"
+            flex="1"
+            minH={0}
+            display="flex"
+            flexDirection="column"
+            px={3}
+            py={2}
+            overflow="hidden"
+        >
             <Calendar />
         </Box>
     )

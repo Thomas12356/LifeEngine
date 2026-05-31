@@ -1,14 +1,29 @@
 import AgentChat from "@/features/agent-chat/AgentChat"
-import AgentWidget from "@/features/agent-widget/AgentWidget"
 import { WidgetBox } from "@ui-components/WidgetBox"
 import { Box } from "@chakra-ui/react"
 
 export default function Agent() {
-    return(
-    <Box width="100%" px={{ base: 3, lg: 5 }} py={2}>
-    <WidgetBox>
-        <AgentChat/>
-    </WidgetBox>
-    </Box>
+    return (
+        <Box
+            w="100%"
+            h="100%"
+            minH={0}
+            display="flex"
+            px={3}
+            py={2}
+            overflow="hidden"
+            pb="10"
+        >
+            <WidgetBox
+                w="100%"
+                h="100%"
+                minH={0}
+                display="flex"
+                flexDirection="column"
+                overflow="hidden"
+            >
+                <AgentChat />
+            </WidgetBox>
+        </Box>
     )
 }

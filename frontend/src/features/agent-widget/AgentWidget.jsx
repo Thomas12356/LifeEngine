@@ -28,7 +28,14 @@ export default function AgentWidget() {
     const user = JSON.parse(localStorage.getItem('user'));
 
     return(
-        <WidgetBox>
+        <WidgetBox
+            width="100%"
+            flex="1"
+            minH={0}
+            height="100%"
+            display="flex"
+            flexDirection="column"
+        >
             <Stack direction="column" width="100%" align="start">
                 <Text textStyle="darkBlueText">
                     {getGreeting()}, {user.first_name}
