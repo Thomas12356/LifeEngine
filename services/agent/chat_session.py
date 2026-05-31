@@ -1,3 +1,5 @@
+#TODO Session Time Out
+
 MAX_MESSAGE_HISTORY = 10
 sessions = {}
 

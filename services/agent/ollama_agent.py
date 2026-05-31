@@ -4,6 +4,7 @@ from tools import create_event
 from tools_schema import TOOLS_SCHEMA
 from datetime import datetime, timedelta
 from config import OLLAMA_HOST, MODEL
+from chat_session import add_message, get_messages
 
 client = Client(host=OLLAMA_HOST)
 
@@ -96,12 +97,29 @@ def run_tool(function_name: str, function_args: dict):
             "function_args": function_args,
         }
     
-def ask_llm(user_message: str):
+def build_summary(results):
+    if not results:
+        return "Done."
+        
+    first = results[0]
+
+    if first.get("ok") is True:
+        return first.get("message", "Done.")
+        
+    if first.get("ok") is False:
+        return first.get("message", "Something went wrong.")
+        
+    return "Done."
+    
+def ask_llm(user_message: str, session_id: str):
+    message_history = get_messages(session_id)
+
     messages = [
         {
             "role": "system",
             "content": build_system_prompt(),
         },
+        *message_history,
         {
             "role": "user",
             "content": user_message,
@@ -120,15 +138,18 @@ def ask_llm(user_message: str):
 
     message = get_message(response)
     tool_calls = get_tool_calls(message)
+    add_message(session_id, "user", user_message)
 
     if not tool_calls:
+        llm_message = get_content(message) or "How can I help?"
+        add_message(session_id, "llm", llm_message)
         return {
             "type": "chat",
-            "message": get_content(message) or "How can I help?",
+            "message": llm_message,
         }
 
     results = []
-
+    log = []
     for tool_call in tool_calls:
         function_name, function_args = parse_tool_call(tool_call)
 
@@ -137,13 +158,15 @@ def ask_llm(user_message: str):
             function_args=function_args,
         )
 
-        results.append({
-            "tool": function_name,
-            "args": function_args,
-            "result": result,
-        })
+        results.append(result)
+        log.append({"function" : function_name, "args" : function_args})
+    
+    summary = build_summary(results)
+    add_message(session_id, "assistant", summary)
 
     return {
         "type": "tool_result",
+        "message" : summary,
         "results": results,
+        "log" : log,
     }
