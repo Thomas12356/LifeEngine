@@ -18,9 +18,18 @@ export default function EventTypesMenu({...props}){
         idealEnergy: "",
         burnoutRate: "",
         priority: 1,
-        availabilityWindow: [660, 1200], // 11:00 - 20:00
-        preferenceWindow: [1080, 1200],  // 18:00 - 20:00
+        availabilityWindow: [0, 1440],
+        preferenceWindow: [0, 1440],
     });
+
+    useEffect(() => { // On load set selected event type to Default
+        if (eventTypes.length === 0) return
+
+        const defaultEventType =
+            eventTypes.find((type) => type.name === "Default")
+
+        updateField("eventTypeName", defaultEventType.name)
+    }, [eventTypes])
 
     function updateField(field, value) {
         setFormData((prev) => ({
@@ -35,6 +44,17 @@ export default function EventTypesMenu({...props}){
         const mins = minutes % 60;
 
         return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    }
+
+    // Convert HH:MM into minutes since 00:00
+    function parseTime(time) {
+        const [hoursStr, minutesStr] = time.split(":")
+
+        const hours = parseInt(hoursStr, 10)
+        const minutes = parseInt(minutesStr, 10)
+
+        return (hours * 60) + minutes
+
     }
 
     async function handleSave() {
@@ -77,7 +97,15 @@ export default function EventTypesMenu({...props}){
 
             idealEnergy: selectedEventType.parameters.ideal_energy,
             burnoutRate: selectedEventType.parameters.burnout_rate,
-            priority: selectedEventType.parameters.priority
+            priority: selectedEventType.parameters.priority,
+            availabilityWindow: [
+                parseTime(selectedEventType.availability_start),
+                parseTime(selectedEventType.availability_end)
+            ],
+            preferenceWindow: [
+                parseTime(selectedEventType.preference_start),
+                parseTime(selectedEventType.preference_end)
+            ]
         }))
     }, [formData.eventTypeName, getEventTypeByName])
 
@@ -147,7 +175,7 @@ export default function EventTypesMenu({...props}){
                         </Field.Label>
                         <Slider.Root 
                             width="350px"
-                            defaultValue={formData.availabilityWindow}
+                            value={formData.availabilityWindow}
                             min = {0}
                             max = {1440}
                             minStepsBetweenThumbs={4} 
@@ -174,7 +202,7 @@ export default function EventTypesMenu({...props}){
                         </Field.Label>
                         <Slider.Root 
                             width="350px" 
-                            defaultValue={formData.preferenceWindow}
+                            value={formData.preferenceWindow}
                             min = {0} 
                             max = {1440}
                             minStepsBetweenThumbs={4} 
