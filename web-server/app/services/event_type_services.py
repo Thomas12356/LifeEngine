@@ -148,7 +148,7 @@ def get_user_event_types(user_id_str : str):
 
         user_uuid = uuid.UUID(user_id_str)
         result = EventType.get_all_by_user_id(user_uuid)
-
+        
         return {"success": True, "event_types": [event_type.to_dict() for event_type in result], "status_code" : 200}
 
     except ValueError as e:
