@@ -1,4 +1,10 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app import db
+from app.models import Event, EventType, EventParameter
+from app.services.schedule_optimiser.dto.input_dto import dbEventInput, dbEventTypeInput
+from app.services.schedule_optimiser.tasks.auto_reschedule import auto_reschedule
+from app.services import event_type_services
+import uuid, os
 
 def auto_reschedule_event(event_id_str):
     """
@@ -9,6 +15,48 @@ def auto_reschedule_event(event_id_str):
     # TODO: replace this with your real scheduling algorithm.
     new_schedule = [{"name" : "New", "start_time" : "2026-06-01T19:00:00", "end_time" : "2026-06-01T20:00:00"}]
 
+    event = Event.find_by_id(uuid.UUID(event_id_str)).to_dict() # Fetch event details
+    event_type = EventType.get_by_own_id(uuid.UUID(event["event_type_id"])).to_dict() # Fetch event type details
+    
+    # If event has custom paramters, fetch them, otherwise use EventTypes parameters
+    parameter_id = event["event_parameter_id"] if event["event_parameter_id"] is not None else event_type["event_parameter_id"]
+    event_parameters = EventParameter.find_by_id(uuid.UUID(parameter_id)).to_dict()
+
+    # Get the users default event type
+    user_default_type = event_type_services.get_default_event_type(event["user_id"])
+    default_params = EventParameter.find_by_id(uuid.UUID(user_default_type["event_parameter_id"])).to_dict()
+
+    ideal_energy = event_parameters.get("ideal_energy") # Try to retrieve parameters
+    burnout_rate = event_parameters.get("burnout_rate") # If thse are None, we use default values
+
+    # Build event DTO
+    event_dto = dbEventInput(
+        id=event["id"],
+        name=event["name"],
+        start_time=event["start_time"],
+        end_time=event["end_time"],
+        is_moveable=event["is_moveable"],
+        ideal_energy=ideal_energy if ideal_energy is not None else default_params["ideal_energy"],
+        burnout_rate=burnout_rate if burnout_rate is not None else default_params["burnout_rate"],
+        priority=event_parameters["priority"]
+    )
+
+    # Build event type DTO
+    event_type_dto = dbEventTypeInput(
+        id=event_type["id"],
+        name=event_type["name"],
+        is_moveable=event_type["is_moveable"],
+        availability_start = event_type["availability_start"],
+        availability_end = event_type["availability_end"],
+        preference_start = event_type["preference_start"],
+        preference_end = event_type["preference_end"],
+        ideal_energy=ideal_energy if ideal_energy is not None else default_params["ideal_energy"],
+        burnout_rate=burnout_rate if burnout_rate is not None else default_params["burnout_rate"],
+        priority=event_parameters["priority"]
+    )
+
+    print(auto_reschedule(event_dto, event_type_dto, None))
+    
     return {
         "ok": True,
         "old_schedule": old_schedule,

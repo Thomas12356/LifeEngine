@@ -15,7 +15,6 @@ class dbEventInput:
 
     is_moveable: bool
 
-    has_custom_params : bool
     ideal_energy : float | None
     burnout_rate : float | None
     priority : int

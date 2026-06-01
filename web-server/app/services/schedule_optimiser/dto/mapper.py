@@ -7,8 +7,15 @@ from ..models import Event, EventType
 from ..config import SLOT_SIZE
 from datetime import datetime
 
+# Given a HH:MM string, convert to slot index
+def convert_hh_mm(time : str):
+    hours, minutes = map(int, time.split(":"))
+    total_minutes = (hours * 60) + minutes
+    return total_minutes // SLOT_SIZE
+
 # Given an ISO string convert to a slot index
-def convert_time(time : datetime):
+def convert_time_iso(timeISO : str):
+    time = datetime.fromisoformat(timeISO)
     return (time.hour * 60 + time.minute) // SLOT_SIZE
 
 # Given a slot index convert to HH:MM
@@ -36,13 +43,13 @@ def map_event(event_dto : dbEventInput, event_type_dto : dbEventTypeInput):
         burnout_rate=burnout_rate,
 
         availability_window=(
-            convert_time(event_type_dto.availability_start),
-            convert_time(event_type_dto.availability_end)
+            convert_hh_mm(event_type_dto.availability_start),
+            convert_hh_mm(event_type_dto.availability_end)
         ),
 
         preferred_window=(
-            convert_time(event_type_dto.preference_start),
-            convert_time(event_type_dto.preference_end)
+            convert_hh_mm(event_type_dto.preference_start),
+            convert_hh_mm(event_type_dto.preference_end)
         )
     )
 
@@ -53,8 +60,8 @@ def map_event(event_dto : dbEventInput, event_type_dto : dbEventTypeInput):
         is_moveable=is_moveable,
         importance=priority,
 
-        start_slot=convert_time(event_dto.start_time),
-        duration_slots=convert_time(event_dto.end_time) - convert_time(event_dto.start_time)
+        start_slot=convert_time_iso(event_dto.start_time),
+        duration_slots=convert_time_iso(event_dto.end_time) - convert_time_iso(event_dto.start_time)
 
     )
 
