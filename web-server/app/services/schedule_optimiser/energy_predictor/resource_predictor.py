@@ -80,8 +80,8 @@ def plot_baselines(phi1, phi2):
 
 def demo():
 
-    phi1 = float(input("Enter an approximate wake up time (0-24): "))
-    phi2 = phi1 - 3.0
+    phi1 = float(input("Enter an approximate wake up time (0-24): ")) + 1
+    phi2 = phi1 - 1
 
     plot_baselines(phi1, phi2)
 

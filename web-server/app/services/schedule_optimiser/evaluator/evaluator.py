@@ -17,20 +17,18 @@
 
 """
 import math
-from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
-
-# ----- EXTRACT TO CONFIG ------
-S = 0.02 # Placeholder for inital S process value used in the simulation at wakeup time
-IMPORTANCE = 50 # Placeholder for event importance, to be replaced with a value defined in the Event object
-K = 1 # Steepness of the yield curve - to be tuned based on experimentation (k = 1 is linear, k > 1 exponential)
-FATIGUE_MODIFIER = -2.0 # Modifier for the fatigue penalty applied to task yield when effective energy is below 0
-RECOVERY_RATE = 0.7 # Rate at which residual fatigue decreases during rest 
-WASTE_COST_WEIGHT = 0.5
-UNSCHEDULED_EVENTS_PENALTY = 1000
-PREFERENCE_WINDOW_PENATLY = 2
-# ----- EXTRACT TO CONFIG ------
-
-SLOT_HOURS = SLOT_SIZE / 60
+from ..config import (
+    SCHEDULE_RESOLUTION,
+    SLOT_SIZE,
+    S,
+    K,
+    FATIGUE_MODIFIER,
+    RECOVERY_RATE,
+    WASTE_COST_WEIGHT,
+    UNSCHEDULED_EVENTS_PENALTY,
+    PREFERENCE_WINDOW_PENATLY,
+    SLOT_HOURS
+)
 
 class Evaluator:
 

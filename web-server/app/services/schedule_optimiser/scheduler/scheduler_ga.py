@@ -1,27 +1,19 @@
-# Class imports
-from ..evaluator import Evaluator
-from .schedule import Schedule
-from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
-
 # Library imports
 import random
 import copy
-
-# NOTE : EXTRACT TO CONFIG
-POPULATION_SIZE = 50 # Number of candidates in a population
-NUM_GENERATIONS = 100 # Number of generations the GA runs for
-ELITISM_RATE = 0.02 # Top % of population carried over for elitism
-TOURNAMENT_SIZE = 5 # The size of the subset of individuals picked from for parent selection
-MUTATION_RATE = 0.15 # Probability that a child will be mutatated
-
-#WAKE_UP_TIME = 7 # 7am
-#SLEEP_DURATION = 8 # User-reported ideal sleep duration
-#BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
-#SCHEDULE_RESOLUTION = 24 # Number of timeslots to divide the day into (24 = 1 timeslot per hour)
-
-# EXTRACT TO CONFIG
-SHIFT_RANGE_HOURS = 2
-SHIFT_RANGE = (SHIFT_RANGE_HOURS * 60) // SLOT_SIZE
+# Class & config imports
+from ..evaluator import Evaluator
+from .schedule import Schedule
+from ..config import (
+    SCHEDULE_RESOLUTION,
+    SLOT_SIZE,
+    POPULATION_SIZE,
+    NUM_GENERATIONS,
+    ELITISM_RATE,
+    TOURNAMENT_SIZE,
+    MUTATION_RATE,
+    SHIFT_RANGE
+)
 
 class SchedulerGA:
     def __init__(self, events, energy_focus_landscape, wakeup_slot, bed_time_slot):
