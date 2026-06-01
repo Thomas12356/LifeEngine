@@ -67,4 +67,10 @@ def map_event(event_dto : dbEventInput, event_type_dto : dbEventTypeInput):
 
     return scheduler_event
 
+def map_preferences(preferences : dbUserPreferenceInput):
+
+    wakeup_slot = convert_hh_mm(preferences.wakeup_time)
+    bed_time = convert_hh_mm(preferences.bed_time)
+
+    return wakeup_slot, bed_time
 

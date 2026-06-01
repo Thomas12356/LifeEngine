@@ -70,11 +70,11 @@ events_to_schedule = [
     Event(5, "Study Session", event_types["Study"], start_slot=52, duration_slots=8, importance=1, is_moveable=True),
 ]
     # NOTE : REVIEW PHI1 & PHI2 CALC
-baseline_energy, baseline_focus = get_baseline_array(phi1=WAKE_UP_TIME + 1, phi2=WAKE_UP_TIME, resolution=SCHEDULE_RESOLUTION) # Fetch baseline energy landscape from resource predictor
+baseline_energy, _ = get_baseline_array(phi1=WAKE_UP_TIME + 1, phi2=WAKE_UP_TIME, resolution=SCHEDULE_RESOLUTION) # Fetch baseline energy landscape from resource predictor
 
 scheduler = SchedulerGA(
     events_to_schedule,
-    energy_focus_landscape=list(zip(baseline_energy,baseline_focus)),
+    energy_focus_landscape=list(zip(baseline_energy,_)),
     wakeup_slot=WAKE_UP_SLOT,
     bed_time_slot=BED_SLOT
     
