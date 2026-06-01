@@ -24,17 +24,17 @@ export default function CalendarHeader({ selectedDate }) {
     const days = getWeekDays(selectedDate); // Fetch the dates of the current week being viewed based on the selected date
 
     return (
-        <HStack w="100%" borderBottom="2px solid" borderColor="#94949442" pb={4}>
-            <Box w="60px"/>
+        <HStack w="100%" minW={{ base: "520px", md: "100%" }} borderBottom="2px solid" borderColor="#94949442" pb={{ base: 2, md: 4 }}>
+            <Box w={{ base: "42px", md: "60px" }} flexShrink={0}/>
             {days.map((day, index) => ( // Loop through the days of the week and render a header cell for each day
-                <VStack key={index} flex="1" lineHeight={1}>
-                    <Text fontWeight="medium" fontSize="sm" color="#3a3a3a">
+                <VStack key={index} flex="1" lineHeight={1} gap={{ base: 1, md: 2 }}>
+                    <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }} color="#3a3a3a">
                         {day.toLocaleString('en-US', { weekday: 'short' })}
                     </Text>
                     <Box   
                         mx="auto"
-                        w="32px"
-                        h="32px"
+                        w={{ base: "26px", md: "32px" }}
+                        h={{ base: "26px", md: "32px" }}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
@@ -43,7 +43,7 @@ export default function CalendarHeader({ selectedDate }) {
                         borderColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}
                     > {/* Highlight the current day */}
                         <Text 
-                            fontSize="md" 
+                            fontSize={{ base: "sm", md: "md" }}
                             fontWeight={isSameDay(day, new Date()) ? "semibold" : "normal"}
                         >
                             {day.getDate()}
