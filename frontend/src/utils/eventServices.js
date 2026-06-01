@@ -99,7 +99,7 @@ export async function autoReschedule(payload) {
 }
 
 export async function acceptAutoReschedule(auto_reschedule_id) {
-    const response = await api.post("/events/autoreschedule/accept", {
+    const response = await api.post("/event/autoreschedule/accept", {
         auto_reschedule_id : auto_reschedule_id,
     });
 
