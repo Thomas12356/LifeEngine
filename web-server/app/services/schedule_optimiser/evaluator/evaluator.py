@@ -17,7 +17,7 @@
 
 """
 import math
-from services.schedule_optimiser.config import SCHEDULE_RESOLUTION, SLOT_SIZE, WAKE_UP_SLOT, BED_SLOT
+from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE, WAKE_UP_SLOT, BED_SLOT
 
 WAKE_UP_TIME = 7
 BED_TIME = 23

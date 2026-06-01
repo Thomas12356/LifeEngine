@@ -1,61 +1,7 @@
-""""
-    Genetic Algorithm Scheduler - MVP Implementation
-
-    This is an inital implementation of a genetic algorithm based scheduler.
-    Given a list of events and a landscape of predicted energy and focus levels for each time slot, 
-    the algorithm will evolve a candidate schedules over multiple generations to
-    find an optimal or near optimal schedule that maximizes the fit of events to time slots.
-
-    V1: Static user state
-       - Basic event and time slot models
-       - User state is static and defined by predicted energy and focus levels for each time slot
-
-    V2: Dynamic user state and feedback loop
-        - Simple user state dynamics model impacted by S process and residual fatigue from previous events
-        - Feedback loop where the schedule impacts user state, which in turn impacts the fit score of subsequent events in the schedule
-
-    DEV NOTES  v1:
-    Prerequisites:
-    - A list of events to be scheduled, each with an associated EventType that defines its ideal energy and focus levels, as well as the weights for energy and focus in the fit score calculation
-    - A landscape of predicted energy and focus levels for each time slot (e.g. each hour of the day), which can be generated using the baseline predictor
-
-    GA Flow :
-        1. Initialise a population of candidate schedules (chromosomes)
-        2. For each chromosone :
-            a. Initialise a starting user state at time 0 (beginning of the day)
-            b. Loop through each time slot in the schedule :
-                - Calculate user state match score for event in time slot t
-                - Apply the decay functions
-                    * S(t+1) = S(t) - Decay(Event, UserState) + Recovery(UserState)
-                - If S(t) falls below a threshold, apply a burnout penalty to the score and subsequent time slots until recovery occurs
-            c. Aggregate the scores across all time slots to get a total fitness score for the schedule
-        3. Select the top performing schedules based on fitness scores
-        4. Apply crossover and mutation to create a new generation of schedules
-            - We must use respect contraints during cross over and mutation to prevent invalid schedules (e.g. two events scheduled at the same time, or events scheduled outside of their allowed time windows)
-        5. Use tournament selection to select best indivduals for reproduction
-        6. Preserve some of the top performing schedules (elitism)
-        5. Repeat for a set number of generations or until convergence
-
-
-    DEV NOTES 8/05/26 (v2):
-    - GA now simulates a candidate schedule measuring predicted yield of each event based on effective energy
-    - Effective enery is calculated using the predicted energy, fatigue build up from previous events and the S process
-    - The simulation provides the GA with a more realistic fitness score that is impacted dynamically by the schedule itself, 
-    - This allows for discovery of schedules that strategically place high impact events to maximise energy and yield
-    - While also placing low impact events in a way that allows for recovery and prevents burnout
-"""
-"""
-    TODO : 
-    - Locate bug which results in fitness scores not showing for the found solution
-    - Tune the parameters of the simulation (e.g. fatigue build up, recovery rate)
-    - Implement a model for focus states and integrate into the simulation and fitness evaluation
-    
-"""
-
 # Class imports
-from services.schedule_optimiser.evaluator import Evaluator
+from ..evaluator import Evaluator
 from .schedule import Schedule
-from services.schedule_optimiser.config import SCHEDULE_RESOLUTION, SLOT_SIZE
+from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
 
 # Library imports
 import random

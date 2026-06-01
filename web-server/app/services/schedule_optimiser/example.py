@@ -1,14 +1,14 @@
 # This is just a temp file to test the scheduler
 
-from services.schedule_optimiser.scheduler.scheduler_ga import SchedulerGA
+from app.services.schedule_optimiser.scheduler.scheduler_ga import SchedulerGA
 
 # Custom data types import
-from services.schedule_optimiser.scheduler.models import EventType, Event
+from app.services.schedule_optimiser.scheduler.models import EventType, Event
 
 # Resource predictor import
-from services.schedule_optimiser.energy_predictor import get_baseline_array
+from app.services.schedule_optimiser.energy_predictor import get_baseline_array
 
-from services.schedule_optimiser.config import SCHEDULE_RESOLUTION, WAKE_UP_SLOT, BED_SLOT
+from app.services.schedule_optimiser.config import SCHEDULE_RESOLUTION, WAKE_UP_SLOT, BED_SLOT
 
 global_avail_window = (WAKE_UP_SLOT + 4, BED_SLOT - 4) # 1 hour after wakeup, 1 hour before bed
 default_pref_window = global_avail_window

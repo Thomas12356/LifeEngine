@@ -9,9 +9,8 @@
 
 """
 
-from dataclasses import dataclass
-from .models import Event, TimeSlot
-from services.schedule_optimiser.config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, WAKE_UP_SLOT, BED_SLOT, SLOT_SIZE
+from ..models import TimeSlot
+from ..config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, WAKE_UP_SLOT, BED_SLOT, SLOT_SIZE
 import random
 
 class Schedule:
