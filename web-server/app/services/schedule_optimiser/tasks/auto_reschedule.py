@@ -10,6 +10,7 @@ from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
 from ..energy_predictor import get_baseline_array
 from ..scheduler import SchedulerGA
 from dataclasses import replace
+from datetime import datetime
 
 def auto_reschedule(
         event_to_reschedule : tuple,
@@ -55,6 +56,18 @@ def auto_reschedule(
         
     ) # Initalise new GA instance
     result = scheduler.run() # Run the scheduler
+
+    # If the event being rescheduled is today, we should reject a new start time earlier than the current time
+    # NOTE : We can improve this by including the logic in the fitness function, because currently if we try
+    # multiple attempts at rescheduling the same result will be produced
+    if same_day:
+        event_slot = result.find_start_slot(reschedule_id)
+        new_event_start = convert_slot_index(event_slot)
+        current_time = datetime.now().strftime("%H:%M")
+
+        if new_event_start < current_time:
+            return {"error": "Failed to find a valid time today.", "ok": False}
+
     return result
 
 
