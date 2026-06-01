@@ -2,6 +2,9 @@ from flask import Blueprint, request, jsonify
 from app.services import event_services
 from app.services import event_type_services
 from app.services import event_parameter_services
+from app.services import scheduler_services
+import uuid
+import time
 
 event_blueprint = Blueprint('event',__name__)
 
@@ -10,6 +13,9 @@ REQUIRED_EVENT_PARAMETER_FIELDS = ["ideal_energy", "burnout_rate", "priority"]
 REQUIRED_EVENT_TYPE_FIELDS = ["user_id", "parameters", "name"]
 REQUIRED_GET_EVENTS_FIELDS = ["user_id"]
 REQUIRED_RESCHEDULE_EVENT_FIELDS = ["user_id", "event_id","new_start", "new_end"]
+REQUIRED_AUTO_RESCHEDULE_FIELDS = ["event_id"]
+REQUIRED_ACCEPT_AUTO_RESCHEDULE_FIELDS = ["user_id", "auto_reschedule_id"]
+AUTO_RESCHEDULE_PENDING = {}
 
 @event_blueprint.route('/addevent', methods=['POST'])
 def add_event():
@@ -188,7 +194,55 @@ def reschedule_event():
         return jsonify({
             "message": f"Events {data['event_id']} rescheduled",
         }), result["status_code"]
-        
+
+
+@event_blueprint.route("/autoreschedule/run", methods=["POST"])
+def auto_reschedule_event():
+    data = request.get_json()
+    print("AUTO RESCHEDULE DATA:", data)
+    print("data.get: ", data.get("event_id"))
+    if not data.get("event_id"):
+        return jsonify({
+            "ok": False,
+            "error": "Missing required field: event_id",
+            "received": data,
+        }), 400
+             
+    try:
+        result = scheduler_services.auto_reschedule_event(
+            event_id_str=data["event_id"],
+        )
+
+        if not result.get("ok"):
+            return jsonify(result), 400
+
+        #auto_reschedule_id = str(uuid.uuid4())
+
+        # AUTO_RESCHEDULE_PENDING[auto_reschedule_id] = {
+        #     "user_id": data["user_id"],
+        #     "event_id": data["event_id"],
+        #     "changes": result.get("changes", []),
+        # }
+
+        time.sleep(5)
+        print(result)
+
+        return jsonify({
+            "ok": True,
+            "auto_reschedule_id": "auto_reschedule_id",
+            "old_schedule": result["old_schedule"],
+            "new_schedule": result["new_schedule"],
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "ok": False,
+            "error": str(e),
+        }), 500
+
+
+
+
 @event_blueprint.route("/geteventtypes", methods=["GET"])
 def get_user_event_types():
     
