@@ -273,6 +273,7 @@ def accept_auto_reschedule_event():
 
     data = request.get_json(silent=True) or {}
     auto_reschedule_id = data.get("auto_reschedule_id")
+    print(auto_reschedule_id)
 
     if not auto_reschedule_id:
         return jsonify({
