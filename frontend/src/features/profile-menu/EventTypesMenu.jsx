@@ -6,6 +6,7 @@ import ColourPicker from "@/components/ui-components/ColourPicker";
 import { useState, useEffect, useRef } from "react"
 import { useEventTypes } from "@/context/EventTypeContext";
 import { updateEventType } from "@/utils/eventServices";
+import { floatToLevel, levelToFloat } from "@/utils/parametersHelper";
 
 export default function EventTypesMenu({...props}){
 
@@ -71,8 +72,8 @@ export default function EventTypesMenu({...props}){
             event_type_id : formData.eventTypeID,
             colour: formData.labelColour,
             parameters: {
-                ideal_energy: formData.idealEnergy,
-                burnout_rate: formData.burnoutRate,
+                ideal_energy: levelToFloat(formData.idealEnergy),
+                burnout_rate: levelToFloat(formData.burnoutRate),
                 priority: formData.priority
             },
             availability_start : minutesToTime(formData.availabilityWindow[0]),
@@ -102,8 +103,8 @@ export default function EventTypesMenu({...props}){
             eventTypeID: selectedEventType.id,
             labelColour: selectedEventType.colour,
 
-            idealEnergy: selectedEventType.parameters.ideal_energy,
-            burnoutRate: selectedEventType.parameters.burnout_rate,
+            idealEnergy: floatToLevel(selectedEventType.parameters.ideal_energy),
+            burnoutRate: floatToLevel(selectedEventType.parameters.burnout_rate),
             priority: selectedEventType.parameters.priority,
             availabilityWindow: [
                 parseTime(selectedEventType.availability_start),
