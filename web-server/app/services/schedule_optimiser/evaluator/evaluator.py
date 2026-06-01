@@ -17,11 +17,9 @@
 
 """
 import math
-from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE, WAKE_UP_SLOT, BED_SLOT
+from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
 
-WAKE_UP_TIME = 7
-BED_TIME = 23
-
+# ----- EXTRACT TO CONFIG ------
 S = 0.02 # Placeholder for inital S process value used in the simulation at wakeup time
 IMPORTANCE = 50 # Placeholder for event importance, to be replaced with a value defined in the Event object
 K = 1 # Steepness of the yield curve - to be tuned based on experimentation (k = 1 is linear, k > 1 exponential)
@@ -30,13 +28,16 @@ RECOVERY_RATE = 0.7 # Rate at which residual fatigue decreases during rest
 WASTE_COST_WEIGHT = 0.5
 UNSCHEDULED_EVENTS_PENALTY = 1000
 PREFERENCE_WINDOW_PENATLY = 2
+# ----- EXTRACT TO CONFIG ------
 
 SLOT_HOURS = SLOT_SIZE / 60
 
 class Evaluator:
 
-    def __init__(self, population, energy_landscape):
+    def __init__(self, energy_landscape, wakeup_slot, bed_time_slot):
         self.energy_landscape = energy_landscape
+        self.wakeup_slot = wakeup_slot
+        self.bed_time_slot = bed_time_slot
 
     # Given an event and a timeslot, calculate the fitness score based on ideal & required energy match
     def calculate_energy_match(self, event, timeslot):
@@ -81,7 +82,7 @@ class Evaluator:
 
         # ---- SIMULATION LOOP ----
         for i in range(SCHEDULE_RESOLUTION):
-            clock_slot = (i + WAKE_UP_SLOT) % SCHEDULE_RESOLUTION # Simulate a 24 hour period starting from the user's wake up time
+            clock_slot = (i + self.wakeup_slot) % SCHEDULE_RESOLUTION # Simulate a 24 hour period starting from the user's wake up time
 
             timeslot = candidate.timeslots[clock_slot] # Get the event scheduled for the current timeslot, if any
             predicted_energy = self.energy_landscape[clock_slot] # Get the predicted energy level for the current timeslot from the energy landscape
@@ -91,7 +92,7 @@ class Evaluator:
             if timeslot is not None: # If there is an event scheduled for the current timeslot, calculate the task yield and update the residual fatigue
                 event = timeslot.event
 
-                if clock_slot < BED_SLOT and clock_slot >= WAKE_UP_SLOT: # Only apply yield if the event is scheduled during waking hours
+                if clock_slot < self.bed_time_slot and clock_slot >= self.wakeup_slot: # Only apply yield if the event is scheduled during waking hours
                     if effective_energy < 0: # Check if effective energy is below 0
                         task_yield = (event.importance * FATIGUE_MODIFIER) + (effective_energy * 0.5) * SLOT_HOURS # Apply a heavy penatly to task yield
                         negative_energy_penalty_total += task_yield

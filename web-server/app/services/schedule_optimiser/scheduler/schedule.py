@@ -10,11 +10,11 @@
 """
 
 from ..models import TimeSlot
-from ..config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, WAKE_UP_SLOT, BED_SLOT, SLOT_SIZE
+from ..config import SCHEDULE_RESOLUTION, SLOTS_PER_DAY, SLOT_SIZE
 import random
 
 class Schedule:
-    def __init__(self, id, events, energy_landscape):
+    def __init__(self, id, events, energy_landscape, wakeup_slot, bed_time_slot):
         self.id = id # Unique identifier for the schedule
         self.events = list(events) # Container for events to be scheduled
         self.timeslots = [None] * SCHEDULE_RESOLUTION # Initialize empty timeslots for the schedule
@@ -28,6 +28,8 @@ class Schedule:
         self.sleep_penalty_total = 0.0
         self.fatigue_drain_total = 0.0
         self.preference_penalty_total = 0.0
+        self.wakeup_slot = wakeup_slot
+        self.bed_time_slot = bed_time_slot
 
     # Given an event and start slot index, return True if the event can be scheduled at that index, False otherwise
     def check_availability(self, event, start_slot):
@@ -36,10 +38,10 @@ class Schedule:
             return False # Event cannot be scheduled as it exceeds the day boundary
         
         if event.is_moveable:
-            if start_slot < WAKE_UP_SLOT:
+            if start_slot < self.wakeup_slot:
                 return False
             
-            if start_slot + event.duration_slots > BED_SLOT:
+            if start_slot + event.duration_slots > self.bed_time_slot:
                 return False
 
         (start, end) = event.EventType.availability_window

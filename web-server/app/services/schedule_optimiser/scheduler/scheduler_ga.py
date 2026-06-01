@@ -7,31 +7,34 @@ from ..config import SCHEDULE_RESOLUTION, SLOT_SIZE
 import random
 import copy
 
-# NOTE : These constants should be moved to a GA config file
+# NOTE : EXTRACT TO CONFIG
 POPULATION_SIZE = 50 # Number of candidates in a population
 NUM_GENERATIONS = 100 # Number of generations the GA runs for
 ELITISM_RATE = 0.02 # Top % of population carried over for elitism
 TOURNAMENT_SIZE = 5 # The size of the subset of individuals picked from for parent selection
 MUTATION_RATE = 0.15 # Probability that a child will be mutatated
 
-WAKE_UP_TIME = 7 # 7am
-SLEEP_DURATION = 8 # User-reported ideal sleep duration
+#WAKE_UP_TIME = 7 # 7am
+#SLEEP_DURATION = 8 # User-reported ideal sleep duration
 #BED_TIME = (WAKE_UP_TIME + 24 - SLEEP_DURATION) % 24 # NOTE : This is not being used, could be removed
 #SCHEDULE_RESOLUTION = 24 # Number of timeslots to divide the day into (24 = 1 timeslot per hour)
 
+# EXTRACT TO CONFIG
 SHIFT_RANGE_HOURS = 2
 SHIFT_RANGE = (SHIFT_RANGE_HOURS * 60) // SLOT_SIZE
 
 class SchedulerGA:
-    def __init__(self, events, energy_focus_landscape):
+    def __init__(self, events, energy_focus_landscape, wakeup_slot, bed_time_slot):
         self.events = events
         self.energy_focus_landscape = energy_focus_landscape
         self.energy_landscape, _ = list(zip(*self.energy_focus_landscape))
+        self.wakeup_slot = wakeup_slot
+        self.bed_time_slot = bed_time_slot
         self.population = self.initialise_population()
         self.next_gen = []
-        self.fixed_events = []
-        self.flexible_events = []
-        self.base_schedule = []
+        #self.fixed_events = []
+        #self.flexible_events = []
+        #self.base_schedule = []
         self.generation = 0
     
     def initialise_population(self):
@@ -39,7 +42,13 @@ class SchedulerGA:
 
         for i in range(POPULATION_SIZE): # Iterate over population size
 
-            candidate = Schedule(id=i, events=self.events, energy_landscape=self.energy_focus_landscape) # Intialise a new candidate schedule
+            candidate = Schedule(
+                id=i,
+                events=self.events,
+                energy_landscape=self.energy_focus_landscape,
+                wakeup_slot=self.wakeup_slot,
+                bed_time_slot=self.bed_time_slot
+            ) # Intialise a new candidate schedule
 
             random.shuffle(candidate.events) # Shuffle list of events to be scheduled to increase diversity
 
@@ -91,8 +100,8 @@ class SchedulerGA:
         #child2_events = [timeslot.event for timeslot in child2_slots if timeslot is not None]
 
         # Create schedule objects using childrens event lists
-        child1 = Schedule(id=len(self.next_gen), events=self.events, energy_landscape=self.energy_focus_landscape)
-        child2 = Schedule(id=len(self.next_gen) + 1, events=self.events, energy_landscape=self.energy_focus_landscape)
+        child1 = Schedule(id=len(self.next_gen), events=self.events, energy_landscape=self.energy_focus_landscape, wakeup_slot=self.wakeup_slot, bed_time_slot=self.bed_time_slot)
+        child2 = Schedule(id=len(self.next_gen) + 1, events=self.events, energy_landscape=self.energy_focus_landscape, wakeup_slot=self.wakeup_slot, bed_time_slot=self.bed_time_slot)
 
         # Set children timeslots
         child1.timeslots = child1_slots
@@ -199,7 +208,7 @@ class SchedulerGA:
     def run(self):
         
         energy_landscape, _ = zip(*self.energy_focus_landscape) # Unpack energy landscape
-        evaluator = Evaluator(self.population, list(energy_landscape)) # Initalise evaluator
+        evaluator = Evaluator(list(energy_landscape), self.wakeup_slot, self.bed_time_slot) # Initalise evaluator
         best_individual = None
         
         while self.generation < NUM_GENERATIONS: # Repeat until max number of generations has been reached
