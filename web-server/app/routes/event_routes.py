@@ -270,7 +270,42 @@ def auto_reschedule_event():
 @event_blueprint.route("/autoreschedule/accept", methods=["POST"])
 def accept_auto_reschedule_event():
     cleanup_expired_auto_reschedules()
-    return
+
+    data = request.get_json(silent=True) or {}
+    auto_reschedule_id = data.get("auto_reschedule_id")
+
+    if not auto_reschedule_id:
+        return jsonify({
+            "ok": False,
+            "error": "Missing required field: auto_reschedule_id"
+        }), 400
+        
+    pending_reschedule = AUTO_RESCHEDULE_PENDING.get(auto_reschedule_id)
+
+    if not pending_reschedule:
+        return jsonify({
+            "ok": False,
+            "error": "Auto-reschedule proposal not found or expired."
+        }), 404
+
+
+    result = event_services.apply_auto_reschedule(
+        user_id_str=pending_reschedule["user_id"],
+        pending_reschedule=pending_reschedule,
+    )
+
+    status_code = result.get("status_code", 500)
+
+    if not result.get("success"):
+        return jsonify(result), status_code
+
+    AUTO_RESCHEDULE_PENDING.pop(auto_reschedule_id, None)
+
+    return jsonify({
+        "success": True,
+        "message": "Auto-reschedule applied.",
+        "result": result,
+    }), 200
 
 @event_blueprint.route("/geteventtypes", methods=["GET"])
 def get_user_event_types():
