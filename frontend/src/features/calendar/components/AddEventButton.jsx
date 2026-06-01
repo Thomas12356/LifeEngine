@@ -33,7 +33,7 @@ export default function AddEventButton({ onEventAdded }) {
                 <Button
                     size={{ base: "xs", md: "md" }}
                     width={{ base: "100%", sm: "auto" }}
-                    bg="blue.500"
+                    bg="blueLight.500"
                     color="white"
                     borderRadius="lg"
                     px={{ base: 3, md: 4 }}

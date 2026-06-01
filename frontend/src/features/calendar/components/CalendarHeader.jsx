@@ -40,7 +40,7 @@ export default function CalendarHeader({ selectedDate }) {
                         justifyContent="center"
                         borderRadius="full"
                         border={isSameDay(day, new Date()) ? "2px solid" : "2px solid transparent"} // Apply border to indicate current day
-                        borderColor={isSameDay(day, new Date()) ? "blue.500" : "transparent"}
+                        borderColor={isSameDay(day, new Date()) ? "blueLight.500" : "transparent"}
                     > {/* Highlight the current day */}
                         <Text 
                             fontSize={{ base: "sm", md: "md" }}

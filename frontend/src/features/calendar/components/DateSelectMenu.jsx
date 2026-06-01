@@ -35,16 +35,20 @@ export default function DateSelectMenu({ selectedDate, setSelectedDate }) {
     >
       <DatePicker.Control>
         <DatePicker.Trigger asChild>
-          <Box as="button">
-            <HStack>
+          <Box
+            as="button"
+          >
+            <HStack _hover = {{
+              cursor: "pointer",
+              }}
+            >
               <Text
-                fontSize={{ base: "md", md: "xl" }}
+                fontSize={{ base: "md", md: "30px" }}
                 fontWeight="medium"
-                color="gray.700"
               > {/* Display the currently selected date in a readable format */}
                 {selectedDate.toLocaleDateString("en-GB", {month : "short", year : "numeric"})}
               </Text> 
-              <LuChevronDown /> {/* Icon indicating that this is a dropdown menu */}
+              <LuChevronDown size="20px" color="grey.700"/> {/* Icon indicating that this is a dropdown menu */}
             </HStack>
           </Box>
         </DatePicker.Trigger>

@@ -19,7 +19,7 @@ export default function CreateEventTypeButton() {
                     size={{ base: "xs", md: "md" }}
                     width={{ base: "x3", sm: "auto" }}
                     bg="transparent"
-                    color="blue.500"
+                    color="blueLight.500"
                     border="1px solid"
                     borderRadius="lg"
                     px={{ base: 3, md: 4 }}
