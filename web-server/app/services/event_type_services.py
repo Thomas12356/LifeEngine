@@ -83,7 +83,7 @@ def create_event_type(user_id_str : str, parameters : dict, name : str, colour: 
         user_uuid = uuid.UUID(user_id_str)
 
         existing_type = (
-            EventType.query.filter_by(user_id=user_uuid, name=name).first()
+            EventType.query.filter_by(user_id=user_uuid, name=name, is_active=True).first()
         )
 
         if existing_type:
@@ -237,6 +237,9 @@ def update_event_type(event_type_id_str : str, data: dict):
 
         if "preference_end" in data:
             event_type.preference_end = data["preference_end"]
+
+        if "is_active" in data:
+            event_type.is_active = data["is_active"]
 
         db.session.commit()
 
