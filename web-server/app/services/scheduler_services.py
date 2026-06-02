@@ -33,7 +33,9 @@ def auto_reschedule_event(event_id_str):
         event_type = EventType.get_by_own_id(uuid.UUID(event["event_type_id"])).to_dict() # Fetch event type details
         
         # If event has custom paramters, fetch them, otherwise use EventTypes parameters
-        parameter_id = event["event_parameter_id"] if event["event_parameter_id"] != "None" or None else event_type["event_parameter_id"]
+        parameter_id = event.get("event_parameter_id")
+        if parameter_id in (None, "None", ""):
+            parameter_id = event_type["event_parameter_id"]
         event_parameters = EventParameter.find_by_id(uuid.UUID(parameter_id)).to_dict()
 
         # Get the users default event type
@@ -72,6 +74,7 @@ def auto_reschedule_event(event_id_str):
         if str(event["id"]) != event_id_str: # 
             day_array.append((event_dto, event_type_dto))
         else:
+            event_dto.is_moveable = True
             event_to_reschedule = (event_dto, event_type_dto)
 
     # Fetch user preferences

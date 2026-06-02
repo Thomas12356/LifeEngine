@@ -27,10 +27,12 @@ def auto_reschedule(
     reschedule_id = event_dto.id # Record ID so we can fetch from GA result and add to array
     events_to_schedule.append(map_event(event_dto=event_dto, event_type_dto=event_type_dto))
 
-    if same_day: # If the event requested for reschedule is today, block all other events from moving
+    if same_day: # If the event requested for reschedule is today, block all other events from moving and ensure that event can move
         for index, event in enumerate(events_to_schedule):
             if event.event_id != reschedule_id:
                 events_to_schedule[index] = replace(event, is_moveable=False)
+            else:
+                events_to_schedule[index] = replace(event, is_moveable=True)
 
     # Map wakeup and bed times to slot indexes
     WAKEUP_SLOT, BED_TIME_SLOT = map_preferences(user_preferences_dto)
@@ -56,6 +58,7 @@ def auto_reschedule(
         
     ) # Initalise new GA instance
     result = scheduler.run() # Run the scheduler
+    result.visualise()
 
     # If the event being rescheduled is today, we should reject a new start time earlier than the current time
     # NOTE : We can improve this by including the logic in the fitness function, because currently if we try
