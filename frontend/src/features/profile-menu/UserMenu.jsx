@@ -47,7 +47,6 @@ export default function UserMenu() {
 
             try {
                 const preferences = await getUserPreferences(user.id)
-                console.log(preferences)
                 setFormData({
                     wakeupTime: preferences.wakeup_time,
                     bedTime: preferences.bed_time

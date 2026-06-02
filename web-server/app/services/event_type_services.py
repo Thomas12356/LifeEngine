@@ -241,6 +241,9 @@ def update_event_type(event_type_id_str : str, data: dict):
         if "is_active" in data:
             event_type.is_active = data["is_active"]
 
+        if "is_moveable" in data:
+            event_type.is_moveable = data["is_moveable"]
+
         db.session.commit()
 
         return {"success": True, "event_type": event_type.to_dict(), "status_code": 200}
