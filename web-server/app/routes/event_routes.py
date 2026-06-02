@@ -248,10 +248,10 @@ def auto_reschedule_event():
             "user_id": data["user_id"],
             "event_id": data["event_id"],
             "changes": result.get("changes", []),
+            "created_at" : now_utc()
         }
 
-        time.sleep(5)
-        print(result)
+        print(AUTO_RESCHEDULE_PENDING)
 
         return jsonify({
             "ok": True,
@@ -280,7 +280,8 @@ def accept_auto_reschedule_event():
             "ok": False,
             "error": "Missing required field: auto_reschedule_id"
         }), 400
-        
+    
+    print(AUTO_RESCHEDULE_PENDING)
     pending_reschedule = AUTO_RESCHEDULE_PENDING.get(auto_reschedule_id)
 
     if not pending_reschedule:
@@ -290,7 +291,7 @@ def accept_auto_reschedule_event():
         }), 404
 
 
-    result = event_services.apply_auto_reschedule(
+    result = scheduler_services.apply_auto_reschedule(
         user_id_str=pending_reschedule["user_id"],
         pending_reschedule=pending_reschedule,
     )

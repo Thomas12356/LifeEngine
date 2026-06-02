@@ -106,7 +106,7 @@ def auto_reschedule_event(event_id_str):
         # ],
     }
 
-def apply_auto_rechedule(user_id_str: str, pending_reschedule: dict):
+def apply_auto_reschedule(user_id_str: str, pending_reschedule: dict):
     new_schedule = pending_reschedule.get("new_schedule", [])
 
     if not new_schedule:
