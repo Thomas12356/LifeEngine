@@ -58,7 +58,7 @@ def map_event(event_dto : dbEventInput, event_type_dto : dbEventTypeInput):
         name=event_dto.name,
         EventType=scheduler_event_type,
         is_moveable=is_moveable,
-        importance=priority,
+        importance=priority if priority else 1,
 
         start_slot=convert_time_iso(event_dto.start_time),
         duration_slots=convert_time_iso(event_dto.end_time) - convert_time_iso(event_dto.start_time)

@@ -153,7 +153,8 @@ export default function AddEventMenu({ onClose, onEventAdded }){
                             >
                                 <Checkbox.HiddenInput/>
                                 <Checkbox.Label fontWeight={"unset"}>
-                                    Allow auto-rescheduling
+                                    Allow this event to be moved during
+                                    auto-rescheduling of other events
                                 </Checkbox.Label>
                                 <Checkbox.Control/>
                             </Checkbox.Root>

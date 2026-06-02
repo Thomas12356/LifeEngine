@@ -1,5 +1,6 @@
 import { autoReschedule, rescheduleEvent, acceptAutoReschedule } from "@/utils/eventServices";
 import { Button, Dialog, CloseButton, Portal, Stack, Input, Field, Text, HStack, Box, Spinner} from "@chakra-ui/react";
+import { Tooltip } from "@/components/ui/tooltip"
 import { useState, useEffect } from "react"
 import buildReschedulePayload from "@features/reschedule-menu/utils/buildReschedulePayload";
 import buildAutoReschedulePayload from "@features/reschedule-menu/utils/buildAutoReschedulePayload";
@@ -75,8 +76,14 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess 
             console.log("AUTO RESCHEDULE RESULT:", autoRescheduleResult);
 
         } catch (err) {
-            console.log("Failed to auto-reschedule event:", err)
-            setError(err.message || "Failed to auto reschedule event.")
+            console.log(err.status)
+            if (err.status === 422) {
+                setError("Failed to find a new time. Please enter a time manually")
+            }
+            else {
+                console.log("Failed to auto-reschedule event:", err)
+                setError(err.message || "Failed to auto reschedule event.")
+            }
         } finally{
             setAutoLoading(false);
         }
@@ -131,8 +138,6 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess 
 
         console.log(event)
     }, [isOpen, event?.id])
-
-    const autoReschedulable = Boolean(event?.is_moveable)
 
     return (
         <Dialog.Root 
@@ -237,22 +242,43 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess 
                         <Dialog.Footer>
                             {!autoRescheduleResult && (
                                 <>
+                                    <Text>
+                                        <Text color={"red"}>WARNING : </Text>
+                                        Auto-reschedule attempt to reschedule this event into an optimal timeslot based on your predicted energy.
+                                        Depending on your scheduled events, a valid time may not be found.
+                                    </Text>
                                     <Button
-                                        disabled={!autoReschedulable || autoLoading}
+                                        disabled={autoLoading}
                                         onClick={handleAutoReschedule}
-                                    >
-                                        Auto reschedule
+                                        size={{ base: "xs", md: "md" }}
+                                        width={{ base: "x3", sm: "auto" }}
+                                        bg="transparent"
+                                        color="blueLight.500"
+                                        border="1px solid"
+                                        borderRadius="lg"
+                                        px={{ base: 3, md: 4 }}
+                                        fontSize={{ base: "xs", md: "sm" }}
+                                        _hover={{
+                                            filter: "brightness(0.92)",
+                                            }}
+                                        >
+                                            Auto reschedule
                                     </Button>
 
-                                    {!autoReschedulable && (
-                                        <Text textStyle="defaultText" fontSize="sm">
-                                            To use this feature, allow auto rescheduling for this event.
-                                        </Text>
-                                    )}
 
                                     <Button
                                         onClick={handleReschedule}
                                         disabled={autoLoading}
+                                        size={{ base: "xs", md: "md" }}
+                                        width={{ base: "100%", sm: "auto" }}
+                                        bg="blueLight.500"
+                                        color="white"
+                                        borderRadius="lg"
+                                        px={{ base: 3, md: 4 }}
+                                        fontSize={{ base: "xs", md: "sm" }}
+                                        _hover={{
+                                            filter: "brightness(0.92)",
+                                        }}
                                     >
                                         Reschedule
                                     </Button>
@@ -272,6 +298,7 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess 
                                     <Button
                                         onClick={handleAcceptReschedule}
                                         disabled={acceptLoading}
+                                        bg="blueLight.500"
                                     >
                                         Accept
                                     </Button>
