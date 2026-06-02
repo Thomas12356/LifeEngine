@@ -238,17 +238,11 @@ export default function RescheduleMenu({ isOpen, onOpenChange, event, onSuccess 
                             {!autoRescheduleResult && (
                                 <>
                                     <Button
-                                        disabled={!autoReschedulable || autoLoading}
+                                        disabled={autoLoading}
                                         onClick={handleAutoReschedule}
                                     >
                                         Auto reschedule
                                     </Button>
-
-                                    {!autoReschedulable && (
-                                        <Text textStyle="defaultText" fontSize="sm">
-                                            To use this feature, allow auto rescheduling for this event.
-                                        </Text>
-                                    )}
 
                                     <Button
                                         onClick={handleReschedule}

@@ -77,7 +77,8 @@ export default function CreateEventTypeMenu({ onClose, onEventTypeCreated }){
                 >
                     <Checkbox.HiddenInput/>
                     <Checkbox.Label>
-                        Allow auto-rescheduling for this type
+                        Allow events of this type to be moved during
+                        auto-rescheduling of other events
                     </Checkbox.Label>
                     <Checkbox.Control/>
                 </Checkbox.Root>
