@@ -1,4 +1,4 @@
-import { Text, Stack, Field, HStack, Slider, Button } from "@chakra-ui/react";
+import { Text, Stack, Field, HStack, Slider, Button, Checkbox } from "@chakra-ui/react";
 import { WidgetBox } from "@ui-components/WidgetBox";
 import DropDown from "@ui-components/DropDown"
 import { NumberInput } from "@chakra-ui/react";
@@ -21,6 +21,7 @@ export default function EventTypesMenu({...props}){
         idealEnergy: "",
         burnoutRate: "",
         priority: 1,
+        isMoveable: false,
         availabilityWindow: [0, 1425],
         preferenceWindow: [0, 1425],
     });
@@ -77,6 +78,7 @@ export default function EventTypesMenu({...props}){
                 burnout_rate: levelToFloat(formData.burnoutRate),
                 priority: formData.priority
             },
+            is_moveable : formData.isMoveable,
             availability_start : minutesToTime(formData.availabilityWindow[0]),
             availability_end : minutesToTime(formData.availabilityWindow[1]),
             preference_start : minutesToTime(formData.preferenceWindow[0]),
@@ -130,6 +132,7 @@ export default function EventTypesMenu({...props}){
             idealEnergy: floatToLevel(selectedEventType.parameters.ideal_energy),
             burnoutRate: floatToLevel(selectedEventType.parameters.burnout_rate),
             priority: selectedEventType.parameters.priority,
+            isMoveable: selectedEventType.is_moveable,
             availabilityWindow: [
                 parseTime(selectedEventType.availability_start),
                 parseTime(selectedEventType.availability_end)
@@ -260,6 +263,23 @@ export default function EventTypesMenu({...props}){
                         {minutesToTime(formData.preferenceWindow[0])} -{" "}
                         {minutesToTime(formData.preferenceWindow[1])}
                     </Text>
+                </Field.Root>
+                <Field.Root>
+                    <Checkbox.Root
+                        checked = {formData.isMoveable}
+                        onCheckedChange={(e) => updateField("isMoveable", e.checked === true)}
+                    >
+                        <Checkbox.HiddenInput/>
+                        <Checkbox.Label fontWeight={"unset"}>
+                            <Stack>
+                                <Text>
+                                    Allow events of this type to be moved during auto-rescheduling of other events
+                                </Text>
+                            </Stack>
+
+                        </Checkbox.Label>
+                        <Checkbox.Control/>
+                    </Checkbox.Root>
                 </Field.Root>
                 <Button 
                     onClick={handleSave} 
