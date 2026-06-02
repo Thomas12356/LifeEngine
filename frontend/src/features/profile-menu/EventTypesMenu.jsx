@@ -91,6 +91,29 @@ export default function EventTypesMenu({...props}){
         }
     }
 
+    async function handleDelete() {
+        if (!formData.eventTypeID) return
+
+        const user = JSON.parse(localStorage.getItem("user"))
+
+        const payload = {
+            event_type_id : formData.eventTypeID,
+            user_id : user.id,
+            is_active : false
+        }
+        
+        try {
+            await updateEventType(payload)
+            await refreshEventTypes()
+            const defaultEventType =
+            eventTypes.find((type) => type.name === "Default")
+            updateField("eventTypeName", defaultEventType.name)
+        } catch (err) {
+            console.log("Failed to delete event type", err)
+        }
+
+    }
+
 
     // Fill formdata with selected event type
     useEffect(() => {
@@ -238,8 +261,33 @@ export default function EventTypesMenu({...props}){
                         {minutesToTime(formData.preferenceWindow[1])}
                     </Text>
                 </Field.Root>
-                <Button onClick={handleSave} my="6px" bg={formData.labelColour} _hover={{filter: "brightness(0.92)"}}> {/* DEBUG */}
+                <Button 
+                    onClick={handleSave} 
+                    my="6px" bg={"blueLight.500"} 
+                    _hover={{filter: "brightness(0.92)"}}
+                    border="1px solid"
+                    borderRadius="lg"
+                >
                     Save Preferences
+                </Button>
+                <Button onClick={() => {
+                        const confirmed = window.confirm("Are you sure you want to delete this event type?")
+                        if (confirmed) {
+                            handleDelete()
+                        }
+                    }} 
+                    my="6px" 
+                    bg="transparent"
+                    color="red.500"
+                    border="1px solid"
+                    borderRadius="lg"
+                    px={{ base: 3, md: 4 }}
+                    fontSize={{ base: "xs", md: "sm" }}
+                    _hover={{
+                        filter: "brightness(0.92)",
+                    }}
+                >
+                    DELETE EVENT TYPE
                 </Button>
             </Stack>
         </WidgetBox>

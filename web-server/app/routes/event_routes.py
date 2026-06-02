@@ -343,3 +343,17 @@ def update_event_type():
         return jsonify({
             "message": f"Event {event_type_id_str} updated."
         }), result["status_code"]
+
+@event_blueprint.route("/deleteeventtype", methods=["PATCH"])
+def delete_event_type():
+    data = request.get_json()
+    event_type_id_str = data["event_type_id"]
+
+    result = event_type_services.update_event_type(event_type_id_str=event_type_id_str, data=data)
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), result["status_code"]
+    else:
+        return jsonify({
+            "message": f"Event {event_type_id_str} deleted."
+        }), result["status_code"]
