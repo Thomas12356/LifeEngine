@@ -101,11 +101,11 @@ The backend expects configuration values such as:
 
 A sample configuration is provided in [web-server/example-env.txt](web-server/example-env.txt).
 
-## 📚 Documentation
+## Documentation
 
 Additional documentation and internal notes can be found in the project folders under [1.Docs](1.Docs).
 
-## 👥 Authors
+## Authors
 
 - Thomas Eardley  
   - University email: [te215@kent.ac.uk](mailto:te215@kent.ac.uk)
@@ -114,6 +114,6 @@ Additional documentation and internal notes can be found in the project folders 
 - Daniel Dixon  
   - University email: [djd41@kent.ac.uk](mailto:djd41@kent.ac.uk)
 
-## 📌 Project Status
+## Project Status
 
 Active development project (University of Kent Computer Science undergraduate project).
