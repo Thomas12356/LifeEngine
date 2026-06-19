@@ -6,6 +6,7 @@ LifeEngine is a full-stack scheduling application designed to help users organis
 
 - Manage events and schedules through a web dashboard
 - View upcoming events and calendar-based planning views
+- Optimise daily schedule using an energy predicter, evaluator, and genetic scheduling algorithm
 - Use an AI assistant for planning and scheduling support
 - Store user preferences and event settings
 - Support for authentication and user-specific data
